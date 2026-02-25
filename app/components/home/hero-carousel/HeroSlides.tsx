@@ -51,6 +51,7 @@ export function HeroSlides({
                   src={slide.image}
                   alt={slide.alt || slide.id}
                   fill
+                  sizes="(min-width: 1920px) 1050px, (min-width: 1640px) 863px, (min-width: 1200px) 760px, 100vw"
                   className="pointer-events-none object-cover"
                   priority
                 />

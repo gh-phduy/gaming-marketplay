@@ -23,7 +23,7 @@ export function HeroCategoryTiles({ activeTab }: HeroCategoryTilesProps) {
 
   if (isTopup) {
     return (
-      <div className="flex justify-center gap-4">
+      <div className="grid grid-cols-1 gap-4 1100:grid-cols-3">
         {categories.map((category) => {
           const IconComponent =
             ICON_MAP[category.icon as keyof typeof ICON_MAP] ?? Monitor;
@@ -33,8 +33,7 @@ export function HeroCategoryTiles({ activeTab }: HeroCategoryTilesProps) {
             <Link
               key={category.id}
               href={category.link}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01]"
-              style={{ width: "520px", height: "134px", flexShrink: 0 }}
+              className="group relative h-[134px] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01]"
             >
               <div className="relative h-full w-full">
                 <Image

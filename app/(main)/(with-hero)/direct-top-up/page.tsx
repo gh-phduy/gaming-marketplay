@@ -13,7 +13,7 @@ export default function DirectTopUpPage() {
       id="main-content"
       className="flex w-full flex-col items-center gap-y-16 pt-8"
     >
-      <DirectTopUpClient />
+      {/* <DirectTopUpClient /> */}
     </main>
   );
 }

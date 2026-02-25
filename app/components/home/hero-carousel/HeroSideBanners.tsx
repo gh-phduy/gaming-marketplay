@@ -16,13 +16,15 @@ export function HeroSideBanners({ activeTab }: HeroSideBannersProps) {
     <div className="h-full w-full">
       <Link
         href={banner.link}
-        className="relative block h-full w-full overflow-hidden rounded-3xl shadow-lg transition-all hover:shadow-2xl"
+        className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-black/30 shadow-lg transition-all hover:shadow-2xl"
       >
         <Image
           src={banner.image}
           alt={banner.alt}
-          fill
-          className="object-cover"
+          width={255}
+          height={226}
+          sizes="(min-width: 1920px) 510px, (min-width: 1640px) 417px, (min-width: 1200px) 350px, 300px"
+          className="h-full w-full object-cover"
           priority
         />
       </Link>

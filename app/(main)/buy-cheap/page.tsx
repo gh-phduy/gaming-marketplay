@@ -53,7 +53,10 @@ export default async function BuyCheapPage({
   const { id } = await searchParams;
   if (!id) {
     return (
-      <main id="main-content" className="flex w-full max-w-[1590px] flex-col items-center gap-y-8">
+      <main
+        id="main-content"
+        className="flex w-full max-w-[1590px] flex-col items-center gap-y-8"
+      >
         <div className="rounded-lg bg-red-500/10 p-4 text-red-500">
           No product ID provided.
         </div>
