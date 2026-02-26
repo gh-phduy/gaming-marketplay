@@ -39,9 +39,11 @@ const nextConfig: NextConfig = {
   },
 
   // Performance optimizations
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false,
 
   experimental: {
+    optimizeCss: true,
+
     // Enable optimized package imports to reduce barrel-file bundle bloat
     optimizePackageImports: [
       "react-icons",

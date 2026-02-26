@@ -50,10 +50,11 @@ const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
         "max-w-[62%] text-xs leading-tight font-bold tracking-wide text-white uppercase drop-shadow-lg",
     },
     digital: {
-      gridClassName: "grid grid-cols-2 gap-4 lg:grid-cols-4",
+      gridClassName:
+        "grid grid-cols-4 gap-2 min-[500px]:grid-cols-2 min-[500px]:gap-4 lg:grid-cols-4",
       cardClassName:
-        "group relative h-[108px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01] md:h-[120px]",
-      imageSizes: "(max-width: 1024px) 50vw, 25vw",
+        "group relative h-[86px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01] min-[500px]:h-[108px] md:h-[120px]",
+      imageSizes: "(max-width: 499px) 25vw, (max-width: 1024px) 50vw, 25vw",
       stackedSizes: "(max-width: 1024px) 26vw, 14vw",
       contentClassName:
         "absolute inset-y-0 left-0 z-20 flex flex-col justify-center gap-2 px-3 md:px-4",
@@ -75,6 +76,8 @@ function HeroCategoryTileCard({
   const IconComponent =
     ICON_MAP[category.icon as keyof typeof ICON_MAP] ?? Monitor;
   const isScattered = category.id in SCATTERED_LAYOUTS;
+  const overlayVisibilityClass =
+    variant === "digital" ? "hidden min-[500px]:block" : "";
 
   return (
     <Link
@@ -100,18 +103,22 @@ function HeroCategoryTileCard({
         </div>
 
         {isScattered ? (
-          <ScatteredIcons
-            categoryId={category.id}
-            heroImages={category.heroImages}
-            title={category.title}
-          />
+          <div className={overlayVisibilityClass}>
+            <ScatteredIcons
+              categoryId={category.id}
+              heroImages={category.heroImages}
+              title={category.title}
+            />
+          </div>
         ) : (
-          <StackedImages
-            categoryId={category.id}
-            heroImages={category.heroImages}
-            title={category.title}
-            sizes={config.stackedSizes}
-          />
+          <div className={overlayVisibilityClass}>
+            <StackedImages
+              categoryId={category.id}
+              heroImages={category.heroImages}
+              title={category.title}
+              sizes={config.stackedSizes}
+            />
+          </div>
         )}
       </div>
     </Link>

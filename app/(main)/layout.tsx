@@ -14,7 +14,9 @@ export default function MainLayout({
       <SettingsProvider>
         <CartProvider>
           <NavBar />
-          <div className="flex flex-1 flex-col items-center pt-20">{children}</div>
+          <div className="flex flex-1 flex-col items-center pt-20">
+            {children}
+          </div>
           <Footer />
         </CartProvider>
       </SettingsProvider>

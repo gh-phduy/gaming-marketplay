@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@plugin "tailwindcss-animate";
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -305,22 +303,6 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-  }
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-    background-color: #181f29;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #374050;
-    border-radius: 9999px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.2);
   }
 
   ::selection {

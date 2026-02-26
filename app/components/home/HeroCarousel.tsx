@@ -35,8 +35,8 @@ export function HeroCarousel() {
   const gridColumnsClass = `grid-cols-1 ${HERO_GRID_COLUMNS_WITH_SIDE_BANNER}`;
   const mediaRowHeightClass =
     activeTab === "digital"
-      ? "h-[270px] 1200:h-[310px] 1640:h-[371px] 1920:h-[451px]"
-      : "h-[164px] 1640:h-[225px] 1920:h-[274px]";
+      ? "h-[236px] min-[500px]:h-[270px] 1200:h-[310px] 1640:h-[371px] 1920:h-[451px]"
+      : "h-[148px] min-[500px]:h-[164px] 1640:h-[225px] 1920:h-[274px]";
 
   return (
     <div className="relative flex w-full justify-center py-8">
