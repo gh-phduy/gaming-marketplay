@@ -41,7 +41,7 @@ export function HeroSlides({
         className="h-full w-full"
       >
         <CarouselContent className="h-full">
-          {slides.map((slide) => (
+          {slides.map((slide, index) => (
             <CarouselItem key={slide.id} className="h-full">
               <div className="relative h-full w-full">
                 <Image
@@ -50,7 +50,8 @@ export function HeroSlides({
                   fill
                   sizes="(min-width: 1920px) 1050px, (min-width: 1640px) 863px, (min-width: 1200px) 760px, 100vw"
                   className="pointer-events-none object-cover"
-                  priority
+                  priority={index === 0}
+                  loading={index === 0 ? undefined : "lazy"}
                 />
               </div>
             </CarouselItem>

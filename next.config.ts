@@ -39,9 +39,21 @@ const nextConfig: NextConfig = {
   },
 
   // Performance optimizations
+  productionBrowserSourceMaps: true,
+
   experimental: {
-    // Enable optimized package imports
-    optimizePackageImports: ["react-icons", "lucide-react"],
+    // Enable optimized package imports to reduce barrel-file bundle bloat
+    optimizePackageImports: [
+      "react-icons",
+      "lucide-react",
+      "framer-motion",
+      "gsap",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-select",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-tooltip",
+      "@radix-ui/react-tabs",
+    ],
   },
 
   // Compiler options - SWC configuration for modern browsers

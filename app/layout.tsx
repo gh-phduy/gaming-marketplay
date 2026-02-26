@@ -1,14 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { QueryProvider } from "./providers/QueryProvider";
-import { AuthProvider } from "./context/AuthContext";
-import { CartProvider } from "./context/CartContext";
-import { SettingsProvider } from "./context/SettingsContext";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -32,20 +30,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} flex min-h-screen flex-col bg-midnight-850 text-dm-text-primary antialiased`}
       >
-        <AuthProvider>
-          <SettingsProvider>
-            <CartProvider>
-              <QueryProvider>
-                {/* Skip to main content link for accessibility */}
-                <a href="#main-content" className="skip-link">
-                  Skip to main content
-                </a>
+        {/* Skip to main content link for accessibility */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
 
-                {children}
-              </QueryProvider>
-            </CartProvider>
-          </SettingsProvider>
-        </AuthProvider>
+        {children}
       </body>
     </html>
   );

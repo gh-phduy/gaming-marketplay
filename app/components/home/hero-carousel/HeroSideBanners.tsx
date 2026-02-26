@@ -30,7 +30,6 @@ export function HeroSideBanners({ activeTab }: HeroSideBannersProps) {
           height={226}
           sizes="(min-width: 1920px) 510px, (min-width: 1640px) 417px, (min-width: 1200px) 350px, 300px"
           className="h-full w-full object-cover"
-          priority
         />
       </Link>
     </div>

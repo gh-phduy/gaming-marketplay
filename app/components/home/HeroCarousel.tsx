@@ -2,113 +2,84 @@
 
 import { useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { CarouselApi } from "@/components/ui/carousel";
 import {
-  HERO_CATEGORY_TILES_TRANSITION,
-  HERO_GRID_TRANSITION,
-  HeroAnimatedDescription,
-  HeroAnimatedSideBanner,
-  HeroAnimatedSlides,
-  HeroAnimatedTitle,
+  HERO_GRID_COLUMNS_WITH_SIDE_BANNER,
   HeroCategoryTiles,
   HeroSideBanners,
   HeroSlides,
   HeroTabs,
   getHeroActiveTab,
-  getHeroHeights,
-  HERO_GRID_COLUMNS_WITH_SIDE_BANNER,
   HERO_TAB_CONTENT,
-  HERO_WRAPPER_STYLE,
   useHeroCarouselSelection,
-  useHeroViewport,
 } from "./hero-carousel";
 import type { HeroTab } from "./hero-carousel";
 
 export function HeroCarousel() {
-  // 1) Carousel API is owned by this container and passed down to slides.
   const [api, setApi] = useState<CarouselApi>();
-
-  // 2) Derived interactive state from dedicated hooks.
-  const viewport = useHeroViewport();
   const { current, scrollTo } = useHeroCarouselSelection(api);
 
-  // 3) Route-driven tab mode and responsive dimensions.
   const pathname = usePathname();
   const router = useRouter();
   const activeTab = getHeroActiveTab(pathname);
-  const { digitalHeight, topupHeight } = getHeroHeights(viewport);
 
   const handleTabChange = useCallback(
     (tab: HeroTab) => {
-      if (tab === "topup") {
-        router.push("/direct-top-up", { scroll: false });
-      } else {
-        router.push("/", { scroll: false });
-      }
+      router.push(tab === "topup" ? "/direct-top-up" : "/", { scroll: false });
     },
     [router],
   );
 
   const tabContent = HERO_TAB_CONTENT[activeTab];
-  const gridColumnsClass = viewport.isSideBannerVisible
-    ? HERO_GRID_COLUMNS_WITH_SIDE_BANNER
-    : "grid-cols-1";
-  const animatedHeroHeight =
-    activeTab === "digital" ? digitalHeight : topupHeight;
+  const gridColumnsClass = `grid-cols-1 ${HERO_GRID_COLUMNS_WITH_SIDE_BANNER}`;
+  const mediaRowHeightClass =
+    activeTab === "digital"
+      ? "h-[270px] 1200:h-[310px] 1640:h-[371px] 1920:h-[451px]"
+      : "h-[164px] 1640:h-[225px] 1920:h-[274px]";
 
   return (
-    <div
-      className="relative flex w-full justify-center py-8"
-      style={HERO_WRAPPER_STYLE}
-    >
-      {/* Content */}
+    <div className="relative flex w-full justify-center py-8">
+      <Image
+        src="/bg-hero-carousel.jpg"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+        aria-hidden="true"
+      />
       <div className="relative z-10">
         <div className="mx-auto w-full">
           <HeroTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
           <div className="mb-6 text-center">
-            <HeroAnimatedTitle
-              activeTab={activeTab}
-              className="mb-3 text-3xl font-bold tracking-wide text-white uppercase md:text-4xl"
-            >
+            <h1 className="mb-3 text-3xl font-bold tracking-wide text-white uppercase md:text-4xl">
               {tabContent.title}
-            </HeroAnimatedTitle>
-            <HeroAnimatedDescription
-              activeTab={activeTab}
-              className="mx-auto max-w-3xl text-sm text-gray-300 md:text-base"
-            >
+            </h1>
+            <p className="mx-auto max-w-3xl text-sm text-gray-300 md:text-base">
               {tabContent.description}
-            </HeroAnimatedDescription>
+            </p>
           </div>
 
-          <div className="rounded-3xl border border-white/5 bg-[#0a0a0b]/20 p-6 shadow-2xl backdrop-blur-sm">
-            {/* Animated media row (slides + optional side banner). */}
-            <motion.div
-              className={`mb-4 grid gap-4 overflow-hidden rounded-3xl lg:justify-center ${gridColumnsClass}`}
-              layout
-              initial={{ height: digitalHeight }}
-              animate={{ height: animatedHeroHeight }}
-              transition={HERO_GRID_TRANSITION}
+          <div className="p-6 990:rounded-3xl 990:border 990:border-white/5 990:bg-[#0a0a0b]/20 990:p-3 990:shadow-2xl 990:backdrop-blur-sm 1200:p-6">
+            {/* Media row — chỉ animate chiều cao mượt mà */}
+            <div
+              className={`mb-4 grid gap-4 overflow-hidden rounded-3xl transition-[height] duration-300 ease-linear lg:justify-center ${gridColumnsClass} ${mediaRowHeightClass}`}
             >
-              <HeroAnimatedSlides activeTab={activeTab}>
-                <HeroSlides
-                  setApi={setApi}
-                  current={current}
-                  onIndicatorClick={scrollTo}
-                  activeTab={activeTab}
-                />
-              </HeroAnimatedSlides>
-              {viewport.isSideBannerVisible && (
-                <HeroAnimatedSideBanner activeTab={activeTab}>
-                  <HeroSideBanners activeTab={activeTab} />
-                </HeroAnimatedSideBanner>
-              )}
-            </motion.div>
+              <HeroSlides
+                setApi={setApi}
+                current={current}
+                onIndicatorClick={scrollTo}
+                activeTab={activeTab}
+              />
+              <div className="hidden h-full 1100:block">
+                <HeroSideBanners activeTab={activeTab} />
+              </div>
+            </div>
 
-            <motion.div layout transition={HERO_CATEGORY_TILES_TRANSITION}>
+            <div>
               <HeroCategoryTiles activeTab={activeTab} />
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

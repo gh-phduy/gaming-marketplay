@@ -96,7 +96,7 @@ function HeroCategoryTileCard({
           <div className={config.iconWrapperClassName}>
             <IconComponent className="h-4 w-4 text-white" />
           </div>
-          <h3 className={config.titleClassName}>{category.title}</h3>
+          <span className={config.titleClassName}>{category.title}</span>
         </div>
 
         {isScattered ? (
