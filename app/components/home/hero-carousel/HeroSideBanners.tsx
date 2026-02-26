@@ -1,11 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HERO_SIDE_BANNERS } from "@/lib/constants/hero";
+import type { HeroTab } from "./types";
 
 interface HeroSideBannersProps {
-  activeTab: "digital" | "topup";
+  activeTab: HeroTab;
 }
 
+/**
+ * Renders the contextual promotional banner beside the main hero slides.
+ * Banner selection is tab-driven to keep UX copy/media consistent.
+ */
 export function HeroSideBanners({ activeTab }: HeroSideBannersProps) {
   const bannerIndex = activeTab === "topup" ? 1 : 0;
   const banner = HERO_SIDE_BANNERS[bannerIndex];

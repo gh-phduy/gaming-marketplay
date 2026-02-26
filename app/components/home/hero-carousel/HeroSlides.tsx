@@ -5,19 +5,16 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/lib/utils";
 import { HERO_SLIDES, HERO_SLIDES_TOPUP } from "@/lib/constants/hero";
+import type { HeroSlidesProps } from "./types";
 
-interface HeroSlidesProps {
-  setApi: (api: CarouselApi) => void;
-  current: number;
-  onIndicatorClick: (index: number) => void;
-  activeTab: "digital" | "topup";
-}
-
+/**
+ * Main hero slideshow. Keeps embla config local while receiving active tab
+ * and pagination state from parent container.
+ */
 export function HeroSlides({
   setApi,
   current,

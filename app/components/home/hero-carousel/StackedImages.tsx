@@ -9,8 +9,9 @@ interface StackedImagesProps {
 }
 
 /**
- * Default hero image renderer: images are absolutely positioned and slightly
- * offset horizontally to create a layered / stacked depth effect.
+ * Default image renderer for categories without a scattered layout.
+ * Images are absolutely positioned and offset horizontally to create
+ * layered depth while preserving object-fit containment.
  */
 export function StackedImages({
   categoryId,

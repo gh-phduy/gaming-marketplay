@@ -1,18 +1,24 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CreditCard, Gamepad2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { IoGameController } from "react-icons/io5";
 import { GiTwoCoins } from "react-icons/gi";
-
-type HeroTab = "digital" | "topup";
+import {
+  HERO_TABS_INDICATOR_ANIMATE,
+  HERO_TABS_INDICATOR_TRANSITION,
+} from "./animations";
+import type { HeroTab } from "./types";
 
 interface HeroTabsProps {
   activeTab: HeroTab;
   onTabChange: (tab: HeroTab) => void;
 }
 
+/**
+ * Switcher between Digital and Direct Top Up hero contexts.
+ * Navigation is handled by parent, this component is purely presentational.
+ */
 export function HeroTabs({ activeTab, onTabChange }: HeroTabsProps) {
   return (
     <div className="mb-8 flex justify-center">
@@ -24,15 +30,8 @@ export function HeroTabs({ activeTab, onTabChange }: HeroTabsProps) {
             background: "linear-gradient(to right, #60984b, #406433)",
           }}
           initial={false}
-          animate={{
-            x: activeTab === "digital" ? 0 : "calc(100% + 4px)",
-            width: activeTab === "digital" ? "385px" : "385px",
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-          }}
+          animate={HERO_TABS_INDICATOR_ANIMATE[activeTab]}
+          transition={HERO_TABS_INDICATOR_TRANSITION}
         />
 
         <button

@@ -8,6 +8,7 @@ interface ScatteredIconsProps {
 }
 
 /**
+ * Variant image renderer used for categories listed in `SCATTERED_LAYOUTS`.
  * Renders heroImages as overlapping, individually rotated icons.
  * Each icon retains its natural aspect ratio — `maxSize` only constrains
  * the bounding box, it never squashes the image into a square.
