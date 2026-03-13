@@ -55,24 +55,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const storedItems = localStorage.getItem(CART_ITEMS_STORAGE_KEY);
-    if (!storedItems) return;
+    let idleCallbackId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    try {
-      const parsed = JSON.parse(storedItems) as unknown;
-      if (!Array.isArray(parsed)) return;
+    const hydrateCart = () => {
+      const storedItems = localStorage.getItem(CART_ITEMS_STORAGE_KEY);
+      if (!storedItems) return;
 
-      const sanitized = parsed.filter(isValidCartItem).map((item) => ({
-        ...item,
-        quantity: Number.isFinite(item.quantity)
-          ? Math.max(1, Math.floor(item.quantity))
-          : 1,
-      }));
+      try {
+        const parsed = JSON.parse(storedItems) as unknown;
+        if (!Array.isArray(parsed)) return;
 
-      setCartItems(sanitized);
-    } catch {
-      localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+        const sanitized = parsed.filter(isValidCartItem).map((item) => ({
+          ...item,
+          quantity: Number.isFinite(item.quantity)
+            ? Math.max(1, Math.floor(item.quantity))
+            : 1,
+        }));
+
+        setCartItems(sanitized);
+      } catch {
+        localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+      }
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleCallbackId = window.requestIdleCallback(hydrateCart, {
+        timeout: 2000,
+      });
+    } else {
+      timeoutId = globalThis.setTimeout(hydrateCart, 300);
     }
+
+    return () => {
+      if (idleCallbackId !== undefined && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (timeoutId !== undefined) {
+        globalThis.clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   useEffect(() => {

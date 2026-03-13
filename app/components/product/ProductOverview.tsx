@@ -42,7 +42,7 @@ export default function ProductOverview({ data }: ProductOverviewProps) {
   }, [data?.seller.name]);
 
   return (
-    <div className="flex w-full justify-between">
+    <div className="flex w-full flex-col gap-5 lg:flex-row lg:gap-6">
       <ProductGallery
         images={data.data.images}
         name={data.data.name}

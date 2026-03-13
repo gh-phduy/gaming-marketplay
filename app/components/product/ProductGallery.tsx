@@ -25,7 +25,7 @@ export default function ProductGallery({
   };
 
   return (
-    <div className="group relative h-[390px] w-[780px] overflow-hidden rounded-[24px] shadow-2xl">
+    <div className="group relative aspect-video w-full overflow-hidden rounded-xl shadow-2xl sm:rounded-2xl lg:max-w-[780px]">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -34,7 +34,7 @@ export default function ProductGallery({
           fill
           className="object-cover transition-all duration-500"
           priority
-          sizes="(max-width: 768px) 100vw, 780px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 780px"
         />
         {/* Gradient overlay for better text/UI visibility */}
         <div className="absolute inset-0 bg-linear-to-b from-black/20 via-transparent to-black/60" />
@@ -73,7 +73,7 @@ export default function ProductGallery({
       )}
 
       {/* Bottom Navigation Bar */}
-      <div className="absolute right-0 bottom-0 left-0 flex h-[60px] items-center justify-center gap-3 border-t border-white/8 bg-black/30 px-6">
+      <div className="absolute right-0 bottom-0 left-0 flex h-11 items-center justify-center gap-2 border-t border-white/8 bg-black/30 px-3 sm:h-[60px] sm:gap-3 sm:px-6">
         <div className="flex items-center gap-2">
           <button className="flex h-9 w-11 items-center justify-center rounded-lg bg-white/5 transition-all hover:bg-white/10 active:scale-90">
             <Monitor className="h-4.5 w-4.5 text-gray-400" />

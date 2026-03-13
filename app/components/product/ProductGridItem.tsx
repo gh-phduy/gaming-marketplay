@@ -68,7 +68,7 @@ export default function ProductGridItem({
           alt={title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          sizes="(max-width: 480px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
         />
 
         {/* Product Type/Key Badge */}
@@ -77,17 +77,19 @@ export default function ProductGridItem({
         </div>
 
         {/* Price Overlay on Image (Marketplace Style) */}
-        <div className="absolute right-0 bottom-0 left-0 flex items-center justify-between bg-black/50 p-2">
-          <div className="flex items-center gap-1.5 text-gray-300">
+        <div className="absolute right-0 bottom-0 left-0 flex items-center justify-between bg-black/50 px-1.5 py-1 sm:p-2">
+          <div className="xs:flex hidden items-center gap-1.5 text-gray-300 sm:flex">
             {Array.isArray(platform) ? (
               platform.map((p) => <PlatformIcon key={p} platform={p} />)
             ) : (
               <PlatformIcon platform={platform} />
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-steel-500">from</span>
-            <span className="font-bold tracking-tight text-white">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <span className="text-xs font-medium text-steel-500 sm:text-sm">
+              from
+            </span>
+            <span className="text-sm font-bold tracking-tight text-white sm:text-base">
               {displayPrice}
             </span>
           </div>
@@ -95,8 +97,8 @@ export default function ProductGridItem({
       </div>
 
       {/* Footer Content */}
-      <div className="bg-midnight-750 p-3">
-        <h3 className="line-clamp-1 text-sm font-semibold text-dm-text-primary text-steel-500 transition-colors group-hover:text-dm-accent-yellow">
+      <div className="bg-midnight-750 p-2 sm:p-3">
+        <h3 className="line-clamp-1 text-xs font-semibold text-dm-text-primary text-steel-500 transition-colors group-hover:text-dm-accent-yellow sm:text-sm">
           {title}
         </h3>
       </div>

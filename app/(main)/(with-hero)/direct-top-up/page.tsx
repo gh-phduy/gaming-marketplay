@@ -9,11 +9,13 @@ import { DirectTopUpClient } from "@/app/components/home/directtopup/DirectTopUp
 
 export default function DirectTopUpPage() {
   return (
-    <main
-      id="main-content"
-      className="flex w-full flex-col items-center gap-y-16 pt-8"
-    >
-      {/* <DirectTopUpClient /> */}
-    </main>
+    <>
+      <main
+        id="main-content"
+        className="flex w-full flex-col items-center gap-y-16 pt-8"
+      >
+        {/* <DirectTopUpClient /> */}
+      </main>
+    </>
   );
 }

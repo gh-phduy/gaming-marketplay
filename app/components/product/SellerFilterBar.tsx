@@ -40,26 +40,26 @@ const SORT_OPTIONS: FilterOption[] = [
 
 export default function SellerFilterBar() {
   return (
-    <div className="mb-6 flex w-full items-center justify-between gap-x-4">
+    <div className="mb-4 flex w-full flex-col gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:flex-nowrap lg:justify-between lg:gap-x-4">
       <FilterDropdown
         options={REGION_OPTIONS}
         headerIcon={<HiOutlineMapPin size={18} />}
-        width="w-[366px]"
+        width="w-full sm:w-[calc(50%-6px)] lg:w-[366px]"
       />
       <FilterDropdown
         options={PLATFORM_OPTIONS}
         headerIcon={<RiGlobalLine size={18} />}
-        width="w-[366px]"
+        width="w-full sm:w-[calc(50%-6px)] lg:w-[366px]"
       />
       <FilterDropdown
         options={EDITION_OPTIONS}
         headerIcon={<FaMedal size={18} />}
-        width="w-[366px]"
+        width="w-full sm:w-[calc(50%-6px)] lg:w-[366px]"
       />
       <FilterDropdown
         options={SORT_OPTIONS}
         headerIcon={<MdSort size={20} />}
-        width="w-[280px]"
+        width="w-full sm:w-[calc(50%-6px)] lg:w-[280px]"
         defaultValue="price_asc"
       />
       <ResetFilterButton />

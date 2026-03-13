@@ -2,7 +2,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function ProductDescription() {
   return (
-    <div className="flex w-full flex-col gap-y-2 rounded-lg bg-midnight-750 p-5 text-steel-500">
+    <div className="flex w-full flex-col gap-y-2 rounded-lg bg-midnight-750 p-3 text-sm text-steel-500 sm:p-5 sm:text-base">
       <span>
         From Battlefield Studios, the titans who turned digital battlefields
         into sprawling sandboxes of destruction, comes the next generation of

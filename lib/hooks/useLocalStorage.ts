@@ -15,7 +15,7 @@ import { useState, useEffect, useCallback } from "react";
  */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
   // State để lưu trữ giá trị
   const [storedValue, setStoredValue] = useState<T>(initialValue);
@@ -24,14 +24,36 @@ export function useLocalStorage<T>(
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    try {
-      const item = window.localStorage.getItem(key);
-      if (item) {
-        setStoredValue(JSON.parse(item));
+    let idleCallbackId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    const readFromStorage = () => {
+      try {
+        const item = window.localStorage.getItem(key);
+        if (item) {
+          setStoredValue(JSON.parse(item));
+        }
+      } catch (error) {
+        console.warn(`Error reading localStorage key "${key}":`, error);
       }
-    } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleCallbackId = window.requestIdleCallback(readFromStorage, {
+        timeout: 2000,
+      });
+    } else {
+      timeoutId = globalThis.setTimeout(readFromStorage, 300);
     }
+
+    return () => {
+      if (idleCallbackId !== undefined && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (timeoutId !== undefined) {
+        globalThis.clearTimeout(timeoutId);
+      }
+    };
   }, [key]);
 
   // Function để cập nhật giá trị
@@ -51,7 +73,7 @@ export function useLocalStorage<T>(
         console.warn(`Error setting localStorage key "${key}":`, error);
       }
     },
-    [key, storedValue]
+    [key, storedValue],
   );
 
   // Function để xóa giá trị

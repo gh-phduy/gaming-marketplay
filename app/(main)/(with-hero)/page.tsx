@@ -7,65 +7,66 @@
  */
 
 import PopularGamesSection from "../../components/home/PopularGamesSection";
-import FeaturesSection from "../../components/home/FeaturesSection";
-import PromoBanner from "../../components/home/PromoBanner";
-import UpcomingGamesSection from "../../components/home/UpcomingGamesSection";
-import CategoryGridRow1 from "../../components/home/CategoryGridRow1";
-import CategoryGridRow2 from "../../components/home/CategoryGridRow2";
-import PopularSellersSection from "../../components/home/PopularSellersSection";
-import CategoryCarousel from "../../components/home/CategoryCarousel";
-import GamesSection from "../../components/shared/GamesSection";
-import FlashSaleSection from "../../components/home/FlashSaleSection";
-import PlatformsSection from "../../components/home/PlatformsSection";
-import LatestNewsSection from "../../components/home/LatestNewsSection";
-
+// import FeaturesSection from "../../components/home/FeaturesSection";
+// import PromoBanner from "../../components/home/PromoBanner";
+// import UpcomingGamesSection from "../../components/home/UpcomingGamesSection";
+// import CategoryGridRow1 from "../../components/home/CategoryGridRow1";
+// import CategoryGridRow2 from "../../components/home/CategoryGridRow2";
+// import PopularSellersSection from "../../components/home/PopularSellersSection";
+// import CategoryCarousel from "../../components/home/CategoryCarousel";
+// import GamesSection from "../../components/shared/GamesSection";
+// import FlashSaleSection from "../../components/home/FlashSaleSection";
+// import PlatformsSection from "../../components/home/PlatformsSection";
+// import LatestNewsSection from "../../components/home/LatestNewsSection";
 export default function HomePage() {
   return (
-    <main
-      id="main-content"
-      className="mt-8 flex w-full flex-col items-center gap-y-16"
-    >
-      {/* Popular Games Section */}
-      {/* <PopularGamesSection /> */}
+    <>
+      <main
+        id="main-content"
+        className="mt-8 flex w-full flex-col items-center gap-y-16"
+      >
+        {/* Popular Games Section */}
+        <PopularGamesSection />
 
-      {/* Features Section */}
-      {/* <FeaturesSection /> */}
+        {/* Features Section */}
+        {/* <FeaturesSection /> */}
 
-      {/* Upcoming Games Section */}
-      {/* <UpcomingGamesSection /> */}
+        {/* Upcoming Games Section */}
+        {/* <UpcomingGamesSection /> */}
 
-      {/* Category Grid Row 1 */}
-      {/* <CategoryGridRow1 /> */}
+        {/* Category Grid Row 1 */}
+        {/* <CategoryGridRow1 /> */}
 
-      {/* Popular Sellers Section */}
-      {/* <PopularSellersSection /> */}
+        {/* Popular Sellers Section */}
+        {/* <PopularSellersSection /> */}
 
-      {/* Category Grid Row 2 */}
-      {/* <CategoryGridRow2 /> */}
+        {/* Category Grid Row 2 */}
+        {/* <CategoryGridRow2 /> */}
 
-      {/* Category Carousel (Mobile) */}
-      {/* <CategoryCarousel /> */}
+        {/* Category Carousel (Mobile) */}
+        {/* <CategoryCarousel /> */}
 
-      {/* New on Difmark */}
-      {/* <GamesSection title="NEW ON DIFMARK" /> */}
+        {/* New on Difmark */}
+        {/* <GamesSection title="NEW ON DIFMARK" /> */}
 
-      {/* Promo Banner */}
-      {/* <PromoBanner /> */}
+        {/* Promo Banner */}
+        {/* <PromoBanner /> */}
 
-      {/* Weekly Chart */}
-      {/* <GamesSection title="WEEKLY CHART" /> */}
+        {/* Weekly Chart */}
+        {/* <GamesSection title="WEEKLY CHART" /> */}
 
-      {/* Flash Sale Section */}
-      {/* <FlashSaleSection /> */}
+        {/* Flash Sale Section */}
+        {/* <FlashSaleSection /> */}
 
-      {/* Under $100 */}
-      {/* <GamesSection title="UNDER $100" /> */}
+        {/* Under $100 */}
+        {/* <GamesSection title="UNDER $100" /> */}
 
-      {/* Platforms Section */}
-      {/* <PlatformsSection /> */}
+        {/* Platforms Section */}
+        {/* <PlatformsSection /> */}
 
-      {/* Latest News Section */}
-      {/* <LatestNewsSection /> */}
-    </main>
+        {/* Latest News Section */}
+        {/* <LatestNewsSection /> */}
+      </main>
+    </>
   );
 }

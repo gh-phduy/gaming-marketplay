@@ -69,7 +69,7 @@ export default async function BuyCheapPage({
   return (
     <main
       id="main-content"
-      className="flex w-full max-w-[1590px] flex-col items-center gap-y-8"
+      className="flex w-full max-w-[1590px] flex-col items-center gap-y-6 px-3 sm:gap-y-8 sm:px-5 md:px-6 lg:px-8"
     >
       <ScrollToTop />
       <Breadcrumbs />
@@ -81,7 +81,7 @@ export default async function BuyCheapPage({
         </div>
       ) : (
         <>
-          <h1 className="text-[32px] font-semibold uppercase">
+          <h1 className="text-center text-xl font-semibold uppercase sm:text-2xl md:text-[28px] lg:text-[32px]">
             {productData.data.name}
           </h1>
           <ProductOverview data={productData} />

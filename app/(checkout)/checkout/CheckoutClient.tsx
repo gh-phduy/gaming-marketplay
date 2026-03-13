@@ -20,10 +20,6 @@ import CheckoutForm from "@/app/components/checkout/CheckoutForm";
 import { ProductApiResponse } from "@/app/types/product";
 import { useCart } from "@/app/context/CartContext";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
-
 export default function CheckoutClient() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
@@ -35,6 +31,14 @@ export default function CheckoutClient() {
     null,
   );
   const [isLoading, setIsLoading] = useState(true);
+
+  const stripePromise = useMemo(() => {
+    if (!clientSecret || !process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      return null;
+    }
+
+    return loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+  }, [clientSecret]);
 
   const cartTotal = useMemo(
     () =>
@@ -153,11 +157,19 @@ export default function CheckoutClient() {
 
         {/* Payment Methods List */}
         <div className="space-y-3">
-          {clientSecret && (
+          {clientSecret && stripePromise && (
             <Elements
               options={{
                 clientSecret,
-                appearance: { theme: "night", labels: "floating" },
+                appearance: {
+                  theme: "night",
+                  labels: "floating",
+                  variables: {
+                    fontFamily:
+                      "system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif",
+                  },
+                },
+                fonts: [],
               }}
               stripe={stripePromise}
             >

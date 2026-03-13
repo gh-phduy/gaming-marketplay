@@ -1,8 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAuth } from "@/app/context/AuthContext";
-import SignIn from "@/app/components/auth/SignIn";
-import UserMenu from "@/app/components/auth/UserMenu";
+
+const SignIn = dynamic(() => import("@/app/components/auth/SignIn"));
+const UserMenu = dynamic(() => import("@/app/components/auth/UserMenu"));
 
 export default function SignInButton() {
   const { user, isLoading } = useAuth();

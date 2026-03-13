@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { PiShoppingCartBold } from "react-icons/pi";
-import { FaMinus, FaPlus } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
+import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +29,7 @@ export default function CartButton() {
         className="relative cursor-pointer text-dm-text-secondary transition-all duration-300 hover:text-dm-text-primary"
         aria-label="Shopping cart"
       >
-        <PiShoppingCartBold size={24} aria-hidden="true" />
+        <ShoppingCart size={24} aria-hidden="true" />
         {cartCount > 0 && (
           <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] leading-none font-semibold text-white">
             {cartCount > 99 ? "99+" : cartCount}
@@ -53,7 +51,7 @@ export default function CartButton() {
             onClick={() => setIsOpen(false)}
             aria-label="Close cart popover"
           >
-            <MdClose className="h-7 w-7" />
+            <X className="h-7 w-7" />
           </button>
         </div>
 
@@ -94,7 +92,7 @@ export default function CartButton() {
                       aria-label={`Remove ${item.name} from cart`}
                       onClick={() => removeItem(item.id)}
                     >
-                      <MdClose className="h-5 w-5" />
+                      <X className="h-5 w-5" />
                     </button>
                   </div>
 
@@ -110,7 +108,7 @@ export default function CartButton() {
                         aria-label={`Decrease quantity for ${item.name}`}
                         onClick={() => decrementItem(item.id)}
                       >
-                        <FaMinus className="h-3 w-3" />
+                        <Minus className="h-3 w-3" />
                       </button>
                       <span className="w-10 text-center text-xl text-dm-text-primary">
                         {item.quantity}
@@ -121,7 +119,7 @@ export default function CartButton() {
                         aria-label={`Increase quantity for ${item.name}`}
                         onClick={() => incrementItem(item.id)}
                       >
-                        <FaPlus className="h-3 w-3" />
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
                   </div>

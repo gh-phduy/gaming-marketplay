@@ -38,8 +38,8 @@ export default function PurchaseCard({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   return (
-    <Card className="w-[780px] border-none bg-[#2a3441]/80 backdrop-blur-md">
-      <CardContent className="flex flex-col gap-5 p-6">
+    <Card className="w-full border-none bg-[#2a3441]/80 backdrop-blur-md lg:max-w-[780px]">
+      <CardContent className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6">
         {/* Seller Info Section */}
         <div className="flex items-start justify-between">
           <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -216,38 +216,52 @@ export default function PurchaseCard({
         </div>
 
         {/* Product Details Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           {/* Left Column */}
           <div className="flex flex-col gap-3">
             {/* Product Type */}
-            <div className="flex items-center gap-3">
-              <FaKey className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-400">Product type:</span>
-              <span className="font-medium text-white">{product.type}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <FaKey className="h-4 w-4 shrink-0 text-gray-400" />
+              <span className="text-xs text-gray-400 sm:text-sm">
+                Product type:
+              </span>
+              <span className="text-sm font-medium text-white sm:text-base">
+                {product.type}
+              </span>
             </div>
 
             {/* Platform */}
-            <div className="flex items-center gap-3">
-              <FaGamepad className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-400">Platform:</span>
-              <span className="font-medium text-white">{product.platform}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <FaGamepad className="h-4 w-4 shrink-0 text-gray-400" />
+              <span className="text-xs text-gray-400 sm:text-sm">
+                Platform:
+              </span>
+              <span className="text-sm font-medium text-white sm:text-base">
+                {product.platform}
+              </span>
             </div>
           </div>
 
           {/* Right Column */}
           <div className="flex flex-col gap-3">
             {/* Edition */}
-            <div className="flex items-center gap-3">
-              <MdPerson className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-400">Edition:</span>
-              <span className="font-medium text-white">{product.edition}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <MdPerson className="h-4 w-4 shrink-0 text-gray-400" />
+              <span className="text-xs text-gray-400 sm:text-sm">Edition:</span>
+              <span className="text-sm font-medium text-white sm:text-base">
+                {product.edition}
+              </span>
             </div>
 
             {/* Delivery */}
-            <div className="flex items-center gap-3">
-              <FaTruck className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-400">Delivery:</span>
-              <span className="font-medium text-white">{product.delivery}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <FaTruck className="h-4 w-4 shrink-0 text-gray-400" />
+              <span className="text-xs text-gray-400 sm:text-sm">
+                Delivery:
+              </span>
+              <span className="text-sm font-medium text-white sm:text-base">
+                {product.delivery}
+              </span>
             </div>
           </div>
         </div>
@@ -278,42 +292,43 @@ export default function PurchaseCard({
         </div>
 
         {/* Price Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-gray-400">Total amount:</span>
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-white">
+            <span className="text-2xl font-bold text-white sm:text-3xl">
               {product.currency} {product.price.toFixed(2)}
             </span>
             {/* Payment Options */}
             <div className="flex items-center gap-2">
               <Badge
                 variant="secondary"
-                className="rounded-full bg-white px-3 py-1.5 text-black"
+                className="rounded-full bg-white px-2 py-1 text-black sm:px-3 sm:py-1.5"
               >
                 <FcGoogle size={16} />
-                <span className="text-sm font-medium">Pay</span>
+                <span className="text-xs font-medium sm:text-sm">Pay</span>
               </Badge>
               <Badge
                 variant="secondary"
                 className="rounded-full bg-white text-black"
               >
-                <FaApplePay size={32} />
+                <FaApplePay size={28} className="sm:hidden" />
+                <FaApplePay size={32} className="hidden sm:block" />
               </Badge>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button
-            className="flex-1 bg-[#3d4b5c] font-semibold text-white hover:bg-[#4a5866]"
+            className="flex-1 bg-[#3d4b5c] text-sm font-semibold text-white hover:bg-[#4a5866] sm:text-base"
             onClick={onAddToCart}
           >
             <FaShoppingCart className="mr-2 h-4 w-4" />
             ADD TO CART
           </Button>
           <Button
-            className="flex-1 cursor-pointer bg-[#4ade80] font-semibold text-white hover:bg-[#3bc66d]"
+            className="flex-1 cursor-pointer bg-[#4ade80] text-sm font-semibold text-white hover:bg-[#3bc66d] sm:text-base"
             onClick={onCheckout}
           >
             GO TO CHECKOUT

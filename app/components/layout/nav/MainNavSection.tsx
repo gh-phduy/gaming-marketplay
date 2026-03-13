@@ -1,19 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiChevronRight } from "react-icons/fi";
-import { FaTag } from "react-icons/fa";
-import CategoriesDropdown from "./CategoriesDropdown";
+import { Bell, ChevronRight, MessageCircle, Tag } from "lucide-react";
 import NavSearch from "./NavSearch";
 import SearchButton from "./SearchButton";
-import CartButton from "./CartButton";
-import SignInButton from "./SignInButton";
 import { Separator } from "@base-ui/react";
-import { FaRegBell } from "react-icons/fa";
-import { BiChat } from "react-icons/bi";
 import { useAuth } from "@/app/context/AuthContext";
+
+const CategoriesDropdown = dynamic(() => import("./CategoriesDropdown"));
+const CartButton = dynamic(() => import("./CartButton"));
+const SignInButton = dynamic(() => import("./SignInButton"));
 
 interface ListingProduct {
   id: number;
@@ -33,23 +32,28 @@ export default function MainNavSection() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [hasLoadedProducts, setHasLoadedProducts] = useState(false);
   const [products, setProducts] = useState<ListingProduct[]>([]);
 
-  useEffect(() => {
-    const fetchListingProducts = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/listing-products`);
-        if (!response.ok) return;
+  const loadListingProducts = async () => {
+    if (hasLoadedProducts) return;
 
-        const data = await response.json();
-        setProducts(Array.isArray(data.products) ? data.products : []);
-      } catch {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/listing-products`);
+      if (!response.ok) {
         setProducts([]);
+        setHasLoadedProducts(true);
+        return;
       }
-    };
 
-    fetchListingProducts();
-  }, []);
+      const data = await response.json();
+      setProducts(Array.isArray(data.products) ? data.products : []);
+    } catch {
+      setProducts([]);
+    } finally {
+      setHasLoadedProducts(true);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -94,6 +98,7 @@ export default function MainNavSection() {
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
+    void loadListingProducts();
   };
 
   const handleSearchBlur = () => {
@@ -107,6 +112,10 @@ export default function MainNavSection() {
   };
 
   const handleSearchSubmit = () => {
+    if (!hasLoadedProducts) {
+      void loadListingProducts();
+    }
+
     if (!normalizedQuery) return;
 
     const firstMatch = suggestedProducts[0];
@@ -192,7 +201,7 @@ export default function MainNavSection() {
 
                           <div className="flex h-full w-[132px] shrink-0 flex-col items-center justify-center gap-1 bg-[#465166] px-3">
                             <div className="flex items-center gap-1 text-sm text-gray-300">
-                              <FaTag className="h-3 w-3" />
+                              <Tag className="h-3 w-3" />
                               <span>from</span>
                             </div>
                             <p className="text-4xl leading-none font-semibold text-white">
@@ -225,7 +234,7 @@ export default function MainNavSection() {
                     }}
                   >
                     View All
-                    <FiChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -238,8 +247,8 @@ export default function MainNavSection() {
         <div className="hidden items-center 990:flex 990:gap-6">
           {user && (
             <>
-              <FaRegBell size={24} className="text-steel-500" />
-              <BiChat size={24} className="text-steel-500" />
+              <Bell size={24} className="text-steel-500" />
+              <MessageCircle size={24} className="text-steel-500" />
             </>
           )}
           <CartButton />

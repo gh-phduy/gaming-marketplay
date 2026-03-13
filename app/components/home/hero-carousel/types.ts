@@ -1,5 +1,3 @@
-import type { CarouselApi } from "@/components/ui/carousel";
-
 /** Supported tabs in the hero module. */
 export type HeroTab = "digital" | "topup";
 
@@ -10,8 +8,5 @@ export type HeroTabContent = {
 };
 
 export type HeroSlidesProps = {
-  setApi: (api: CarouselApi) => void;
-  current: number;
-  onIndicatorClick: (index: number) => void;
   activeTab: HeroTab;
 };

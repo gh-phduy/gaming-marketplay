@@ -12,7 +12,7 @@ import {
 
 export default function Loading() {
   return (
-    <main className="flex w-full max-w-[1590px] flex-col items-center gap-y-8 pt-40">
+    <main className="flex w-full max-w-[1590px] flex-col items-center gap-y-6 px-3 pt-28 sm:gap-y-8 sm:px-5 sm:pt-32 md:px-6 md:pt-40 lg:px-8">
       {/* Breadcrumbs Skeleton */}
       <div className="flex w-full gap-2">
         <Skeleton className="h-4 w-16" />

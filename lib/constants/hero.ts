@@ -52,11 +52,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     image: "/hero-slide-4.webp",
     alt: "Hero 4",
   },
-  {
-    id: "hero-slide-5",
-    image: "/hero-slide-5.webp",
-    alt: "Hero 5",
-  },
 ];
 
 // Side banners configuration

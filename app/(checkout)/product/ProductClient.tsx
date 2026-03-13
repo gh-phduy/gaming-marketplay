@@ -10,6 +10,7 @@ import {
   X,
   ShoppingCart,
   Bell,
+  SlidersHorizontal,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import ProductSidebar from "@/app/components/product/ProductSidebar";
 import ProductGridItem from "@/app/components/product/ProductGridItem";
@@ -171,25 +179,28 @@ export default function ProductClient() {
   }, [currentPage, filteredProducts]);
 
   return (
-    <div className="flex min-h-screen w-full justify-between bg-[#0d1117] font-sans text-white">
-      {/* We assume NavBar is in layout, but based on screenshot there's a specific header look */}
-      <div className="flex flex-col lg:flex-row">
-        {/* Sidebar */}
+    <div className="flex min-h-screen w-full bg-[#0d1117] font-sans text-white">
+      {/* Desktop Sidebar — hidden below lg */}
+      <aside className="hidden lg:block">
         <ProductSidebar />
-      </div>
+      </aside>
+
       {/* Main Content Area */}
-      <div className="w-full space-y-8 bg-midnight-850 px-4 py-6">
+      <div className="w-full min-w-0 space-y-6 bg-midnight-850 px-3 py-4 sm:space-y-8 sm:px-5 sm:py-6 md:px-6 lg:px-8 xl:px-10">
         {/* Breadcrumb */}
-        <div className="mb-4 flex items-center gap-2 text-steel-500">
+        <div className="mb-2 flex items-center gap-2 text-sm text-steel-500 sm:mb-4 sm:text-base">
           <IoMdHome size={18} />
           <FaChevronRight size={12} />
           <span className="font-medium">Products</span>
         </div>
 
-        <h1 className="mb-6 text-3xl font-bold">Products</h1>
+        <h1 className="mb-4 text-2xl font-bold sm:mb-6 sm:text-3xl">
+          Products
+        </h1>
 
         {/* Top Controls */}
-        <div className="mb-6 flex flex-col gap-4 md:flex-row">
+        <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:gap-4 md:flex-row">
+          {/* Search */}
           <div className="relative flex-1">
             <IoSearch
               size={24}
@@ -197,7 +208,7 @@ export default function ProductClient() {
             />
             <Input
               placeholder="Search by Product name"
-              className="h-11 bg-midnight-750 pl-10 text-gray-300"
+              className="h-10 bg-midnight-750 pl-10 text-sm text-gray-300 sm:h-11 sm:text-base"
               value={searchTerm}
               onChange={(event) => {
                 setSearchTerm(event.target.value);
@@ -218,10 +229,33 @@ export default function ProductClient() {
               </button>
             )}
           </div>
-          <div className="flex gap-2">
+
+          {/* Sort / View / Filter toggle */}
+          <div className="flex items-center gap-2">
+            {/* Mobile filter toggle */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:h-11 lg:hidden"
+                >
+                  <SlidersHorizontal className="mr-2 h-5 w-5" /> Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[280px] overflow-y-auto border-[#30363d] bg-midnight-700 p-0 sm:w-[320px]"
+              >
+                <SheetHeader className="px-4 pt-4">
+                  <SheetTitle className="text-white">Filters</SheetTitle>
+                </SheetHeader>
+                <ProductSidebar />
+              </SheetContent>
+            </Sheet>
+
             <Select defaultValue="Most popular">
               <SelectTrigger
-                className="h-11 w-[200px] bg-midnight-750 text-base text-white"
+                className="h-10 w-[140px] bg-midnight-750 text-sm text-white sm:h-11 sm:w-[200px] sm:text-base"
                 size="default"
               >
                 <BsSortDown size={18} />
@@ -240,18 +274,19 @@ export default function ProductClient() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+
             <Button
               variant="outline"
-              className="h-11 border-[#30363d] bg-midnight-700 px-3 text-steel-300"
+              className="hidden h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:inline-flex sm:h-11"
             >
-              <List className="mr-2 h-6 w-6" /> List
+              <List className="mr-2 h-5 w-5 sm:h-6 sm:w-6" /> List
             </Button>
           </div>
         </div>
 
         {/* Filters Tag List */}
-        <div className="mb-6 flex gap-4 text-base">
-          <div className="flex-1">
+        <div className="mb-4 flex gap-3 text-sm sm:mb-6 sm:gap-4 sm:text-base">
+          <div className="min-w-0 flex-1">
             <div
               ref={filtersRef}
               className={cn(
@@ -267,8 +302,8 @@ export default function ProductClient() {
                 Chosen filters :
               </span>
               {searchTerm.trim() && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-sm font-medium text-steel-300">
-                  "{searchTerm.trim()}"
+                <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm">
+                  &ldquo;{searchTerm.trim()}&rdquo;
                   <IoCloseSharp
                     className="cursor-pointer hover:text-white"
                     onClick={() => {
@@ -281,7 +316,7 @@ export default function ProductClient() {
               {CHOSEN_FILTERS.map((filter) => (
                 <span
                   key={filter.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-sm font-medium text-steel-300"
+                  className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm"
                 >
                   {filter.label}
                   <IoCloseSharp className="cursor-pointer hover:text-white" />
@@ -296,34 +331,35 @@ export default function ProductClient() {
                 setSearchTerm("");
                 setCurrentPage(1);
               }}
-              className="flex items-center gap-1 whitespace-nowrap text-gray-400 hover:text-white"
+              className="flex items-center gap-1 text-xs whitespace-nowrap text-gray-400 hover:text-white sm:text-sm"
             >
-              Clear all <X className="h-4 w-4" />
+              Clear all <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
             {isOverflowing && (
               <button
                 onClick={() => setShowAllFilters(!showAllFilters)}
-                className="text-sm whitespace-nowrap text-forest-500 transition-colors hover:text-forest-100"
+                className="text-xs whitespace-nowrap text-forest-500 transition-colors hover:text-forest-100 sm:text-sm"
               >
                 {showAllFilters ? "Show less ▲" : "Show more ▼"}
               </button>
             )}
           </div>
         </div>
+
         {/* Product Grid */}
         <div className="flex-1">
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {[...Array(8)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-[250px] animate-pulse rounded-lg bg-midnight-750"
+                  className="aspect-video animate-pulse rounded-lg bg-midnight-750 sm:aspect-auto sm:h-[250px]"
                 />
               ))}
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-400">
+              <div className="mb-3 text-xs text-gray-400 sm:mb-4 sm:text-sm">
                 Showing{" "}
                 {filteredProducts.length === 0
                   ? 0
@@ -336,7 +372,7 @@ export default function ProductClient() {
                 of {filteredProducts.length} products ($
                 {priceRange.min.toFixed(2)} - ${priceRange.max.toFixed(2)})
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {paginatedProducts.map((product) => (
                   <ProductGridItem
                     key={product.id}

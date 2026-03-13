@@ -42,13 +42,14 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
 
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true — disabled: critters doesn't work with React 19 data-precedence stylesheets
+    // (confirmed: no critical CSS is being inlined despite the flag being active)
 
     // Enable optimized package imports to reduce barrel-file bundle bloat
     optimizePackageImports: [
       "react-icons",
       "lucide-react",
-      "framer-motion",
+      "motion",
       "gsap",
       "@radix-ui/react-dialog",
       "@radix-ui/react-select",

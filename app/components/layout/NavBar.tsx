@@ -1,19 +1,25 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { useScrollPosition } from "@/lib/hooks";
+import { useEffect, useState } from "react";
 import { ROUTES } from "@/lib/constants";
-import CheckoutNavSection from "./nav/CheckoutNavSection";
-import MainNavSection from "./nav/MainNavSection";
 
-/* ============================================
-   CONSTANTS
-   ============================================ */
+function NavSectionFallback() {
+  return <div className="hidden h-10 flex-1 770:block" aria-hidden="true" />;
+}
 
-/** Scroll threshold to trigger navbar background change */
-const SCROLL_THRESHOLD = 100;
+const CheckoutNavSection = dynamic(() => import("./nav/CheckoutNavSection"), {
+  ssr: false,
+  loading: NavSectionFallback,
+});
+
+const MainNavSection = dynamic(() => import("./nav/MainNavSection"), {
+  ssr: false,
+  loading: NavSectionFallback,
+});
 
 /* ============================================
    MAIN COMPONENT 
@@ -34,9 +40,33 @@ const SCROLL_THRESHOLD = 100;
  */
 export default function NavBar() {
   const pathname = usePathname();
-  const { isScrolled } = useScrollPosition(SCROLL_THRESHOLD);
+  const [isNavInteractive, setIsNavInteractive] = useState(false);
   const isCheckoutPage = pathname?.startsWith("/checkout");
   const isProductPage = pathname?.startsWith("/product");
+
+  useEffect(() => {
+    let idleCallbackId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    const enableInteractivity = () => setIsNavInteractive(true);
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleCallbackId = window.requestIdleCallback(enableInteractivity, {
+        timeout: 2000,
+      });
+    } else {
+      timeoutId = globalThis.setTimeout(enableInteractivity, 1200);
+    }
+
+    return () => {
+      if (idleCallbackId !== undefined && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (timeoutId !== undefined) {
+        globalThis.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
 
   return (
     <nav
@@ -46,7 +76,7 @@ export default function NavBar() {
     >
       {/* Main Container */}
       <div
-        className={`flex w-full translate-y-0 justify-center gap-x-3 bg-brand/80 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out`}
+        className={`flex w-full translate-y-0 justify-center gap-x-3 bg-brand/80 shadow-2xl backdrop-blur-xl transition-all duration-700 ease-out`}
       >
         <div
           className={`800:px-4, flex h-10 w-full items-center justify-between gap-x-6 py-10 770:justify-center ${isProductPage ? "px-12" : "responsive-nav px-8"}`}
@@ -63,7 +93,15 @@ export default function NavBar() {
             />
           </Link>
 
-          {isCheckoutPage ? <CheckoutNavSection /> : <MainNavSection />}
+          {isNavInteractive ? (
+            isCheckoutPage ? (
+              <CheckoutNavSection />
+            ) : (
+              <MainNavSection />
+            )
+          ) : (
+            <NavSectionFallback />
+          )}
         </div>
       </div>
     </nav>

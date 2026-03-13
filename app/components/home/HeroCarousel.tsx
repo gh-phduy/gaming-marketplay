@@ -1,42 +1,25 @@
-"use client";
-
-import { useCallback, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { CarouselApi } from "@/components/ui/carousel";
 import {
   HERO_GRID_COLUMNS_WITH_SIDE_BANNER,
-  HeroCategoryTiles,
-  HeroSideBanners,
-  HeroSlides,
-  HeroTabs,
-  getHeroActiveTab,
   HERO_TAB_CONTENT,
-  useHeroCarouselSelection,
-} from "./hero-carousel";
-import type { HeroTab } from "./hero-carousel";
+} from "./hero-carousel/config";
+import { HeroCategoryTiles } from "./hero-carousel/HeroCategoryTiles";
+import { HeroSideBanners } from "./hero-carousel/HeroSideBanners";
+import { HeroSlides } from "./hero-carousel/HeroSlides";
+import { HeroTabs } from "./hero-carousel/HeroTabs";
+import type { HeroTab } from "./hero-carousel/types";
 
-export function HeroCarousel() {
-  const [api, setApi] = useState<CarouselApi>();
-  const { current, scrollTo } = useHeroCarouselSelection(api);
+interface HeroCarouselProps {
+  activeTab: HeroTab;
+}
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const activeTab = getHeroActiveTab(pathname);
-
-  const handleTabChange = useCallback(
-    (tab: HeroTab) => {
-      router.push(tab === "topup" ? "/direct-top-up" : "/", { scroll: false });
-    },
-    [router],
-  );
-
+export function HeroCarousel({ activeTab }: HeroCarouselProps) {
   const tabContent = HERO_TAB_CONTENT[activeTab];
   const gridColumnsClass = `grid-cols-1 ${HERO_GRID_COLUMNS_WITH_SIDE_BANNER}`;
   const mediaRowHeightClass =
     activeTab === "digital"
-      ? "h-[236px] min-[500px]:h-[270px] 1200:h-[310px] 1640:h-[371px] 1920:h-[451px]"
-      : "h-[148px] min-[500px]:h-[164px] 1640:h-[225px] 1920:h-[274px]";
+      ? "h-auto min-[700px]:h-[270px] 1200:h-[310px] 1640:h-[371px] 1920:h-[451px]"
+      : "h-auto min-[700px]:h-[164px] 1200:h-[206px] 1640:h-[225px] 1920:h-[274px]";
 
   return (
     <div className="relative flex w-full justify-center py-8">
@@ -44,15 +27,16 @@ export function HeroCarousel() {
         src="/bg-hero-carousel.jpg"
         alt=""
         fill
-        priority
+        fetchPriority="low"
+        loading="eager"
         className="object-cover object-center"
         aria-hidden="true"
       />
       <div className="relative z-10">
         <div className="mx-auto w-full">
-          <HeroTabs activeTab={activeTab} onTabChange={handleTabChange} />
+          <HeroTabs activeTab={activeTab} />
 
-          <div className="mb-6 text-center">
+          <div className="mb-6 px-4 text-center">
             <h1 className="mb-3 text-3xl font-bold tracking-wide text-white uppercase md:text-4xl">
               {tabContent.title}
             </h1>
@@ -66,12 +50,7 @@ export function HeroCarousel() {
             <div
               className={`mb-4 grid gap-4 overflow-hidden rounded-3xl transition-[height] duration-300 ease-linear lg:justify-center ${gridColumnsClass} ${mediaRowHeightClass}`}
             >
-              <HeroSlides
-                setApi={setApi}
-                current={current}
-                onIndicatorClick={scrollTo}
-                activeTab={activeTab}
-              />
+              <HeroSlides activeTab={activeTab} />
               <div className="hidden h-full 1100:block">
                 <HeroSideBanners activeTab={activeTab} />
               </div>
