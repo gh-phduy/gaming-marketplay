@@ -38,7 +38,7 @@ export function StackedImages({
               src={src}
               alt={`${title} hero ${idx + 1}`}
               fill
-              className="object-contain object-right"
+              className="object-contain object-right-bottom"
               sizes={sizes}
             />
           </div>

@@ -39,7 +39,7 @@ const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
     topup: {
       gridClassName: "grid grid-cols-1 gap-4 1100:grid-cols-3",
       cardClassName:
-        "group relative h-[134px] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01]",
+        "group relative h-[134px] w-full overflow-hidden rounded-2xl ring-1 ring-inset ring-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01]",
       imageSizes: "520px",
       stackedSizes: "300px",
       contentClassName:
@@ -47,13 +47,13 @@ const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
       iconWrapperClassName:
         "flex h-8 w-8 items-center justify-center rounded-md bg-white/20 ring-1 ring-white/30 backdrop-blur-md",
       titleClassName:
-        "max-w-[62%] text-xs leading-tight font-bold tracking-wide text-white uppercase drop-shadow-lg",
+        "max-w-[62%] text-[9px] min-[700px]:text-[12px] leading-tight font-bold tracking-wide text-white uppercase drop-shadow-lg",
     },
     digital: {
       gridClassName:
         "grid grid-cols-4 gap-2 min-[500px]:grid-cols-2 min-[500px]:gap-4 lg:grid-cols-4",
       cardClassName:
-        "group relative h-[86px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01] min-[500px]:h-[108px] md:h-[120px]",
+        "group relative h-[86px] overflow-hidden rounded-2xl ring-1 ring-inset ring-white/10 bg-slate-900/40 shadow-lg backdrop-blur-sm transition-transform hover:scale-[1.01] min-[500px]:h-[108px] md:h-[120px]",
       imageSizes: "(max-width: 499px) 25vw, (max-width: 1024px) 50vw, 25vw",
       stackedSizes: "(max-width: 1024px) 26vw, 14vw",
       contentClassName:
@@ -61,7 +61,7 @@ const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
       iconWrapperClassName:
         "flex h-7 w-7 items-center justify-center rounded-md bg-white/20 ring-1 ring-white/30 backdrop-blur-md md:h-8 md:w-8",
       titleClassName:
-        "max-w-[62%] text-[11px] leading-tight font-bold tracking-wide text-white uppercase drop-shadow-lg md:text-xs",
+        "max-w-[62%] text-[9px] 600:text-[11px] leading-tight font-bold tracking-wide text-white uppercase drop-shadow-lg md:text-xs",
     },
   };
 
