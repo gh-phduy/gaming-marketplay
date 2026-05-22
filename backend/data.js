@@ -501,6 +501,345 @@ const EXTRA_PLATFORM_LABELS = {
   nintendo: "Nintendo eShop",
 };
 
+function normalizeFilterId(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+const PRODUCT_TYPE_LABELS = {
+  "game-keys": "Game Keys",
+  "console-games": "Console Games",
+  "pc-games": "PC Games",
+  mobile: "Mobile",
+  "game-currency": "Game Currency",
+  "game-accounts": "Game Accounts",
+  "game-items": "Game Items",
+  "power-leveling": "Power Leveling",
+  software: "Software",
+  "gift-cards": "Gift Cards",
+  "game-cards": "Game Cards",
+};
+const ROUTE_PRODUCT_TYPE_IDS = new Set(Object.keys(PRODUCT_TYPE_LABELS));
+
+const PRODUCT_TYPE_SALE_KIND = {
+  "game-keys": "Product key",
+  "console-games": "Product key",
+  "pc-games": "Product key",
+  mobile: "Mobile product",
+  "game-currency": "Game currency",
+  "game-accounts": "Game account",
+  "game-items": "Game item",
+  "power-leveling": "Power leveling",
+  software: "Software license",
+  "gift-cards": "Gift card",
+  "game-cards": "Game card",
+};
+
+const MOCK_IMAGES = [
+  "/popular-game/arc-raiders-pc.jpg",
+  "/popular-game/battlefield-6-xbox-series.jpg",
+  "/popular-game/call-of-duty-black-ops-7-pc.jpg",
+  "/popular-game/code-vein-ii-pc.png",
+  "/popular-game/high-on-life-2-pc.jpg",
+  "/popular-game/mafia-the-old-country-pc.jpg",
+  "/popular-game/nioh-3-pc.jpg",
+  "/popular-game/reanimal-pc.jpg",
+  "/cyberpunk_2077.jpg",
+  "/battlefield_6.jpg",
+];
+
+const MOCK_SELLERS = [
+  { id: "S1", name: "CodesMarket", avatar: "/avt.jpg" },
+  { id: "S2", name: "GameKeys Pro", avatar: "/spacex.jpg" },
+  { id: "S3", name: "DigitalGames", avatar: "/seller3.jpg" },
+  { id: "S4", name: "VoidKeys", avatar: "/avt.jpg" },
+];
+
+const GAME_KEY_ENTRIES = [
+  ["steam", "Steam", "pc", "Steam"],
+  ["rockstar", "Rockstar", "pc", "Rockstar"],
+  ["dlc", "DLC", "pc", "Steam"],
+  ["gog", "GOG", "pc", "GOG"],
+  ["epic", "Epic Games", "pc", "Epic Games"],
+  ["ea", "Electronic arts", "pc", "Electronic Arts"],
+  ["bethesda", "Bethesda", "pc", "Bethesda"],
+  ["ubisoft", "Ubisoft", "pc", "Ubisoft"],
+  ["battle-net", "Battle.Net", "pc", "Battle.Net"],
+  ["random-keys", "Random Keys", "pc", "Random Keys"],
+  ["upcoming", "Upcoming", "pc", "Steam"],
+  ["microsoft", "Microsoft", "pc", "Microsoft"],
+].map(([id, label, platform, platformLabel]) => ({
+  id,
+  label,
+  platform,
+  platformLabel,
+}));
+
+const PC_GAME_ENTRIES = [
+  ["steam", "Steam", "pc", "Steam"],
+  ["epic", "Epic Games", "pc", "Epic Games"],
+  ["windows-store", "Windows Store", "pc", "Windows Store"],
+  ["ea", "Electronic Arts", "pc", "Electronic Arts"],
+  ["ubisoft", "Ubisoft", "pc", "Ubisoft"],
+  ["battle-net", "Battlenet", "pc", "Battle.Net"],
+].map(([id, label, platform, platformLabel]) => ({
+  id,
+  label,
+  platform,
+  platformLabel,
+}));
+
+const CONSOLE_ENTRIES = [
+  ["playstation", "Sony Playstation", "playstation", "PlayStation Store"],
+  ["nintendo", "Nintendo Switch", "nintendo", "Nintendo eShop"],
+  ["xbox", "Xbox Live", "xbox", "Xbox Live"],
+].map(([id, label, platform, platformLabel]) => ({
+  id,
+  label,
+  platform,
+  platformLabel,
+}));
+
+const MOBILE_ENTRIES = [
+  ["ios", "IOS", "ios", "iOS"],
+  ["android", "Android", "android", "Android"],
+].map(([id, label, platform, platformLabel]) => ({
+  id,
+  label,
+  platform,
+  platformLabel,
+}));
+
+const GAME_GENRE_ENTRIES = [
+  ["shooter", "Shooter"],
+  ["mmorpg", "MMORPG"],
+  ["adventure", "Adventure"],
+  ["simulator", "Simulator"],
+  ["sport", "Sport"],
+  ["action", "Action"],
+  ["rpg", "RPG"],
+  ["fighting", "Fighting"],
+  ["survival-horror", "Survival horror"],
+  ["mmo", "MMO"],
+  ["hack-and-slash", "Hack and Slash"],
+  ["racing", "Racing"],
+  ["strategy", "Strategy"],
+].map(([id, label]) => ({ id, label }));
+
+const SOFTWARE_ENTRIES = [
+  ["microsoft", "Microsoft"],
+  ["performance", "Performance"],
+  ["antivirus", "Antivirus"],
+  ["vpn", "VPN"],
+  ["security", "Security"],
+  ["gaming-video", "Gaming/Video"],
+  ["ashampoo", "Ashampoo"],
+  ["nch-software", "NCH Software"],
+  ["project-softwares", "Project Softwares"],
+  ["website-builder", "Website builder"],
+  ["movavi", "Movavi"],
+  ["snagit", "SnagIt"],
+  ["ai-tools", "AI Tools"],
+  ["apple", "Apple"],
+  ["franzis", "Franzis"],
+  ["finance", "Finance"],
+].map(([id, label]) => ({ id, label, platform: "pc", platformLabel: label }));
+
+const GIFT_CARD_ENTRIES = [
+  ["skinrave", "SkinRave gg"],
+  ["plg-bet", "PLG BET"],
+  ["gamblit", "Gamblit"],
+  ["csgorun", "CSGORUN"],
+  ["knifex", "KNIFEX"],
+  ["youtube", "YouTube"],
+  ["tastydrop", "TastyDrop"],
+  ["discord", "Discord"],
+  ["bets4", "Bets4"],
+  ["tastystrike", "TastyStrike"],
+  ["telegram", "Telegram"],
+  ["steam", "Steam"],
+  ["playstation", "Playstation"],
+  ["xbox-live", "Xbox Live"],
+  ["amazon", "Amazon"],
+  ["daddyskins", "DaddySkins"],
+  ["difmark", "Difmark"],
+  ["spotify", "Spotify"],
+  ["disney", "Disney"],
+  ["paypal", "PayPal"],
+].map(([id, label]) => ({ id, label }));
+
+const GAME_CARD_ENTRIES = [
+  ["roblox", "Roblox"],
+  ["fifa-fut-points", "FIFA FUT Points"],
+  ["pubg-mobile", "PUBG Mobile"],
+  ["imvu", "IMVU"],
+  ["lotro", "Lotro"],
+  ["lol", "LOL"],
+  ["free-fire", "Free Fire"],
+  ["valorant", "Valorant"],
+  ["diablo-iv", "Diablo IV"],
+  ["minecraft", "Minecraft"],
+  ["fc-mobile-points", "FC Mobile Points"],
+  ["mobile-legends", "Mobile Legends"],
+  ["csgo", "CSGO"],
+  ["overwatch-2", "Overwatch 2"],
+  ["ea-sports-college-football", "EA SPORTS College Football Points"],
+  ["candy-crush", "Candy Crush"],
+  ["netdragon-universal", "NetDragon Universal"],
+  ["dead-by-daylight-golden-cells", "Dead by Daylight Golden Cells"],
+  ["lawl-online", "Lawl Online"],
+  ["halo-infinite-halo-credits", "Halo Infinite Halo Credits"],
+].map(([id, label]) => ({ id, label }));
+
+const MARKETPLACE_PRODUCT_GROUPS = [
+  { productType: "game-keys", entries: GAME_KEY_ENTRIES },
+  { productType: "pc-games", entries: PC_GAME_ENTRIES },
+  { productType: "console-games", entries: CONSOLE_ENTRIES },
+  { productType: "mobile", entries: MOBILE_ENTRIES },
+  { productType: "game-currency", entries: GAME_GENRE_ENTRIES },
+  { productType: "game-accounts", entries: GAME_GENRE_ENTRIES },
+  { productType: "game-items", entries: GAME_GENRE_ENTRIES },
+  { productType: "power-leveling", entries: GAME_GENRE_ENTRIES },
+  { productType: "software", entries: SOFTWARE_ENTRIES },
+  { productType: "gift-cards", entries: GIFT_CARD_ENTRIES },
+  { productType: "game-cards", entries: GAME_CARD_ENTRIES },
+];
+
+function createMarketplaceProducts() {
+  let nextId = 1000;
+
+  return MARKETPLACE_PRODUCT_GROUPS.flatMap((group, groupIndex) =>
+    group.entries.map((entry, entryIndex) => {
+      const id = nextId++;
+      const productTypeLabel = PRODUCT_TYPE_LABELS[group.productType];
+      const isGameService = [
+        "game-currency",
+        "game-accounts",
+        "game-items",
+        "power-leveling",
+      ].includes(group.productType);
+      const title = isGameService
+        ? `${entry.label} ${productTypeLabel}`
+        : `${entry.label} ${productTypeLabel} Deal`;
+      const platform = entry.platform ?? (group.productType === "mobile" ? "android" : "pc");
+      const platformLabel =
+        entry.platformLabel ??
+        (group.productType === "console-games" ? entry.label : productTypeLabel);
+
+      return {
+        id,
+        name: title,
+        title,
+        price: Number((2.49 + ((groupIndex * 7 + entryIndex) % 28) * 1.37).toFixed(2)),
+        image: MOCK_IMAGES[(groupIndex + entryIndex) % MOCK_IMAGES.length],
+        images: [MOCK_IMAGES[(groupIndex + entryIndex) % MOCK_IMAGES.length]],
+        platform,
+        platformLabel,
+        type: PRODUCT_TYPE_SALE_KIND[group.productType],
+        productType: group.productType,
+        category: entry.id,
+        genre: isGameService ? entry.id : undefined,
+        edition: entryIndex % 4 === 0 ? "Deluxe" : "Standard",
+        delivery: "Instant",
+        activationRegion: entryIndex % 5 === 0 ? "Europe" : "Global",
+        currency: "$",
+        filters: [group.productType, entry.id],
+        seller: {
+          ...MOCK_SELLERS[(groupIndex + entryIndex) % MOCK_SELLERS.length],
+          isOnline: entryIndex % 2 === 0,
+        },
+      };
+    }),
+  );
+}
+
+function addPlatformFilters(
+  filters,
+  platform,
+  platformLabel,
+  allowRouteTypeInference,
+) {
+  const platforms = Array.isArray(platform) ? platform : [platform];
+
+  platforms.forEach((platformValue) => {
+    const normalizedPlatform = normalizeFilterId(platformValue);
+    if (!normalizedPlatform) return;
+
+    filters.add(normalizedPlatform);
+
+    if (allowRouteTypeInference && normalizedPlatform === "pc") {
+      filters.add("pc-games");
+    }
+    if (
+      allowRouteTypeInference &&
+      ["xbox", "playstation", "nintendo"].includes(normalizedPlatform)
+    ) {
+      filters.add("console-games");
+    }
+    if (
+      allowRouteTypeInference &&
+      ["ios", "android", "mobile"].includes(normalizedPlatform)
+    ) {
+      filters.add("mobile");
+    }
+  });
+
+  const labelId = normalizeFilterId(platformLabel);
+  if (!labelId) return;
+
+  filters.add(labelId);
+
+  const aliases = {
+    steam: ["pc-games"],
+    "epic-games": ["epic", "pc-games"],
+    "electronic-arts": ["ea", "pc-games"],
+    "battle-net": ["battle-net", "battlenet", "pc-games"],
+    "windows-store": ["windows-store", "microsoft", "pc-games"],
+    "xbox-live": ["xbox", "console-games"],
+    "playstation-store": ["playstation", "sony-playstation", "console-games"],
+    "nintendo-eshop": ["nintendo", "nintendo-switch", "console-games"],
+  };
+
+  (aliases[labelId] ?? []).forEach((alias) => {
+    if (allowRouteTypeInference || !ROUTE_PRODUCT_TYPE_IDS.has(alias)) {
+      filters.add(alias);
+    }
+  });
+}
+
+function enrichProduct(product) {
+  const productType = product.productType ?? "game-keys";
+  const filters = new Set((product.filters ?? []).map(normalizeFilterId));
+
+  [
+    productType,
+    product.category,
+    product.genre,
+    product.type,
+    product.edition,
+    product.activationRegion,
+  ].forEach((value) => {
+    const normalized = normalizeFilterId(value);
+    if (normalized) filters.add(normalized);
+  });
+
+  addPlatformFilters(
+    filters,
+    product.platform,
+    product.platformLabel,
+    ["game-keys", "pc-games", "console-games", "mobile"].includes(productType),
+  );
+
+  return {
+    ...product,
+    productType,
+    filters: Array.from(filters).filter(Boolean),
+  };
+}
+
 const EXTRA_PRODUCTS = EXTRA_PRODUCT_TITLES.map((title, index) => {
   const id = BASE_PRODUCTS.length + index + 1;
   const platform = EXTRA_PLATFORMS[index % EXTRA_PLATFORMS.length];
@@ -530,7 +869,12 @@ const EXTRA_PRODUCTS = EXTRA_PRODUCT_TITLES.map((title, index) => {
   };
 });
 
-const ALL_PRODUCTS = [...BASE_PRODUCTS, ...EXTRA_PRODUCTS];
+const CATEGORY_PRODUCTS = createMarketplaceProducts();
+const ALL_PRODUCTS = [
+  ...BASE_PRODUCTS,
+  ...EXTRA_PRODUCTS,
+  ...CATEGORY_PRODUCTS,
+].map(enrichProduct);
 
 // Transform internal data into the exported formats
 export const mockProducts = ALL_PRODUCTS.reduce((acc, product) => {
@@ -546,6 +890,10 @@ export const mockProducts = ALL_PRODUCTS.reduce((acc, product) => {
       price: product.price,
       currency: product.currency,
       images: product.images,
+      productType: product.productType,
+      category: product.category,
+      genre: product.genre,
+      filters: product.filters,
     },
     seller: {
       ...product.seller,
@@ -571,6 +919,12 @@ export const listingProducts = ALL_PRODUCTS.map((product) => ({
   price: product.price,
   image: product.image,
   platform: product.platform,
+  platformLabel: product.platformLabel,
+  type: product.type,
+  productType: product.productType,
+  category: product.category,
+  genre: product.genre,
+  filters: product.filters,
 }));
 
 // Derived from main product list - single source of truth
