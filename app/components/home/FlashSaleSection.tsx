@@ -45,14 +45,10 @@ function DiagonalImage({
 
   // Position classes based on position prop
   const positionClasses = {
-    "left-near":
-      "-translate-x-[100px] 1000:-translate-x-[140px] 1300:-translate-x-[110px] 1440:-translate-x-[80px] left-0",
-    "left-far":
-      "-translate-x-[220px] 1000:-translate-x-[310px] 1300:-translate-x-[350px] left-0",
-    "right-near":
-      "translate-x-[100px] 1000:translate-x-[140px] 1300:translate-x-[110px] right-0",
-    "right-far":
-      "translate-x-[220px] 1000:translate-x-[310px] 1300:translate-x-[350px] right-0",
+    "left-near": "left-0 -translate-x-[18%]",
+    "left-far": "left-0 -translate-x-[62%]",
+    "right-near": "right-0 translate-x-[18%]",
+    "right-far": "right-0 translate-x-[62%]",
   };
 
   const clipPath = isLeft ? CLIP_PATHS.leftImage : CLIP_PATHS.rightImage;
@@ -62,10 +58,10 @@ function DiagonalImage({
 
   return (
     <div
-      className={`absolute 800:block hidden w-[250px] 1000:w-[320px] 1300:w-[450px] 1440:w-[520px] h-full ${positionClasses[position]} top-0 bottom-0`}
+      className={`absolute top-0 bottom-0 hidden h-full w-[clamp(250px,31vw,520px)] 800:block ${isFar ? "z-0" : "z-10"} ${positionClasses[position]}`}
     >
       <div
-        className={`w-full relative h-full ${hasHoverEffect ? "z-50" : ""}`}
+        className="relative h-full w-full"
         style={{ clipPath }}
       >
         {/* Game Image */}
@@ -80,7 +76,7 @@ function DiagonalImage({
             alt={alt}
             fill
             className="object-cover"
-            sizes="(max-width: 1000px) 250px, (max-width: 1300px) 320px, 450px"
+            sizes="(max-width: 800px) 0px, (max-width: 1677px) 31vw, 520px"
           />
         </div>
 
@@ -107,7 +103,7 @@ function DiagonalImage({
 export default function SaleTime() {
   return (
     <section
-      className="w-full 800:px-36 px-0 1000:px-16"
+      className="w-full overflow-hidden px-0"
       aria-label="Flash Sale Countdown"
     >
       <div className="h-[222px] 1000:h-[280px] 1300:h-[380px] 1440:h-[455px] w-full flex items-center justify-center relative bg-surface-base overflow-hidden">

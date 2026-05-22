@@ -10,12 +10,13 @@ export default function WithHeroLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const shouldShowHero = pathname === "/" || pathname === "/direct-top-up";
   const activeTab: HeroTab =
     pathname === "/direct-top-up" ? "topup" : "digital";
 
   return (
     <>
-      <HeroCarousel activeTab={activeTab} />
+      {shouldShowHero ? <HeroCarousel activeTab={activeTab} /> : null}
       {children}
     </>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { CarouselApi } from "@/components/ui/carousel";
 import {
   Carousel,
@@ -78,20 +79,30 @@ export function HeroSlides({ activeTab }: HeroSlidesProps) {
                   )
               : slide.image;
 
+            const slideContent = (
+              <div className="relative h-full w-full">
+                <Image
+                  src={imageSrc}
+                  alt={slide.alt || slide.id}
+                  fill
+                  sizes="(max-width: 699px) 100vw, (max-width: 1199px) 96vw, (min-width: 1920px) 1050px, (min-width: 1640px) 863px, (min-width: 1200px) 760px, 100vw"
+                  className="pointer-events-none object-cover"
+                  priority={index === 0}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+              </div>
+            );
+
             return (
               <CarouselItem key={slide.id} className="h-full">
-                <div className="relative h-full w-full">
-                  <Image
-                    src={imageSrc}
-                    alt={slide.alt || slide.id}
-                    fill
-                    sizes="(max-width: 699px) 100vw, (max-width: 1199px) 96vw, (min-width: 1920px) 1050px, (min-width: 1640px) 863px, (min-width: 1200px) 760px, 100vw"
-                    className="pointer-events-none object-cover"
-                    priority={index === 0}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                </div>
+                {slide.link ? (
+                  <Link href={slide.link} className="block h-full w-full">
+                    {slideContent}
+                  </Link>
+                ) : (
+                  slideContent
+                )}
               </CarouselItem>
             );
           })}

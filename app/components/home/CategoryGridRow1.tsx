@@ -23,6 +23,7 @@ const CATEGORY_CARDS: CategoryCardData[] = [
     bgImage: "/bg-hero1.webp",
     heroImage: "/hero_1.webp",
     gradientColor: "to-blue-500/10",
+    href: "/buy-game-currency",
   },
   {
     id: 2,
@@ -33,6 +34,7 @@ const CATEGORY_CARDS: CategoryCardData[] = [
     bgImage: "/bg-hero2.webp",
     heroImage: "/hero_2.webp",
     gradientColor: "to-purple-500/10",
+    href: "/buy-game-cards",
   },
 ] as const;
 

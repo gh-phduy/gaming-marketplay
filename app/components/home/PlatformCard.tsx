@@ -9,6 +9,7 @@
 
 import { useState, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ============================================
    TYPES
@@ -17,6 +18,8 @@ import Image from "next/image";
 interface PlatformItemProps {
   /** Platform name */
   name?: string;
+  /** Product listing URL with platform filter */
+  href?: string;
   /** Background image */
   bgImage?: string;
   /** Hover overlay image */
@@ -33,6 +36,7 @@ interface PlatformItemProps {
 
 const DEFAULTS = {
   name: "PlayStation 5",
+  href: "/product?platform=playstation",
   bgImage: "/bg-flatform.png",
   hoverImage: "/hover-fp.svg",
   consoleImageDark: "/ps5-hover.webp",
@@ -50,6 +54,7 @@ const DEFAULTS = {
  */
 export default function PlatformItem({
   name = DEFAULTS.name,
+  href = DEFAULTS.href,
   bgImage = DEFAULTS.bgImage,
   hoverImage = DEFAULTS.hoverImage,
   consoleImageDark = DEFAULTS.consoleImageDark,
@@ -66,7 +71,15 @@ export default function PlatformItem({
   }, []);
 
   return (
-    <article className="relative group responsive-platforms-item-bg select-none cursor-pointer">
+    <Link
+      href={href}
+      className="relative group responsive-platforms-item-bg block select-none cursor-pointer focus-visible:ring-2 focus-visible:ring-dm-accent-green/70 focus-visible:outline-none"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleMouseLeave}
+      aria-label={`Browse ${name} products`}
+    >
       {/* Hover overlay */}
       <div
         className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-linear"
@@ -99,8 +112,6 @@ export default function PlatformItem({
       {/* Console image container */}
       <div
         className="responsive-platforms-item-content group-hover:scale-105 group-hover:-translate-y-9 transition-transform duration-1000 absolute left-1/2 -translate-y-10 -translate-x-1/2 z-20"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
         {/* Console image - dark (default) */}
         <Image
@@ -123,6 +134,6 @@ export default function PlatformItem({
           sizes="(max-width: 990px) 155px, (max-width: 1280px) 210px, 290px"
         />
       </div>
-    </article>
+    </Link>
   );
 }

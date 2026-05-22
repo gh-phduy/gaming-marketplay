@@ -150,10 +150,14 @@ export default function AddToCartCard({
               </div>
 
               {/* Add to Cart Button (slides in on hover) */}
-              <div className="absolute inset-0 w-[200px] -translate-x-full transition duration-1000 group-hover:translate-x-0">
+              <div className="absolute inset-0 w-[225px] -translate-x-full transition duration-1000 group-hover:translate-x-0">
                 <button
                   onClick={handleAddToCart}
-                  className="flex h-full w-full items-center justify-center gap-x-3 bg-dm-accent-green px-5 transition-colors hover:bg-dm-accent-green-hover"
+                  className="flex h-full w-full items-center justify-center gap-x-3 bg-dm-accent-green px-5 pr-12 transition-colors hover:bg-dm-accent-green-hover"
+                  style={{
+                    clipPath:
+                      "polygon(0 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 0 100%)",
+                  }}
                   aria-label={`Add ${title} to cart`}
                 >
                   <BsBasket3Fill

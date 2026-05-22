@@ -245,15 +245,19 @@ export default function GameItem({
               {/* Add to Cart Button (slides in on hover) */}
               <div
                 ref={cardHoverRef}
-                className="absolute inset-0 w-[200px]"
+                className="absolute inset-0 w-[225px]"
                 style={{ transform: "translateX(-100%)" }}
               >
                 <button
                   onClick={handleAddToCart}
-                  className="w-full h-full relative bg-dm-accent-green hover:bg-dm-accent-green-hover transition-colors"
+                  className="relative h-full w-full bg-dm-accent-green pr-8 transition-colors hover:bg-dm-accent-green-hover"
+                  style={{
+                    clipPath:
+                      "polygon(0 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 0 100%)",
+                  }}
                   aria-label={`Add ${title} to cart`}
                 >
-                  <div className="absolute inset-0 h-full w-full text-dm-text-primary text-[14px] flex gap-x-3 px-5 font-bold items-center">
+                  <div className="absolute inset-0 flex h-full w-full items-center gap-x-3 px-5 pr-12 text-[14px] font-bold text-dm-text-primary">
                     <BsBasket3Fill aria-hidden="true" />
                     <span>ADD TO CART</span>
                   </div>

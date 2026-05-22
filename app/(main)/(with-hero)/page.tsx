@@ -7,20 +7,22 @@
  */
 
 import PopularGamesSection from "../../components/home/PopularGamesSection";
-// import FeaturesSection from "../../components/home/FeaturesSection";
-// import PromoBanner from "../../components/home/PromoBanner";
-// import UpcomingGamesSection from "../../components/home/UpcomingGamesSection";
-// import CategoryGridRow1 from "../../components/home/CategoryGridRow1";
-// import CategoryGridRow2 from "../../components/home/CategoryGridRow2";
-// import PopularSellersSection from "../../components/home/PopularSellersSection";
-// import CategoryCarousel from "../../components/home/CategoryCarousel";
-// import GamesSection from "../../components/shared/GamesSection";
-// import FlashSaleSection from "../../components/home/FlashSaleSection";
-// import PlatformsSection from "../../components/home/PlatformsSection";
-// import LatestNewsSection from "../../components/home/LatestNewsSection";
+import FeaturesSection from "../../components/home/FeaturesSection";
+import PromoBanner from "../../components/home/PromoBanner";
+import UpcomingGamesSection from "../../components/home/UpcomingGamesSection";
+import CategoryGridRow1 from "../../components/home/CategoryGridRow1";
+import CategoryGridRow2 from "../../components/home/CategoryGridRow2";
+import PopularSellersSection from "../../components/home/PopularSellersSection";
+import CategoryCarousel from "../../components/home/CategoryCarousel";
+import HomeScrollRestoration from "../../components/home/HomeScrollRestoration";
+import GamesSection from "../../components/shared/GamesSection";
+import FlashSaleSection from "../../components/home/FlashSaleSection";
+import PlatformsSection from "../../components/home/PlatformsSection";
+import LatestNewsSection from "../../components/home/LatestNewsSection";
 export default function HomePage() {
   return (
     <>
+      <HomeScrollRestoration />
       <main
         id="main-content"
         className="mt-8 flex w-full flex-col items-center gap-y-16"
@@ -29,43 +31,43 @@ export default function HomePage() {
         <PopularGamesSection />
 
         {/* Features Section */}
-        {/* <FeaturesSection /> */}
+        <FeaturesSection />
 
         {/* Upcoming Games Section */}
-        {/* <UpcomingGamesSection /> */}
+        <UpcomingGamesSection />
 
         {/* Category Grid Row 1 */}
-        {/* <CategoryGridRow1 /> */}
+        <CategoryGridRow1 />
 
         {/* Popular Sellers Section */}
-        {/* <PopularSellersSection /> */}
+        <PopularSellersSection />
 
         {/* Category Grid Row 2 */}
-        {/* <CategoryGridRow2 /> */}
+        <CategoryGridRow2 />
 
         {/* Category Carousel (Mobile) */}
-        {/* <CategoryCarousel /> */}
+        <CategoryCarousel />
 
         {/* New on Difmark */}
-        {/* <GamesSection title="NEW ON DIFMARK" /> */}
+        <GamesSection title="NEW ON DIFMARK" />
 
         {/* Promo Banner */}
-        {/* <PromoBanner /> */}
+        <PromoBanner />
 
         {/* Weekly Chart */}
-        {/* <GamesSection title="WEEKLY CHART" /> */}
+        <GamesSection title="WEEKLY CHART" />
 
         {/* Flash Sale Section */}
-        {/* <FlashSaleSection /> */}
+        <FlashSaleSection />
 
         {/* Under $100 */}
-        {/* <GamesSection title="UNDER $100" /> */}
+        <GamesSection title="UNDER $100" />
 
         {/* Platforms Section */}
-        {/* <PlatformsSection /> */}
+        <PlatformsSection />
 
         {/* Latest News Section */}
-        {/* <LatestNewsSection /> */}
+        <LatestNewsSection />
       </main>
     </>
   );
