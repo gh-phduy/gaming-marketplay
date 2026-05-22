@@ -5,6 +5,7 @@
  */
 
 import Image from "next/image";
+import Link from "next/link";
 import { LuClock3 } from "react-icons/lu";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
@@ -58,15 +59,13 @@ export default function NewsItem({
   views = DEFAULTS.views,
   href,
 }: NewsItemProps) {
-  const CardWrapper = href ? "a" : "article";
+  const cardClassName =
+    "bg-surface-card gap-y-2 flex flex-col w-fit rounded-sm p-5 transition-colors hover:bg-state-hover cursor-pointer focus-visible:ring-2 focus-visible:ring-dm-accent-green/70 focus-visible:outline-none";
 
-  return (
-    <CardWrapper
-      {...(href ? { href } : {})}
-      className="bg-surface-card gap-y-2 flex flex-col w-fit rounded-sm p-5 transition-colors hover:bg-state-hover cursor-pointer"
-    >
+  const cardContent = (
+    <>
       {/* Article Image */}
-      <div className="relative w-[305px] 970:w-[253px] 1200:w-[320px] 1920:w-[335px] 1640:w-[376px] h-[174px] rounded-lg overflow-hidden">
+      <div className="relative h-[174px] w-[305px] overflow-hidden rounded-lg 970:w-[253px] 1200:w-[320px] 1640:w-[376px] 1920:w-[335px]">
         <Image
           src={image}
           alt={title}
@@ -77,28 +76,38 @@ export default function NewsItem({
       </div>
 
       {/* Time Ago */}
-      <div className="flex gap-x-1 items-center text-dm-text-disabled text-[12px]">
+      <div className="flex items-center gap-x-1 text-[12px] text-dm-text-disabled">
         <LuClock3 size={16} aria-hidden="true" />
         <time>{timeAgo}</time>
       </div>
 
       {/* Title */}
-      <h3 className="text-[16px] max-w-[305px] 970:max-w-[253px] 1920:max-w-[335px] 1640:max-w-[376px] 1200:max-w-[320px] text-dm-text-primary font-medium line-clamp-2">
+      <h3 className="line-clamp-2 max-w-[305px] text-[16px] font-medium text-dm-text-primary 970:max-w-[253px] 1200:max-w-[320px] 1640:max-w-[376px] 1920:max-w-[335px]">
         {title}
       </h3>
 
       {/* Excerpt */}
-      <p className="text-dm-text-muted text-[14px] max-w-[305px] 970:max-w-[253px] 1920:max-w-[335px] 1640:max-w-[376px] 1200:max-w-[320px] line-clamp-3">
+      <p className="line-clamp-3 max-w-[305px] text-[14px] text-dm-text-muted 970:max-w-[253px] 1200:max-w-[320px] 1640:max-w-[376px] 1920:max-w-[335px]">
         {excerpt}
       </p>
 
       {/* View Count */}
-      <div className="flex text-dm-text-secondary mt-2 text-[16px] items-center gap-x-1">
+      <div className="mt-2 flex items-center gap-x-1 text-[16px] text-dm-text-secondary">
         <MdOutlineRemoveRedEye size={24} aria-hidden="true" />
         <span aria-label={`${views.toLocaleString()} views`}>
           {views.toLocaleString()}
         </span>
       </div>
-    </CardWrapper>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className={cardClassName}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return <article className={cardClassName}>{cardContent}</article>;
 }
