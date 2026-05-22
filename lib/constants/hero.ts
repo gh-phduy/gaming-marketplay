@@ -3,6 +3,7 @@ export interface HeroSlide {
   id: string;
   image: string;
   alt?: string;
+  link?: string;
 }
 
 export const HERO_SLIDES_DIGITAL: HeroSlide[] = [
@@ -23,11 +24,13 @@ export const HERO_SLIDES_TOPUP: HeroSlide[] = [
     id: "hero-slide-tab-1",
     image: "/hero-slide-tab-1.webp",
     alt: "Direct Top Up Hero 1",
+    link: "/direct-top-up/mobile-games/mobile-legends",
   },
   {
     id: "hero-slide-tab-2",
     image: "/hero-slide-tab-2.webp",
     alt: "Direct Top Up Hero 2",
+    link: "/direct-top-up/mobile-games/pubg-mobile",
   },
 ];
 
@@ -94,7 +97,7 @@ export const HERO_CATEGORIES: HeroCategory[] = [
     icon: "monitor",
     image: "/bg-category-hero-pc.jpg",
     heroImages: ["/category-hero-pc.webp"],
-    link: "/buy-cheap?category=pc-games",
+    link: "/buy-pc-games",
   },
   {
     id: "console-games",
@@ -102,7 +105,7 @@ export const HERO_CATEGORIES: HeroCategory[] = [
     icon: "gamepad-2",
     image: "/bg-category-hero-console.jpg",
     heroImages: ["/category-hero-console.webp"],
-    link: "/buy-cheap?category=console-games",
+    link: "/buy-console-games",
   },
   {
     id: "gift-cards",
@@ -114,7 +117,7 @@ export const HERO_CATEGORIES: HeroCategory[] = [
       "/category-hero-gift2.webp",
       "/category-hero-gift3.webp",
     ],
-    link: "/buy-cheap?category=gift-cards",
+    link: "/buy-gift-cards",
   },
   {
     id: "software",
@@ -125,7 +128,7 @@ export const HERO_CATEGORIES: HeroCategory[] = [
       "/category-hero-software1.webp",
       "/category-hero-software2.webp",
     ],
-    link: "/buy-cheap?category=software",
+    link: "/buy-software",
   },
 ];
 

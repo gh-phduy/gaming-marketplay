@@ -10,8 +10,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
-import { IoKey } from "react-icons/io5";
+import { IoKey, IoPhonePortraitOutline } from "react-icons/io5";
 import { IconType } from "react-icons";
+import {
+  FaBolt,
+  FaGamepad,
+  FaMobileAlt,
+  FaTools,
+  FaWindows,
+} from "react-icons/fa";
+import {
+  MdAccountCircle,
+  MdCardGiftcard,
+  MdComputer,
+  MdInventory2,
+} from "react-icons/md";
 
 /* ============================================
    TYPES
@@ -39,29 +52,79 @@ const CATEGORIES_DATA: Category[] = [
     id: 1,
     title: "Video games",
     items: [
-      { id: 1, name: "Game keys", icon: IoKey, href: "/games/keys" },
-      { id: 2, name: "DLC Packs", icon: IoIosArrowForward, href: "/games/dlc" },
-      { id: 3, name: "Steam Cards", icon: IoIosArrowForward, href: "/games/steam" },
-      { id: 10, name: "Xbox Games", icon: IoIosArrowForward, href: "/games/xbox" },
+      { id: 1, name: "Game Keys", icon: IoKey, href: "/buy-game-keys" },
+      {
+        id: 2,
+        name: "Console Games",
+        icon: FaGamepad,
+        href: "/buy-console-games",
+      },
+      {
+        id: 3,
+        name: "PC Games",
+        icon: MdComputer,
+        href: "/buy-pc-games",
+      },
+      {
+        id: 4,
+        name: "Mobile",
+        icon: IoPhonePortraitOutline,
+        href: "/buy-mobile",
+      },
     ],
   },
   {
     id: 2,
-    title: "Software",
+    title: "Online games",
     items: [
-      { id: 4, name: "Windows Keys", icon: IoIosArrowForward, href: "/software/windows" },
-      { id: 5, name: "Office 365", icon: IoIosArrowForward, href: "/software/office" },
-      { id: 6, name: "Antivirus", icon: IoIosArrowForward, href: "/software/antivirus" },
-      { id: 11, name: "VPN", icon: IoIosArrowForward, href: "/software/vpn" },
+      {
+        id: 5,
+        name: "Game Currency",
+        icon: FaMobileAlt,
+        href: "/buy-game-currency",
+      },
+      {
+        id: 6,
+        name: "Game Accounts",
+        icon: MdAccountCircle,
+        href: "/buy-game-accounts",
+      },
+      {
+        id: 7,
+        name: "Game Items",
+        icon: FaTools,
+        href: "/buy-game-items",
+      },
+      {
+        id: 8,
+        name: "Power Leveling",
+        icon: FaBolt,
+        href: "/buy-power-leveling",
+      },
     ],
   },
   {
     id: 3,
-    title: "Digital Services",
+    title: "Gift Cards and Software",
     items: [
-      { id: 7, name: "VPN Access", icon: IoIosArrowForward, href: "/services/vpn" },
-      { id: 8, name: "Streaming", icon: IoIosArrowForward, href: "/services/streaming" },
-      { id: 9, name: "Cloud Storage", icon: IoIosArrowForward, href: "/services/cloud" },
+      {
+        id: 9,
+        name: "Software",
+        icon: FaWindows,
+        href: "/buy-software",
+      },
+      {
+        id: 10,
+        name: "Gift Cards",
+        icon: MdCardGiftcard,
+        href: "/buy-gift-cards",
+      },
+      {
+        id: 11,
+        name: "Game Cards",
+        icon: MdInventory2,
+        href: "/buy-game-cards",
+      },
     ],
   },
 ] as const;
@@ -81,9 +144,10 @@ function CategoryHeader({ title }: CategoryHeaderProps) {
   return (
     <div
       style={{
-        maskImage: "linear-gradient(to right, black 8%, black 60%, transparent 100%)",
+        maskImage:
+          "linear-gradient(to right, black 8%, black 60%, transparent 100%)",
       }}
-      className="bg-surface-overlay w-fit text-[14px] 990:text-[16px] text-dm-text-muted rounded-sm pl-3 pr-16"
+      className="w-fit rounded-sm bg-surface-overlay pr-16 pl-3 text-[14px] text-dm-text-muted 990:text-[16px]"
     >
       {title}
     </div>
@@ -103,28 +167,28 @@ function ItemCard({ item }: ItemCardProps) {
   return (
     <Link
       href={item.href}
-      className="w-[100px] 990:w-[130px] 1200:w-[170px] relative group text-dm-text-muted duration-1000 origin-center ease-out overflow-hidden h-[65px] 990:h-[75px] 1200:h-[92px] bg-surface-overlay rounded-lg flex flex-col gap-y-1 990:gap-y-2 justify-center items-center hover:bg-state-hover transition-colors cursor-pointer"
+      className="group relative flex h-[65px] w-[100px] origin-center cursor-pointer flex-col items-center justify-center gap-y-1 overflow-hidden rounded-lg bg-surface-overlay text-dm-text-muted transition-colors duration-1000 ease-out hover:bg-state-hover 990:h-[75px] 990:w-[130px] 990:gap-y-2 1200:h-[92px] 1200:w-[170px]"
     >
       {/* Hover background */}
       <Image
         src="/nav-cate-hover1.webp"
         alt=""
         fill
-        className="object-cover origin-center z-10 group-hover:opacity-95 ease-out opacity-0 transition-all duration-1000"
+        className="z-10 origin-center object-cover opacity-0 transition-all duration-1000 ease-out group-hover:opacity-95"
         aria-hidden="true"
       />
 
       {/* Icon container */}
-      <div className="bg-state-active group-hover:bg-state-active/10 transition-colors ease-out duration-1000 shadow-nav-cate relative z-20 h-[32px] w-[32px] 990:h-[38px] 990:w-[38px] 1200:h-[44px] 1200:w-[44px] rounded-lg flex justify-center items-center">
+      <div className="relative z-20 flex h-[32px] w-[32px] items-center justify-center rounded-lg bg-state-active shadow-nav-cate transition-colors duration-1000 ease-out group-hover:bg-state-active/10 990:h-[38px] 990:w-[38px] 1200:h-[44px] 1200:w-[44px]">
         <IconComponent
-          className="group-hover:scale-110 scale-100 transition-transform ease-out duration-1000"
+          className="scale-100 transition-transform duration-1000 ease-out group-hover:scale-110"
           size={16}
           aria-hidden="true"
         />
       </div>
 
       {/* Item name */}
-      <span className="text-[10px] 990:text-xs 1200:text-sm relative z-20">
+      <span className="relative z-20 text-[10px] 990:text-xs 1200:text-sm">
         {item.name}
       </span>
     </Link>
@@ -139,12 +203,15 @@ interface CategorySectionProps {
 /**
  * Category section with header and items
  */
-function CategorySection({ category, showTopMargin = false }: CategorySectionProps) {
+function CategorySection({
+  category,
+  showTopMargin = false,
+}: CategorySectionProps) {
   return (
     <div className={showTopMargin ? "mt-2 990:mt-3" : ""}>
       <CategoryHeader title={category.title} />
       <div
-        className="flex gap-x-2 990:gap-x-3 1200:gap-x-4 items-center justify-center mt-2 990:mt-3"
+        className="mt-2 flex items-center justify-center gap-x-2 990:mt-3 990:gap-x-3 1200:gap-x-4"
         role="list"
       >
         {category.items.map((item) => (
@@ -171,7 +238,7 @@ export default function NavCategories() {
       aria-label="Product categories"
     >
       {/* Categories content */}
-      <div className="flex flex-col items-start p-3 990:p-4 gap-y-2 990:gap-y-3">
+      <div className="flex flex-col items-start gap-y-2 p-3 990:gap-y-3 990:p-4">
         {CATEGORIES_DATA.map((category, index) => (
           <CategorySection
             key={category.id}
@@ -184,7 +251,7 @@ export default function NavCategories() {
       {/* Footer link */}
       <Link
         href="/categories"
-        className="flex text-dm-text-muted p-2 bg-brand-light justify-center items-center gap-x-2 hover:text-dm-text-primary transition-colors cursor-pointer"
+        className="flex cursor-pointer items-center justify-center gap-x-2 bg-brand-light p-2 text-dm-text-muted transition-colors hover:text-dm-text-primary"
       >
         <span className="text-[14px] 990:text-[16px] 1200:text-[18px]">
           See all categories
