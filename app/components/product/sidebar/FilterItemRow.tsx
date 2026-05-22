@@ -23,8 +23,11 @@ export function FilterItemRow({
   onToggleCheck,
 }: FilterItemProps) {
   const hasSubItems = item.subItems.length > 0;
-  const isChecked = checkedIds.includes(item.id);
   const subItemIds = item.subItems.map((s) => s.id);
+  const isChecked = hasSubItems
+    ? subItemIds.length > 0 &&
+      subItemIds.every((subItemId) => checkedIds.includes(subItemId))
+    : checkedIds.includes(item.id);
 
   // Sort sub-items: Checked ones go to top
   const sortedSubItems = useMemo(() => {

@@ -18,7 +18,6 @@ export default function ProductSidebar() {
       <SidebarPriceFilter />
 
       <SidebarProductTypeFilter />
-      <SidebarProductTypeFilter />
     </div>
   );
 }

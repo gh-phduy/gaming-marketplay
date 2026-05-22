@@ -16,6 +16,8 @@ interface ProductFilterContextType {
   setPriceRange: (range: PriceRange) => void;
   selectedPlatforms: string[];
   setSelectedPlatforms: (platforms: string[]) => void;
+  resetVersion: number;
+  resetProductFilters: () => void;
 }
 
 /* ============================================
@@ -34,14 +36,23 @@ interface ProductFilterProviderProps {
   children: ReactNode;
 }
 
+const DEFAULT_PRICE_RANGE: PriceRange = {
+  min: 0,
+  max: 1450,
+};
+
 export function ProductFilterProvider({
   children,
 }: ProductFilterProviderProps) {
-  const [priceRange, setPriceRange] = useState<PriceRange>({
-    min: 0,
-    max: 1450,
-  });
+  const [priceRange, setPriceRange] = useState<PriceRange>(DEFAULT_PRICE_RANGE);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+  const [resetVersion, setResetVersion] = useState(0);
+
+  const resetProductFilters = () => {
+    setPriceRange(DEFAULT_PRICE_RANGE);
+    setSelectedPlatforms([]);
+    setResetVersion((version) => version + 1);
+  };
 
   return (
     <ProductFilterContext.Provider
@@ -50,6 +61,8 @@ export function ProductFilterProvider({
         setPriceRange,
         selectedPlatforms,
         setSelectedPlatforms,
+        resetVersion,
+        resetProductFilters,
       }}
     >
       {children}
