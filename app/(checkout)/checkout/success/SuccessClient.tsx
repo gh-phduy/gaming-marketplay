@@ -1,106 +1,387 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  Copy,
+  Home,
+  Loader2,
+  PackageCheck,
+  ReceiptText,
+  ShieldCheck,
+  X,
+  XCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/app/context/CartContext";
+import {
+  readCheckoutOrderSnapshot,
+  type CheckoutOrderSnapshot,
+} from "@/app/components/checkout/checkout-session";
+import { addMarketplaceNotification } from "@/app/components/notifications/notification-store";
 
 const PROCESSED_PAYMENT_INTENT_KEY = "processed_payment_intent";
+
+function formatCurrency(value: number, currency: string) {
+  return `${currency} ${value.toFixed(2)}`;
+}
+
+function truncatePaymentId(paymentIntent: string | null) {
+  if (!paymentIntent) return "Unavailable";
+  if (paymentIntent.length <= 18) return paymentIntent;
+  return `${paymentIntent.slice(0, 12)}...${paymentIntent.slice(-6)}`;
+}
+
+function getNotificationDescription(
+  snapshot: CheckoutOrderSnapshot | null,
+  total: string,
+) {
+  if (!snapshot?.items.length) {
+    return `Your payment was confirmed successfully. Total paid: ${total}.`;
+  }
+
+  const itemCount = snapshot.items.reduce(
+    (count, item) => count + item.quantity,
+    0,
+  );
+  const firstItem = snapshot.items[0];
+  const extraItems = itemCount > 1 ? ` and ${itemCount - 1} more` : "";
+
+  return `${firstItem.name}${extraItems} ${
+    itemCount === 1 ? "was" : "were"
+  } paid successfully. Total paid: ${total}.`;
+}
+
+function SuccessToast({
+  isVisible,
+  itemCount,
+  total,
+}: {
+  isVisible: boolean;
+  itemCount: number;
+  total: string;
+}) {
+  if (!isVisible) return null;
+
+  return (
+    <div
+      role="status"
+      className="fixed top-24 right-5 z-50 w-[min(420px,calc(100vw-40px))] overflow-hidden rounded-lg border border-emerald-400/25 bg-[#1f2937] text-white shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+    >
+      <div className="h-1 bg-[#62d676]" />
+      <div className="flex gap-4 p-4">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#62d676]/15 text-[#62d676]">
+          <CheckCircle2 className="h-6 w-6" aria-hidden />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold">Payment completed successfully</p>
+          <p className="mt-1 text-sm leading-5 text-slate-300">
+            {itemCount} {itemCount === 1 ? "product" : "products"} confirmed.
+            Total paid: <span className="font-semibold text-white">{total}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function SuccessClient() {
   const searchParams = useSearchParams();
   const { resetCart } = useCart();
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<"succeeded" | "failed" | null>(null);
+  const [orderSnapshot, setOrderSnapshot] =
+    useState<CheckoutOrderSnapshot | null>(null);
+  const [showToast, setShowToast] = useState(false);
+
+  const paymentIntent = searchParams.get("payment_intent");
+  const redirectStatus = searchParams.get("redirect_status");
 
   useEffect(() => {
-    const paymentIntent = searchParams.get("payment_intent");
-    const redirectStatus = searchParams.get("redirect_status");
-
     if (!paymentIntent) {
       setStatus("failed");
       return;
     }
 
-    if (redirectStatus === "succeeded") {
-      setStatus("succeeded");
-
-      const processedPaymentIntent = localStorage.getItem(
-        PROCESSED_PAYMENT_INTENT_KEY,
-      );
-
-      if (processedPaymentIntent !== paymentIntent) {
-        resetCart();
-        localStorage.setItem(PROCESSED_PAYMENT_INTENT_KEY, paymentIntent);
-      }
-    } else {
+    if (redirectStatus !== "succeeded") {
       setStatus("failed");
+      return;
     }
-  }, [resetCart, searchParams]);
+
+    const snapshot = readCheckoutOrderSnapshot();
+    setOrderSnapshot(snapshot);
+    setStatus("succeeded");
+    setShowToast(true);
+
+    const processedPaymentIntent = localStorage.getItem(
+      PROCESSED_PAYMENT_INTENT_KEY,
+    );
+
+    if (processedPaymentIntent !== paymentIntent) {
+      addMarketplaceNotification({
+        id: `payment-${paymentIntent}`,
+        kind: "payment",
+        title: "Payment confirmed",
+        description: getNotificationDescription(
+          snapshot,
+          formatCurrency(snapshot?.total ?? 0, snapshot?.currency ?? "$"),
+        ),
+        href: `/checkout/success?payment_intent=${encodeURIComponent(
+          paymentIntent,
+        )}&redirect_status=succeeded`,
+      });
+      resetCart();
+      localStorage.setItem(PROCESSED_PAYMENT_INTENT_KEY, paymentIntent);
+    }
+
+    const timeoutId = window.setTimeout(() => setShowToast(false), 6200);
+    return () => window.clearTimeout(timeoutId);
+  }, [paymentIntent, redirectStatus, resetCart]);
+
+  const itemCount = useMemo(
+    () =>
+      orderSnapshot?.items.reduce((total, item) => total + item.quantity, 0) ??
+      0,
+    [orderSnapshot],
+  );
+  const currency = orderSnapshot?.currency ?? "$";
+  const total = orderSnapshot?.total ?? 0;
+  const formattedTotal = formatCurrency(total, currency);
+  const displayedItemCount = itemCount || 1;
 
   if (status === null) {
     return (
       <div className="flex h-[60vh] w-full items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-[#eac54f]" />
+        <Loader2 className="h-10 w-10 animate-spin text-[#62d676]" />
       </div>
     );
   }
 
+  if (status === "failed") {
+    return (
+      <main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-[880px] items-center justify-center px-4 py-12">
+        <div className="w-full rounded-lg border border-red-500/20 bg-[#1f2937] p-8 text-center shadow-[0_24px_60px_rgba(0,0,0,0.22)]">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10">
+            <XCircle className="h-11 w-11 text-red-400" />
+          </div>
+          <h1 className="mt-6 text-3xl font-bold text-white">
+            Payment could not be completed
+          </h1>
+          <p className="mx-auto mt-3 max-w-[560px] text-sm leading-6 text-slate-300">
+            We could not confirm this payment. Your cart has not been cleared,
+            so you can review the order and try again securely.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button
+              asChild
+              className="h-12 rounded-md bg-[#62d676] px-6 font-bold text-[#111827] hover:bg-[#56c96a]"
+            >
+              <Link href="/checkout">Return to checkout</Link>
+            </Button>
+            <Button
+              asChild
+              variant="secondary"
+              className="h-12 rounded-md bg-[#303a4a] px-6 font-semibold text-white hover:bg-[#3a4658]"
+            >
+              <Link href="/">Back to marketplace</Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <div className="mx-auto flex h-[60vh] w-full max-w-[600px] flex-col items-center justify-center gap-6 text-center">
-      {status === "succeeded" ? (
-        <>
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#eac54f]/10">
-            <CheckCircle2 className="h-10 w-10 text-[#eac54f]" />
-          </div>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-white">
-              Payment Successful!
-            </h1>
-            <p className="text-gray-400">
-              Thank you for your purchase. Your order has been confirmed.
-            </p>
-          </div>
-          <div className="w-full max-w-sm rounded-lg border border-[#30363d] bg-midnight-750 p-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Payment ID</span>
-              <span className="font-mono text-xs text-white">
-                {searchParams.get("payment_intent")}
-              </span>
+    <main className="relative mx-auto w-full max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
+      <SuccessToast
+        isVisible={showToast}
+        itemCount={displayedItemCount}
+        total={formattedTotal}
+      />
+
+      <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-[#1f2937] shadow-[0_24px_70px_rgba(0,0,0,0.28)]">
+        <div className="border-b border-white/[0.06] bg-[linear-gradient(135deg,rgba(98,214,118,0.16),rgba(31,41,55,0.3)_42%,rgba(51,65,85,0.38))] px-6 py-8 sm:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex min-w-0 gap-5">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-[#62d676]/25 bg-[#62d676]/12">
+                <CheckCircle2 className="h-9 w-9 text-[#62d676]" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold tracking-wide text-[#62d676] uppercase">
+                  Payment confirmed
+                </p>
+                <h1 className="mt-2 text-3xl leading-tight font-bold text-white sm:text-4xl">
+                  Your order is ready
+                </h1>
+                <p className="mt-3 max-w-[680px] text-sm leading-6 text-slate-300">
+                  Thank you for your purchase. We have confirmed the payment and
+                  secured the products below for your Difmark account.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-white/[0.06] bg-[#151c26]/70 p-4 lg:min-w-[260px]">
+              <p className="text-xs font-semibold text-slate-400 uppercase">
+                Total paid
+              </p>
+              <p className="mt-2 text-3xl font-bold text-white">
+                {formattedTotal}
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
+                {displayedItemCount}{" "}
+                {displayedItemCount === 1 ? "product" : "products"}
+              </p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <Link href="/">
-              <Button className="rounded bg-[#30363d] px-6 py-2 text-white hover:bg-[#3c444d]">
-                Return to Home
+        </div>
+
+        <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="space-y-5">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xl font-bold text-white">Purchased items</h2>
+              <span className="rounded-full bg-[#62d676]/12 px-3 py-1 text-xs font-semibold text-[#62d676]">
+                Paid successfully
+              </span>
+            </div>
+
+            {orderSnapshot?.items.length ? (
+              <div className="space-y-3">
+                {orderSnapshot.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex gap-4 rounded-lg border border-white/[0.05] bg-[#151c26]/80 p-3"
+                  >
+                    <div className="relative h-24 w-36 shrink-0 overflow-hidden rounded-md bg-[#0f1722]">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        sizes="144px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col justify-center">
+                      <h3 className="truncate text-base font-bold text-white">
+                        {item.name}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-400">
+                        {item.platform}
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                        <span className="rounded bg-[#263241] px-2.5 py-1 text-slate-300">
+                          Quantity: {item.quantity}
+                        </span>
+                        <span className="font-semibold text-white">
+                          {formatCurrency(item.price * item.quantity, item.currency)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-4 rounded-lg border border-[#eac54f]/20 bg-[#eac54f]/8 p-4 text-sm leading-6 text-slate-300">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#eac54f]" />
+                <p>
+                  Payment was confirmed, but the local order snapshot is no
+                  longer available in this browser session. You can still use
+                  the payment reference below for support.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <aside className="space-y-4">
+            <div className="rounded-lg border border-white/[0.06] bg-[#151c26]/80 p-5">
+              <div className="flex items-center gap-3">
+                <ReceiptText className="h-5 w-5 text-[#62d676]" />
+                <h2 className="font-bold text-white">Payment details</h2>
+              </div>
+              <div className="mt-5 space-y-4 text-sm">
+                <div>
+                  <p className="text-slate-400">Payment ID</p>
+                  <div className="mt-1 flex items-center justify-between gap-3 rounded-md bg-[#222c3b] px-3 py-2">
+                    <span className="truncate font-mono text-xs text-white">
+                      {truncatePaymentId(paymentIntent)}
+                    </span>
+                    <Copy className="h-4 w-4 shrink-0 text-slate-400" />
+                  </div>
+                </div>
+                <div className="flex justify-between border-t border-white/[0.06] pt-4">
+                  <span className="text-slate-400">Status</span>
+                  <span className="font-semibold text-[#62d676]">Succeeded</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Delivery</span>
+                  <span className="font-semibold text-white">Instant</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-white/[0.06] bg-[#151c26]/80 p-5">
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 text-[#62d676]" />
+                  <div>
+                    <p className="font-semibold text-white">Order protected</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-400">
+                      Difmark protection remains active while your order is
+                      delivered.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <PackageCheck className="mt-0.5 h-5 w-5 text-[#62d676]" />
+                  <div>
+                    <p className="font-semibold text-white">Next step</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-400">
+                      Check your account inventory and seller messages for
+                      delivery details.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              <Button
+                asChild
+                className="h-12 rounded-md bg-[#62d676] font-bold text-[#111827] hover:bg-[#56c96a]"
+              >
+                <Link href="/product">
+                  Continue shopping
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
-            </Link>
-            <Link href="/orders">
-              <Button className="rounded bg-[#eac54f] px-6 py-2 text-[#161b22] hover:bg-[#d4b246]">
-                View Order
+              <Button
+                asChild
+                variant="secondary"
+                className="h-12 rounded-md bg-[#303a4a] font-semibold text-white hover:bg-[#3a4658]"
+              >
+                <Link href="/">
+                  <Home className="mr-2 h-4 w-4" />
+                  Back to home
+                </Link>
               </Button>
-            </Link>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10">
-            <CheckCircle2 className="h-10 w-10 rotate-45 text-red-500" />
-          </div>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-white">Payment Failed</h1>
-            <p className="text-gray-400">
-              Something went wrong with your payment. Please try again.
-            </p>
-          </div>
-          <Link href="/checkout">
-            <Button className="rounded bg-[#eac54f] px-6 py-2 text-[#161b22] hover:bg-[#d4b246]">
-              Try Again
-            </Button>
-          </Link>
-        </>
-      )}
-    </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {showToast ? (
+        <button
+          type="button"
+          aria-label="Dismiss payment notification"
+          onClick={() => setShowToast(false)}
+          className="fixed top-[104px] right-7 z-[60] hidden h-8 w-8 items-center justify-center rounded-md text-slate-300 transition hover:bg-white/10 hover:text-white sm:flex"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      ) : null}
+    </main>
   );
 }

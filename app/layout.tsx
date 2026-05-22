@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { CartProvider } from "./context/CartContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,12 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="flex min-h-screen flex-col bg-midnight-850 text-dm-text-primary antialiased">
-        {/* Skip to main content link for accessibility */}
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
+        <CartProvider>
+          {/* Skip to main content link for accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
 
-        {children}
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

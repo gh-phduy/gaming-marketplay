@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthProvider } from "@/app/context/AuthContext";
-import { CartProvider } from "@/app/context/CartContext";
 import { SettingsProvider } from "@/app/context/SettingsContext";
 import type { ReactNode } from "react";
 
@@ -12,9 +11,7 @@ import type { ReactNode } from "react";
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      <SettingsProvider>
-        <CartProvider>{children}</CartProvider>
-      </SettingsProvider>
+      <SettingsProvider>{children}</SettingsProvider>
     </AuthProvider>
   );
 }

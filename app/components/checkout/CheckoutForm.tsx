@@ -7,8 +7,18 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
+import {
+  saveCheckoutOrderSnapshot,
+  type CheckoutOrderItem,
+} from "./checkout-session";
 
-export default function CheckoutForm({ amount }: { amount: number }) {
+export default function CheckoutForm({
+  amount,
+  orderItems,
+}: {
+  amount: number;
+  orderItems: CheckoutOrderItem[];
+}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -23,6 +33,14 @@ export default function CheckoutForm({ amount }: { amount: number }) {
     }
 
     setIsLoading(true);
+    const currency = orderItems[0]?.currency ?? "$";
+    saveCheckoutOrderSnapshot({
+      items: orderItems,
+      subtotal: amount,
+      total: amount,
+      currency,
+      createdAt: new Date().toISOString(),
+    });
 
     const { error } = await stripe.confirmPayment({
       elements,

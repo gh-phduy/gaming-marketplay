@@ -39,6 +39,42 @@ function isValidCartItem(value: unknown): value is CartItem {
   );
 }
 
+function readCartItemsFromStorage() {
+  if (typeof window === "undefined") return [];
+
+  const storedItems = window.localStorage.getItem(CART_ITEMS_STORAGE_KEY);
+  if (!storedItems) return [];
+
+  try {
+    const parsed = JSON.parse(storedItems) as unknown;
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(isValidCartItem).map((item) => ({
+      ...item,
+      quantity: Number.isFinite(item.quantity)
+        ? Math.max(1, Math.floor(item.quantity))
+        : 1,
+    }));
+  } catch {
+    window.localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+    return [];
+  }
+}
+
+function writeCartItemsToStorage(cartItems: CartItem[]) {
+  if (typeof window === "undefined") return;
+
+  if (cartItems.length === 0) {
+    window.localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+    return;
+  }
+
+  window.localStorage.setItem(
+    CART_ITEMS_STORAGE_KEY,
+    JSON.stringify(cartItems),
+  );
+}
+
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
@@ -53,58 +89,20 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [hasHydratedCart, setHasHydratedCart] = useState(false);
 
   useEffect(() => {
-    let idleCallbackId: number | undefined;
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-    const hydrateCart = () => {
-      const storedItems = localStorage.getItem(CART_ITEMS_STORAGE_KEY);
-      if (!storedItems) return;
-
-      try {
-        const parsed = JSON.parse(storedItems) as unknown;
-        if (!Array.isArray(parsed)) return;
-
-        const sanitized = parsed.filter(isValidCartItem).map((item) => ({
-          ...item,
-          quantity: Number.isFinite(item.quantity)
-            ? Math.max(1, Math.floor(item.quantity))
-            : 1,
-        }));
-
-        setCartItems(sanitized);
-      } catch {
-        localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
-      }
-    };
-
-    if (typeof window.requestIdleCallback === "function") {
-      idleCallbackId = window.requestIdleCallback(hydrateCart, {
-        timeout: 2000,
-      });
-    } else {
-      timeoutId = globalThis.setTimeout(hydrateCart, 300);
-    }
-
-    return () => {
-      if (idleCallbackId !== undefined && "cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleCallbackId);
-      }
-      if (timeoutId !== undefined) {
-        globalThis.clearTimeout(timeoutId);
-      }
-    };
+    setCartItems(readCartItemsFromStorage());
+    setHasHydratedCart(true);
   }, []);
 
   useEffect(() => {
-    if (cartItems.length === 0) {
-      localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+    if (!hasHydratedCart) {
       return;
     }
 
-    localStorage.setItem(CART_ITEMS_STORAGE_KEY, JSON.stringify(cartItems));
-  }, [cartItems]);
+    writeCartItemsToStorage(cartItems);
+  }, [cartItems, hasHydratedCart]);
 
   const cartCount = useMemo(
     () => cartItems.reduce((total, item) => total + item.quantity, 0),
@@ -117,42 +115,54 @@ export function CartProvider({ children }: { children: ReactNode }) {
         (cartItem) => cartItem.id === item.id,
       );
       if (existingIndex === -1) {
-        return [...prev, { ...item, quantity: 1 }];
+        const nextCartItems = [...prev, { ...item, quantity: 1 }];
+        writeCartItemsToStorage(nextCartItems);
+        return nextCartItems;
       }
 
-      return prev.map((cartItem, index) =>
+      const nextCartItems = prev.map((cartItem, index) =>
         index === existingIndex
           ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem,
       );
+      writeCartItemsToStorage(nextCartItems);
+      return nextCartItems;
     });
   };
 
   const incrementItem = (itemId: string) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
+    setCartItems((prev) => {
+      const nextCartItems = prev.map((item) =>
         item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item,
-      ),
-    );
+      );
+      writeCartItemsToStorage(nextCartItems);
+      return nextCartItems;
+    });
   };
 
   const decrementItem = (itemId: string) => {
-    setCartItems((prev) =>
-      prev
+    setCartItems((prev) => {
+      const nextCartItems = prev
         .map((item) =>
           item.id === itemId ? { ...item, quantity: item.quantity - 1 } : item,
         )
-        .filter((item) => item.quantity > 0),
-    );
+        .filter((item) => item.quantity > 0);
+      writeCartItemsToStorage(nextCartItems);
+      return nextCartItems;
+    });
   };
 
   const removeItem = (itemId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
+    setCartItems((prev) => {
+      const nextCartItems = prev.filter((item) => item.id !== itemId);
+      writeCartItemsToStorage(nextCartItems);
+      return nextCartItems;
+    });
   };
 
   const resetCart = () => {
     setCartItems([]);
-    localStorage.removeItem(CART_ITEMS_STORAGE_KEY);
+    writeCartItemsToStorage([]);
   };
 
   const value = useMemo(

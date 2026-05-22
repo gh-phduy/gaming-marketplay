@@ -17,16 +17,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CheckoutForm from "@/app/components/checkout/CheckoutForm";
+import {
+  readCheckoutOrderSnapshot,
+  type CheckoutOrderItem,
+  type CheckoutOrderSnapshot,
+} from "@/app/components/checkout/checkout-session";
 import { ProductApiResponse } from "@/app/types/product";
 import { useCart } from "@/app/context/CartContext";
 
 export default function CheckoutClient() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
+  const isDirectTopUpCheckout = searchParams.get("directTopUp") === "1";
   const { cartItems } = useCart();
 
   const [selectedMethod, setSelectedMethod] = useState("visa");
   const [clientSecret, setClientSecret] = useState("");
+  const [directTopUpOrder, setDirectTopUpOrder] = useState<
+    CheckoutOrderSnapshot | null | undefined
+  >(undefined);
   const [productData, setProductData] = useState<ProductApiResponse | null>(
     null,
   );
@@ -47,10 +56,58 @@ export default function CheckoutClient() {
   );
 
   const amount = useMemo(() => {
+    if (isDirectTopUpCheckout && directTopUpOrder)
+      return directTopUpOrder.total;
+    if (isDirectTopUpCheckout && directTopUpOrder === undefined) return 0;
     if (!productId && cartTotal > 0) return cartTotal;
     if (productData?.data.price) return productData.data.price;
     return 99.97;
-  }, [cartTotal, productData?.data.price, productId]);
+  }, [
+    cartTotal,
+    directTopUpOrder,
+    isDirectTopUpCheckout,
+    productData?.data.price,
+    productId,
+  ]);
+
+  const orderItems = useMemo<CheckoutOrderItem[]>(() => {
+    if (productData) {
+      return [
+        {
+          id: productData.data.id,
+          name: productData.data.name,
+          platform: productData.data.platform,
+          image: productData.data.images[0] ?? "/battlefield_6.jpg",
+          price: productData.data.price,
+          currency: productData.data.currency,
+          quantity: 1,
+        },
+      ];
+    }
+
+    if (isDirectTopUpCheckout && directTopUpOrder) {
+      return directTopUpOrder.items;
+    }
+
+    return cartItems.map((item) => ({
+      id: item.id,
+      name: item.name,
+      platform: item.platform,
+      image: item.image,
+      price: item.price,
+      currency: item.currency,
+      quantity: item.quantity,
+    }));
+  }, [cartItems, directTopUpOrder, isDirectTopUpCheckout, productData]);
+
+  useEffect(() => {
+    if (!isDirectTopUpCheckout) {
+      setDirectTopUpOrder(undefined);
+      return;
+    }
+
+    setDirectTopUpOrder(readCheckoutOrderSnapshot());
+  }, [isDirectTopUpCheckout]);
 
   // Fetch product data
   useEffect(() => {
@@ -173,7 +230,7 @@ export default function CheckoutClient() {
               }}
               stripe={stripePromise}
             >
-              <CheckoutForm amount={amount} />
+              <CheckoutForm amount={amount} orderItems={orderItems} />
             </Elements>
           )}
         </div>
@@ -267,13 +324,13 @@ export default function CheckoutClient() {
           </div>
         )}
 
-        {!productData && cartItems.length > 0 && (
+        {!productData && orderItems.length > 0 && (
           <div className="space-y-3 rounded-lg border border-[#30363d] bg-midnight-750 p-4">
             <h3 className="text-sm font-semibold text-gray-300">
-              Cart summary
+              {isDirectTopUpCheckout ? "Direct top up summary" : "Cart summary"}
             </h3>
             <div className="space-y-2">
-              {cartItems.map((item) => (
+              {orderItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center justify-between text-sm"
