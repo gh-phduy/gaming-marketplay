@@ -23,7 +23,7 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
       )}
     >
       <Link
-        href={`/direct-top-up/${game.slug}`}
+        href={`/direct-top-up/mobile-games/${game.slug}`}
         className="block h-full w-full"
       >
         {/* Cover image */}
