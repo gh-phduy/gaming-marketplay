@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bell, ChevronRight, MessageCircle, Tag } from "lucide-react";
+import { ChevronRight, MessageCircle, Tag } from "lucide-react";
 import NavSearch from "./NavSearch";
 import SearchButton from "./SearchButton";
 import { Separator } from "@base-ui/react";
@@ -12,6 +12,7 @@ import { useAuth } from "@/app/context/AuthContext";
 
 const CategoriesDropdown = dynamic(() => import("./CategoriesDropdown"));
 const CartButton = dynamic(() => import("./CartButton"));
+const NotificationButton = dynamic(() => import("./NotificationButton"));
 const SignInButton = dynamic(() => import("./SignInButton"));
 
 interface ListingProduct {
@@ -26,6 +27,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function MainNavSection() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
   const { user } = useAuth();
 
@@ -91,6 +93,10 @@ export default function MainNavSection() {
   const handleCategoriesOpenChange = (open: boolean) => {
     setIsCategoriesOpen(open);
   };
+
+  useEffect(() => {
+    setIsCategoriesOpen(false);
+  }, [pathname]);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -247,7 +253,7 @@ export default function MainNavSection() {
         <div className="hidden items-center 990:flex 990:gap-6">
           {user && (
             <>
-              <Bell size={24} className="text-steel-500" />
+              <NotificationButton />
               <MessageCircle size={24} className="text-steel-500" />
             </>
           )}
@@ -258,6 +264,11 @@ export default function MainNavSection() {
           />
         </div>
       </div>
+      {user ? (
+        <div className="990:hidden">
+          <NotificationButton />
+        </div>
+      ) : null}
       <SignInButton />
     </>
   );
