@@ -4,6 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 export interface Message {
   id: string;
   senderId: string;
@@ -23,6 +27,17 @@ export interface ActiveConversation {
   listingTitle: string;
 }
 
+/* ==========================================================================
+   CUSTOM STATE HOOK: useFloatingChat
+   ========================================================================== */
+
+/**
+ * useFloatingChat Hook
+ *
+ * Encapsulates the state and side-effects for the floating chat room,
+ * including loading existing threads, resetting unread badges, and listening
+ * for postgres insert changes via Supabase realtime channels.
+ */
 export function useFloatingChat() {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +48,7 @@ export function useFloatingChat() {
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Listen for custom trigger event to open chat
+  // Hook 1: Listen for custom trigger events to launch chat overlays
   useEffect(() => {
     const handleOpenChat = (event: Event) => {
       const customEvent = event as CustomEvent<ActiveConversation>;
@@ -49,7 +64,7 @@ export function useFloatingChat() {
     };
   }, []);
 
-  // Sync active chat ID to window so NavBar can suppress sounds/badges for it
+  // Hook 2: Sync active chat ID to window so header NavBar badges can suppress new indicators
   useEffect(() => {
     if (isOpen && activeConversation) {
       (window as any).difmarkActiveChatId = activeConversation.id;
@@ -61,10 +76,11 @@ export function useFloatingChat() {
     };
   }, [isOpen, activeConversation]);
 
-  // Fetch messages and reset unread count when conversation changes
+  // Hook 3: Fetch messages log and reset unread counts when conversation switches
   useEffect(() => {
     if (!activeConversation || !isOpen) return;
 
+    // Reset unread count indicators on open actions
     const resetUnreadOnOpen = async () => {
       if (!user?.id) return;
       const isCurrentUserSeller = activeConversation.sellerId === user.id;
@@ -81,6 +97,7 @@ export function useFloatingChat() {
 
     void resetUnreadOnOpen();
 
+    // Load message logs history
     const fetchMessages = async () => {
       setIsLoading(true);
       try {
@@ -118,7 +135,7 @@ export function useFloatingChat() {
 
     void fetchMessages();
 
-    // Subscribe to real-time message inserts
+    // Subscribe to Postgres realtime message insert updates
     const subscription = supabase
       .channel(`chat-room:${activeConversation.id}-${Math.random().toString(36).substring(7)}`)
       .on(
@@ -132,13 +149,13 @@ export function useFloatingChat() {
         (payload) => {
           const newRow = payload.new as any;
           
-          // Only append if it's not already in the state
+          // Verify duplicate rows are ignored
           setMessages((prev) => {
             if (prev.some((m) => m.id === newRow.id)) return prev;
 
             const isCurrentUser = newRow.sender_id === user?.id;
             
-            // If incoming message is from the other user, reset DB unread immediately since user is actively viewing
+            // Instantly sync active viewing states
             if (!isCurrentUser) {
               const isCurrentUserSeller = activeConversation.sellerId === user?.id;
               void supabase
@@ -177,11 +194,12 @@ export function useFloatingChat() {
     };
   }, [activeConversation, isOpen, user]);
 
-  // Scroll to bottom on new messages
+  // Hook 4: Auto scroll list container on new message arrival
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Action: Submit transaction processing handler
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeConversation || !user || isSending) return;
@@ -239,3 +257,4 @@ export function useFloatingChat() {
     currentUser: user,
   };
 }
+

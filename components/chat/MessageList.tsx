@@ -5,6 +5,10 @@ import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import type { Message } from "./useFloatingChat";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
@@ -12,12 +16,24 @@ interface MessageListProps {
   messagesEndRef: RefObject<HTMLDivElement | null>;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: MessageList
+   ========================================================================== */
+
+/**
+ * MessageList Component
+ *
+ * Renders the scrolling message timeline list.
+ * Sorts and aligns rows (right for self, left for recipient) and handles
+ * active scroll-to-bottom actions on new message arrival.
+ */
 export function MessageList({
   messages,
   isLoading,
   currentUserId,
   messagesEndRef,
 }: MessageListProps) {
+  // Loading skeleton state
   if (isLoading) {
     return (
       <div className="flex-1 overflow-y-auto p-4 bg-[#111822] flex items-center justify-center">
@@ -30,6 +46,7 @@ export function MessageList({
     <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#111822]">
       {messages.map((msg) => {
         const isMe = msg.senderId === currentUserId;
+        
         return (
           <div
             key={msg.id}
@@ -37,6 +54,7 @@ export function MessageList({
               isMe ? "ml-auto flex-row-reverse" : ""
             }`}
           >
+            {/* Recipient Avatar display */}
             {!isMe && (
               <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full bg-slate-700">
                 <Image
@@ -47,6 +65,8 @@ export function MessageList({
                 />
               </div>
             )}
+            
+            {/* Message bubble */}
             <div
               className={`rounded-lg px-3 py-2 text-xs leading-normal ${
                 isMe
@@ -55,6 +75,8 @@ export function MessageList({
               }`}
             >
               <p className="break-words">{msg.text}</p>
+              
+              {/* Formatted timestamp */}
               <span className="block mt-1 text-[9px] opacity-60 text-right">
                 {new Date(msg.createdAt).toLocaleTimeString([], {
                   hour: "2-digit",
@@ -65,7 +87,10 @@ export function MessageList({
           </div>
         );
       })}
+      
+      {/* Scroll Anchor Ref element */}
       <div ref={messagesEndRef} />
     </div>
   );
 }
+

@@ -5,6 +5,10 @@ import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -12,15 +16,28 @@ interface ChatInputProps {
   isSending: boolean;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: ChatInput
+   ========================================================================== */
+
+/**
+ * ChatInput Component
+ *
+ * Renders the bottom message composition bar.
+ * Handles typing triggers, character validation, and submission actions.
+ */
 export function ChatInput({ value, onChange, onSubmit, isSending }: ChatInputProps) {
   return (
     <form onSubmit={onSubmit} className="border-t border-[#2a3545] bg-[#161e28] p-3 flex gap-2">
+      {/* Message Text Input */}
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Type a message..."
         className="h-10 bg-[#202936] border-none text-white placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-emerald-400/50"
       />
+      
+      {/* Submit Button Trigger */}
       <Button
         type="submit"
         disabled={!value.trim() || isSending}
@@ -31,3 +48,4 @@ export function ChatInput({ value, onChange, onSubmit, isSending }: ChatInputPro
     </form>
   );
 }
+
