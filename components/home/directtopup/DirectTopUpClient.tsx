@@ -8,12 +8,16 @@ import { TopUpGameCard } from "./TopUpGameCard";
 import FilterDropdown from "@/components/product/FilterDropdown";
 import { IoSearch } from "react-icons/io5";
 
+/* ==========================================================================
+   HELPER FUNCTIONS
+   ========================================================================== */
+
 const DEFAULT_CATEGORY = "all";
 
-interface DirectTopUpClientProps {
-  category?: string;
-}
-
+/**
+ * Validates a category ID, falling back to a default value
+ * if it doesn't match any supported categories.
+ */
 function getValidTopUpCategory(category: string | null): string {
   return category &&
     TOPUP_CATEGORIES_FILTER.some((option) => option.id === category)
@@ -21,7 +25,22 @@ function getValidTopUpCategory(category: string | null): string {
     : DEFAULT_CATEGORY;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: DirectTopUpClient
+   ========================================================================== */
+
+interface DirectTopUpClientProps {
+  category?: string;
+}
+
+/**
+ * DirectTopUpClient Component
+ *
+ * Renders the interactive game listing client panel for top-up items.
+ * Allows searching by text query and filtering by categories via select options.
+ */
 export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
+  // Sync the category query parameter with local filters
   const urlCategory = useMemo(
     () => getValidTopUpCategory(category ?? null),
     [category],
@@ -29,10 +48,12 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>(urlCategory);
 
+  // Sync category parameter updates
   useEffect(() => {
     setActiveCategory(urlCategory);
   }, [urlCategory]);
 
+  // Memoized query and category filter handler
   const filteredGames = useMemo(() => {
     return TOPUP_GAMES.filter((game) => {
       const matchesQuery = game.name
@@ -49,7 +70,7 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
       id="top-up-products"
       className="scroll-mt-28 flex w-full max-w-[1280px] flex-col items-center px-4 pb-16"
     >
-      {/* Heading */}
+      {/* Title Header */}
       <div className="mb-8 text-center">
         <h2 className="text-4xl font-medium tracking-wide text-white uppercase md:text-3xl">
           Ready to play? Power up your game!
@@ -59,9 +80,9 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
         </p>
       </div>
 
-      {/* Search + Filter bar */}
+      {/* Search Input & Category Dropdown Bar */}
       <div className="mb-8 flex w-full max-w-[1070px] items-center rounded-lg bg-midnight-700 p-1">
-        {/* Search input */}
+        {/* Search input field */}
         <div className="flex h-[44px] flex-1 items-center gap-3 rounded-lg bg-midnight-700 px-4">
           <IoSearch size={24} className="shrink-0 text-steel-500" />
           <input
@@ -73,7 +94,7 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
           />
         </div>
 
-        {/* Category dropdown */}
+        {/* Category switcher */}
         <FilterDropdown
           key={activeCategory}
           options={TOPUP_CATEGORIES_FILTER}
@@ -84,7 +105,7 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
         />
       </div>
 
-      {/* Game grid */}
+      {/* Filtered Games Grid / No-results Panel */}
       {filteredGames.length > 0 ? (
         <div className="flex w-full justify-center">
           <div

@@ -6,14 +6,30 @@ import { useState } from "react";
 import { TopUpGame } from "@/lib/constants/products";
 import { cn } from "@/lib/utils";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface TopUpGameCardProps {
   game: TopUpGame;
   className?: string;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: TopUpGameCard
+   ========================================================================== */
+
+/**
+ * TopUpGameCard Component
+ *
+ * Renders a square top-up item card featuring a dynamic thumbnail cover.
+ * Shows the game's title on card hover, slide-animating from the bottom edge.
+ * Implements fallback rendering if the remote cover image fails to load.
+ */
 export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
   const [imgError, setImgError] = useState(false);
 
+  // Normalizes routing pathways based on categorizations (e.g. services vs games)
   const categoryPath =
     game.category === "services" ? "services" : `${game.category}-games`;
 
@@ -29,7 +45,7 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
         href={`/direct-top-up/${categoryPath}/${game.slug}`}
         className="block h-full w-full"
       >
-        {/* Cover image */}
+        {/* Game Banner Image & Failure Fallback */}
         {!imgError ? (
           <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
             <Image
@@ -45,10 +61,10 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
           <div className="absolute inset-0 bg-slate-900" />
         )}
 
-        {/* Hover overlay */}
+        {/* Hover Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Label bar */}
+        {/* Title Name Label (Slide-in hover transition) */}
         <div className="absolute right-0 bottom-0 left-0 flex translate-y-full justify-center bg-midnight-800/60 p-5 backdrop-blur-xs transition-transform duration-300 ease-out group-hover:translate-y-0">
           <span className="text-lg font-semibold text-white">{game.name}</span>
         </div>
@@ -56,3 +72,4 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
     </div>
   );
 }
+

@@ -11,6 +11,10 @@ import { ScatteredIcons } from "./ScatteredIcons";
 import { StackedImages } from "./StackedImages";
 import type { HeroTab } from "./types";
 
+/* ==========================================================================
+   CONFIGURATIONS & STYLING VARIANTS
+   ========================================================================== */
+
 const ICON_MAP = {
   monitor: Monitor,
   "gamepad-2": Gamepad2,
@@ -34,6 +38,10 @@ type HeroTileVariantConfig = {
   titleClassName: string;
 };
 
+/**
+ * Styling token maps that define layout grid structures, image sizes,
+ * and text sizing for the digital keys categories versus the topup sections.
+ */
 const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
   {
     topup: {
@@ -65,6 +73,17 @@ const HERO_TILE_VARIANT_CONFIG: Record<HeroTileVariant, HeroTileVariantConfig> =
     },
   };
 
+/* ==========================================================================
+   SUBCOMPONENT: HeroCategoryTileCard
+   ========================================================================== */
+
+/**
+ * HeroCategoryTileCard Component
+ *
+ * Renders an individual category card overlaying a thumbnail image,
+ * category title, platform icons, and scattered floaters or stacked covers
+ * based on layout config specifications.
+ */
 function HeroCategoryTileCard({
   category,
   variant,
@@ -86,6 +105,7 @@ function HeroCategoryTileCard({
       className={config.cardClassName}
     >
       <div className="relative h-full w-full">
+        {/* Background Banner */}
         <Image
           src={category.image}
           alt={category.title}
@@ -95,6 +115,7 @@ function HeroCategoryTileCard({
         />
         <div className="absolute inset-0 bg-black/15" />
 
+        {/* Text Title & Vector Icon Container */}
         <div className={config.contentClassName}>
           <div className={config.iconWrapperClassName}>
             <IconComponent className="h-4 w-4 text-white" />
@@ -102,6 +123,10 @@ function HeroCategoryTileCard({
           <span className={config.titleClassName}>{category.title}</span>
         </div>
 
+        {/* 
+          Floaters Overlay: Displays either scattered product icons or
+          stacked covers on the right edge of the card (only on desktop sizes).
+        */}
         {isScattered ? (
           <div className={overlayVisibilityClass}>
             <ScatteredIcons
@@ -125,9 +150,15 @@ function HeroCategoryTileCard({
   );
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: HeroCategoryTiles
+   ========================================================================== */
+
 /**
- * Bottom hero category strip.
- * Uses one shared card renderer and swaps layout/spacing via variant config.
+ * HeroCategoryTiles Component
+ *
+ * Renders the bottom category strip below the main slide show.
+ * Dynamically binds configuration layouts and loads categories based on activeTab.
  */
 export function HeroCategoryTiles({ activeTab }: HeroCategoryTilesProps) {
   const isTopup = activeTab === "topup";
@@ -147,3 +178,4 @@ export function HeroCategoryTiles({ activeTab }: HeroCategoryTilesProps) {
     </div>
   );
 }
+
