@@ -3,12 +3,27 @@
 import ProductGridItem from "@/components/product/ProductGridItem";
 import type { Product } from "../_lib/product-listing";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface ProductGridProps {
   products: Product[];
   isLoading: boolean;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: ProductGrid
+   ========================================================================== */
+
+/**
+ * ProductGrid Component
+ *
+ * Renders the products grid list.
+ * Integrates an animate-pulse skeleton fallback container when loading.
+ */
 export default function ProductGrid({ products, isLoading }: ProductGridProps) {
+  // Loading skeleton placeholder state
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
@@ -37,3 +52,4 @@ export default function ProductGrid({ products, isLoading }: ProductGridProps) {
     </div>
   );
 }
+

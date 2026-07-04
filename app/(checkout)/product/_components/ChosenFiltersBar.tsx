@@ -9,6 +9,10 @@ import {
   type ProductSortKey,
 } from "../_lib/product-listing";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface SelectedFilter {
   id: string;
   label: string;
@@ -25,6 +29,17 @@ interface ChosenFiltersBarProps {
   sortBy: ProductSortKey;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: ChosenFiltersBar
+   ========================================================================== */
+
+/**
+ * ChosenFiltersBar Component
+ *
+ * Renders the filter chips representing active search terms, sorting methods,
+ * and listing filters. If the number of filters exceeds the single line height,
+ * it displays a "Show more" toggler using height transition animations.
+ */
 export default function ChosenFiltersBar({
   searchTerm,
   selectedFilters,
@@ -39,6 +54,7 @@ export default function ChosenFiltersBar({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const filtersRef = useRef<HTMLDivElement>(null);
 
+  // Monitor element height changes to toggle overflow trigger visibility
   useEffect(() => {
     if (filtersRef.current) {
       setIsOverflowing(
@@ -50,6 +66,7 @@ export default function ChosenFiltersBar({
   return (
     <div className="mb-4 flex gap-3 text-sm sm:mb-6 sm:gap-4 sm:text-base">
       <div className="min-w-0 flex-1">
+        {/* Dynamic height filter list container */}
         <div
           ref={filtersRef}
           className={cn(
@@ -64,6 +81,8 @@ export default function ChosenFiltersBar({
           <span className="whitespace-nowrap text-gray-400">
             Chosen filters :
           </span>
+          
+          {/* Active Search query tag */}
           {searchTerm.trim() && (
             <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm">
               &ldquo;{searchTerm.trim()}&rdquo;
@@ -73,6 +92,8 @@ export default function ChosenFiltersBar({
               />
             </span>
           )}
+          
+          {/* Active Sort method tag */}
           <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm">
             {selectedSortLabel}
             <IoCloseSharp
@@ -80,6 +101,8 @@ export default function ChosenFiltersBar({
               onClick={onClearSort}
             />
           </span>
+          
+          {/* Active sidebar filter tags */}
           {selectedFilters.map((filter) => (
             <span
               key={filter.id}
@@ -94,7 +117,10 @@ export default function ChosenFiltersBar({
           ))}
         </div>
       </div>
+      
+      {/* Action Buttons Panel */}
       <div className="flex shrink-0 flex-col items-end gap-1">
+        {/* Clear All Trigger */}
         <button
           type="button"
           onClick={() => {
@@ -105,6 +131,8 @@ export default function ChosenFiltersBar({
         >
           Clear all <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
+        
+        {/* Toggle Expansion button */}
         {isOverflowing && (
           <button
             type="button"
@@ -118,3 +146,4 @@ export default function ChosenFiltersBar({
     </div>
   );
 }
+

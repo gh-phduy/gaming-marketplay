@@ -8,11 +8,25 @@ import {
   type ProductSortKey,
 } from "../_lib/product-listing";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface ProductSortDropdownProps {
   value: ProductSortKey;
   onChange: (value: ProductSortKey) => void;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: ProductSortDropdown
+   ========================================================================== */
+
+/**
+ * ProductSortDropdown Component
+ *
+ * Renders a custom select dropdown menu to choose active sorting keys.
+ * Listens for outside mouse clicks or escape key sequences to close the menu.
+ */
 export default function ProductSortDropdown({
   value,
   onChange,
@@ -22,6 +36,7 @@ export default function ProductSortDropdown({
   const selectedOption =
     SORT_OPTIONS.find((option) => option.value === value) ?? SORT_OPTIONS[2];
 
+  // Hook: Monitor document pointer down and keydown events for close boundaries
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
       if (!dropdownRef.current?.contains(event.target as Node)) {
@@ -46,6 +61,7 @@ export default function ProductSortDropdown({
 
   return (
     <div ref={dropdownRef} className="relative z-40">
+      {/* Dropdown Menu Trigger */}
       <button
         type="button"
         aria-haspopup="listbox"
@@ -64,6 +80,7 @@ export default function ProductSortDropdown({
         )}
       </button>
 
+      {/* Dropdown Menu Options Panel */}
       {isOpen && (
         <div
           role="listbox"
@@ -98,3 +115,4 @@ export default function ProductSortDropdown({
     </div>
   );
 }
+

@@ -15,6 +15,10 @@ import ProductSidebar from "@/components/product/ProductSidebar";
 import type { ProductSortKey } from "../_lib/product-listing";
 import ProductSortDropdown from "./ProductSortDropdown";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface ProductToolbarProps {
   searchTerm: string;
   sortBy: ProductSortKey;
@@ -22,6 +26,17 @@ interface ProductToolbarProps {
   onSortChange: (value: ProductSortKey) => void;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: ProductToolbar
+   ========================================================================== */
+
+/**
+ * ProductToolbar Component
+ *
+ * Renders the search input, sorting selectors, and layout toggles.
+ * Provides a responsive Sheet modal trigger on mobile viewports (< 1024px)
+ * to open the sidebar filters in a drawer overlay.
+ */
 export default function ProductToolbar({
   searchTerm,
   sortBy,
@@ -30,6 +45,7 @@ export default function ProductToolbar({
 }: ProductToolbarProps) {
   return (
     <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:gap-4 md:flex-row">
+      {/* Product Name Search Field */}
       <div className="relative flex-1">
         <IoSearch
           size={24}
@@ -53,7 +69,9 @@ export default function ProductToolbar({
         )}
       </div>
 
+      {/* Toolbar Options Actions */}
       <div className="flex items-center gap-2">
+        {/* Mobile Filters Slide-out Sheet Trigger */}
         <Sheet>
           <SheetTrigger
             render={
@@ -76,8 +94,10 @@ export default function ProductToolbar({
           </SheetContent>
         </Sheet>
 
+        {/* Product Sorting Selector */}
         <ProductSortDropdown value={sortBy} onChange={onSortChange} />
 
+        {/* View Layout Toggle Button */}
         <Button
           variant="outline"
           className="hidden h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:inline-flex sm:h-11"
@@ -88,3 +108,4 @@ export default function ProductToolbar({
     </div>
   );
 }
+
