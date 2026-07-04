@@ -5,20 +5,35 @@ import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CreditCard, ShoppingCart, CheckCircle2, XCircle } from "lucide-react";
 
+/* ==========================================================================
+   MAIN COMPONENT: CheckoutNavBar
+   ========================================================================== */
+
+/**
+ * CheckoutNavBar Component
+ *
+ * Renders the top progress bar for checkout flows.
+ * Uses query parameters and url path patterns to determine if the payment
+ * is completed, failed, or processing, updating progress bars and steps.
+ */
 export default function CheckoutNavBar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  
+  // Extract Stripe redirect status from query params
   const redirectStatus = searchParams.get("redirect_status");
   const isSuccessPage = pathname?.startsWith("/checkout/success");
   const isCompleted = isSuccessPage && redirectStatus === "succeeded";
   const isFailed = isSuccessPage && redirectStatus !== "succeeded";
   const isAfterCheckout = isCompleted || isFailed;
 
+  // Active step styling classes based on checkout state
   const checkoutStepClass = isAfterCheckout ? "text-[#46ca43]" : "text-white";
   const checkoutIconClass = isAfterCheckout
     ? "border-[#46ca43] bg-[#46ca43] text-black"
     : "border-[#58a6ff] bg-[#374050] text-white";
 
+  // Label configuration for the final checkout status indicator
   const lastStepLabel = isCompleted
     ? "Completed"
     : isFailed
@@ -33,6 +48,7 @@ export default function CheckoutNavBar() {
   return (
     <nav className="sticky top-0 z-50 flex h-20 w-full items-center justify-center border-b border-[#2d3544] bg-[#161b22]">
       <div className="flex w-full max-w-[1622px] items-center justify-between px-4">
+        {/* Brand Logo Link */}
         <Link href="/" className="flex items-center gap-2">
           <div className="relative h-[40px] w-[150px]">
             <Image
@@ -46,7 +62,9 @@ export default function CheckoutNavBar() {
           </div>
         </Link>
 
+        {/* Progress Tracker Steps (hidden on mobile) */}
         <div className="hidden items-center gap-4 text-sm font-medium md:flex">
+          {/* Step 1: Shopping Cart (completed by default during checkout) */}
           <div className="flex items-center gap-2 text-[#46ca43]">
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#46ca43] text-black">
               <ShoppingCart className="h-3.5 w-3.5" />
@@ -56,6 +74,7 @@ export default function CheckoutNavBar() {
 
           <div className="h-[2px] w-24 bg-[#46ca43]"></div>
 
+          {/* Step 2: Checkout (active/completed) */}
           <div className={`flex items-center gap-2 ${checkoutStepClass}`}>
             <div
               className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${checkoutIconClass}`}
@@ -69,6 +88,7 @@ export default function CheckoutNavBar() {
             className={`h-[2px] w-24 ${isCompleted ? "bg-[#46ca43]" : isFailed ? "bg-[#f85149]" : "bg-[#2d3544]"}`}
           ></div>
 
+          {/* Step 3: Success / Fail / Processing status indicator */}
           <div className={`flex items-center gap-2 ${lastStepClass}`}>
             <div
               className={`flex h-6 w-6 items-center justify-center rounded-full ${isCompleted ? "bg-[#46ca43] text-black" : isFailed ? "bg-[#f85149] text-white" : "bg-[#21262d]"}`}
@@ -85,6 +105,7 @@ export default function CheckoutNavBar() {
           </div>
         </div>
 
+        {/* Currency & Language Indicators */}
         <div className="flex items-center gap-4 text-sm text-[#8b949e]">
           <div className="flex items-center gap-4">
             <span className="cursor-pointer hover:text-white">USD</span>
@@ -95,3 +116,4 @@ export default function CheckoutNavBar() {
     </nav>
   );
 }
+

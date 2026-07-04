@@ -12,6 +12,16 @@ import {
   type CheckoutOrderItem,
 } from "./checkout-session";
 
+/* ==========================================================================
+   MAIN COMPONENT: CheckoutForm
+   ========================================================================== */
+
+/**
+ * CheckoutForm Component
+ *
+ * Renders the Stripe payment element forms. Handles Stripe client instance bindings,
+ * order caching snapshot setups, payment confirmations, and error state tracking.
+ */
 export default function CheckoutForm({
   amount,
   orderItems,
@@ -25,6 +35,10 @@ export default function CheckoutForm({
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Submit transaction processing handler.
+   * Backups cart items in sessionStorage first to bridge Stripe redirects.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,6 +48,8 @@ export default function CheckoutForm({
 
     setIsLoading(true);
     const currency = orderItems[0]?.currency ?? "$";
+
+    // Cache order details in sessionStorage prior to redirecting to Stripe
     saveCheckoutOrderSnapshot({
       items: orderItems,
       subtotal: amount,
@@ -42,6 +58,7 @@ export default function CheckoutForm({
       createdAt: new Date().toISOString(),
     });
 
+    // Request payment validation and redirection
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
@@ -49,6 +66,7 @@ export default function CheckoutForm({
       },
     });
 
+    // Capture and translate Stripe processing issues
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message ?? "An unexpected error occurred.");
     } else {
@@ -60,7 +78,10 @@ export default function CheckoutForm({
 
   return (
     <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
+      {/* Stripe Payment Element (Loads dynamic input tabs per country/intent settings) */}
       <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
+      
+      {/* Submit Button Trigger */}
       <Button
         disabled={isLoading || !stripe || !elements}
         id="submit"
@@ -76,6 +97,8 @@ export default function CheckoutForm({
           )}
         </span>
       </Button>
+      
+      {/* Error & Warning Message Area */}
       {message && (
         <div
           id="payment-message"

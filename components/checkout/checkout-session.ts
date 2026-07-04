@@ -1,3 +1,7 @@
+/* ==========================================================================
+   CONSTANTS & TYPE DEFINITIONS
+   ========================================================================== */
+
 export const CHECKOUT_ORDER_STORAGE_KEY = "difmark_checkout_order";
 
 export type CheckoutOrderItem = {
@@ -18,6 +22,13 @@ export type CheckoutOrderSnapshot = {
   createdAt: string;
 };
 
+/* ==========================================================================
+   TYPE GUARDS & VALIDATORS
+   ========================================================================== */
+
+/**
+ * Validates that an unknown value matches the CheckoutOrderItem structure.
+ */
 function isCheckoutOrderItem(value: unknown): value is CheckoutOrderItem {
   if (!value || typeof value !== "object") return false;
 
@@ -33,6 +44,9 @@ function isCheckoutOrderItem(value: unknown): value is CheckoutOrderItem {
   );
 }
 
+/**
+ * Validates that an unknown value matches the CheckoutOrderSnapshot structure.
+ */
 function isCheckoutOrderSnapshot(
   value: unknown,
 ): value is CheckoutOrderSnapshot {
@@ -49,6 +63,14 @@ function isCheckoutOrderSnapshot(
   );
 }
 
+/* ==========================================================================
+   SESSION STORAGE ACTIONS
+   ========================================================================== */
+
+/**
+ * Reads and parses the active checkout snapshot from sessionStorage.
+ * Performs type checks and returns null if corrupt or missing.
+ */
 export function readCheckoutOrderSnapshot() {
   if (typeof window === "undefined") return null;
 
@@ -66,6 +88,10 @@ export function readCheckoutOrderSnapshot() {
   }
 }
 
+/**
+ * Serializes and saves a checkout snapshot to sessionStorage
+ * to persist order data during page transitions and third-party payment redirects.
+ */
 export function saveCheckoutOrderSnapshot(snapshot: CheckoutOrderSnapshot) {
   if (typeof window === "undefined") return;
 
@@ -74,3 +100,4 @@ export function saveCheckoutOrderSnapshot(snapshot: CheckoutOrderSnapshot) {
     JSON.stringify(snapshot),
   );
 }
+
