@@ -11,6 +11,10 @@ import { UserMenuContent } from "./userMenu/UserMenuContent";
 import { UserMenuFooter } from "./userMenu/UserMenuFooter";
 import { LanguageCurrencySelector } from "./userMenu/LanguageCurrencySelector";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface UserMenuProps {
   user: {
     name: string;
@@ -19,6 +23,16 @@ interface UserMenuProps {
   };
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: UserMenu Sidebar Sheet
+   ========================================================================== */
+
+/**
+ * UserMenu Component
+ *
+ * Renders the authenticated user's profile dropdown drawer (Sheet).
+ * Syncs workspace locale settings and routes logout actions.
+ */
 export default function UserMenu({ user }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -37,7 +51,7 @@ export default function UserMenu({ user }: UserMenuProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      {/* Trigger Button */}
+      {/* Drawer Trigger Button (User Avatar) */}
       <SheetTrigger className="flex items-center gap-2 outline-hidden">
         <div className="hover:ring-brand-primary relative h-9 w-9 cursor-pointer overflow-hidden rounded-full ring-2 ring-brand-light transition-all">
           <Image
@@ -49,18 +63,18 @@ export default function UserMenu({ user }: UserMenuProps) {
         </div>
       </SheetTrigger>
 
-      {/* Sidebar Content */}
+      {/* Sidebar Content Panel */}
       <SheetContent
         side="right"
         showCloseButton={false}
         className="w-[316px] gap-0 overflow-visible border-l border-white/10 p-0 shadow-2xl backdrop-blur-sm sm:max-w-[316px]"
       >
         <div className="relative flex h-full w-full flex-col bg-midnight-700/80">
-          {/* Header Section */}
+          {/* Header Section (Profile Details & Setting Selectors) */}
           <div className="bg-midnight-600/60 px-5 pt-8 pb-3">
             <UserMenuHeader user={user} buyerRankText={t("buyerRank")} />
 
-            {/* Language & Currency Selectors */}
+            {/* Language & Currency Selectors dropdowns */}
             <LanguageCurrencySelector
               selectedLang={selectedLang}
               onLanguageChange={setSelectedLang}
@@ -69,13 +83,14 @@ export default function UserMenu({ user }: UserMenuProps) {
             />
           </div>
 
-          {/* Menu Content */}
+          {/* Core Navigation Links Menu */}
           <UserMenuContent t={t} />
 
-          {/* Footer */}
+          {/* Footer Action Bar */}
           <UserMenuFooter onLogout={handleLogout} logoutText={t("logout")} />
         </div>
       </SheetContent>
     </Sheet>
   );
 }
+

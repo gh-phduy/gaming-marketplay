@@ -17,6 +17,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
+/* ==========================================================================
+   HELPER UTILITIES
+   ========================================================================== */
+
+/**
+ * Builds the Google OAuth callback API endpoint based on configuration parameters.
+ * Normalizes trailing slashes and ensures standard path namespaces are populated.
+ */
 const getGoogleAuthUrl = () => {
   const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   const normalizedBaseUrl = rawBaseUrl.replace(/\/$/, "");
@@ -27,9 +35,20 @@ const getGoogleAuthUrl = () => {
   return `${apiBaseUrl}/auth/google`;
 };
 
+/* ==========================================================================
+   MAIN COMPONENT: SignIn Modal Dialog
+   ========================================================================== */
+
+/**
+ * SignIn Component
+ *
+ * Renders the modal trigger button and login popup layout dialog.
+ * Integrates Google OAuth via Supabase client, alongside other mock SSO providers.
+ */
 export default function SignIn() {
   return (
     <Dialog modal={true}>
+      {/* Sign In Header Nav Trigger */}
       <DialogTrigger className="flex cursor-pointer items-center gap-x-2 border-none bg-transparent px-2 py-4 text-dm-text-secondary outline-hidden transition-colors duration-500 hover:text-dm-text-primary">
         <PiSignInBold size={24} aria-hidden="true" />
         <span className="hidden 770:block">SIGN IN</span>
@@ -44,7 +63,7 @@ export default function SignIn() {
         </DialogDescription>
 
         <div className="grid min-h-[550px] grid-cols-1 md:grid-cols-2">
-          {/* Left Column: Hero Image with Background */}
+          {/* Left Column: Hero Cover Art (hidden on mobile) */}
           <div className="relative hidden h-full w-full overflow-hidden md:block">
             <Image
               src="/modal-animate-bg.jpg"
@@ -64,6 +83,7 @@ export default function SignIn() {
 
             <div className="absolute inset-0 z-20 bg-linear-to-t from-surface-base/80 to-transparent" />
 
+            {/* Cashback Reward Banner */}
             <div className="absolute right-8 bottom-12 left-8 z-30 rounded-2xl border border-white/10 bg-surface-base/40 p-6 backdrop-blur-md">
               <h3 className="mb-2 text-xl font-bold text-white">
                 Get your Cashback
@@ -75,6 +95,7 @@ export default function SignIn() {
             </div>
           </div>
 
+          {/* Right Column: Provider Action Buttons */}
           <div className="relative flex flex-col justify-center bg-[#161b26] p-8 md:p-12">
             <div className="mb-10">
               <h2 className="mb-3 text-3xl font-bold text-white">
@@ -85,6 +106,7 @@ export default function SignIn() {
               </p>
             </div>
 
+            {/* Google Authentication SSO */}
             <Button
               variant="default"
               className="mb-8 flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-white text-base font-bold text-black transition-all hover:bg-gray-200"
@@ -108,6 +130,7 @@ export default function SignIn() {
 
             <div className="mb-8 h-px w-full bg-white/10" />
 
+            {/* Other OAuth Social Integrations */}
             <div className="grid grid-cols-2 gap-4">
               <SocialButton
                 icon={
@@ -153,7 +176,20 @@ export default function SignIn() {
   );
 }
 
-function SocialButton({ icon, label }: { icon: ReactNode; label: string }) {
+/* ==========================================================================
+   SUPPORTING WIDGETS
+   ========================================================================== */
+
+interface SocialButtonProps {
+  icon: ReactNode;
+  label: string;
+}
+
+/**
+ * SocialButton Component
+ * Renders individual SSO provider buttons with specialized hover transitions.
+ */
+function SocialButton({ icon, label }: SocialButtonProps) {
   return (
     <Button
       variant="outline"

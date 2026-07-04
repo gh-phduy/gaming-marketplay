@@ -10,6 +10,10 @@ import {
 import { MdArrowDropDown } from "react-icons/md";
 import { LANGUAGES, CURRENCIES, Language } from "./constants";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface LanguageCurrencySelectorProps {
   selectedLang: string;
   onLanguageChange: (lang: string) => void;
@@ -17,6 +21,14 @@ interface LanguageCurrencySelectorProps {
   onCurrencyChange: (currency: string) => void;
 }
 
+/* ==========================================================================
+   SUPPORTING WIDGETS
+   ========================================================================== */
+
+/**
+ * FlagDisplay Component
+ * Renders small rounded country flag graphics for language menu items.
+ */
 function FlagDisplay({ lang }: { lang: Language }) {
   return (
     <Image
@@ -29,6 +41,16 @@ function FlagDisplay({ lang }: { lang: Language }) {
   );
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: LanguageCurrencySelector Popovers
+   ========================================================================== */
+
+/**
+ * LanguageCurrencySelector Component
+ *
+ * Renders two inline popover buttons allowing users to select their preferred
+ * display language and currency code, updating localized settings context.
+ */
 export function LanguageCurrencySelector({
   selectedLang,
   onLanguageChange,
@@ -40,7 +62,7 @@ export function LanguageCurrencySelector({
 
   return (
     <div className="mt-6 flex items-center overflow-hidden rounded-md border border-white/5 bg-[#1c243a]/50">
-      {/* Language Popover */}
+      {/* Language Trigger & Options Selection Popover */}
       <Popover open={langOpen} onOpenChange={setLangOpen}>
         <PopoverTrigger className="flex flex-1 items-center justify-between px-3 py-2.5 text-[13px] text-white/90 transition hover:bg-white/5">
           <div className="flex items-center gap-2">
@@ -51,6 +73,7 @@ export function LanguageCurrencySelector({
           </div>
           <MdArrowDropDown className="text-lg text-white/30" />
         </PopoverTrigger>
+        
         <PopoverContent
           className="w-[280px] border-white/10 bg-[#1c243a] p-3 text-white"
           side="bottom"
@@ -81,7 +104,7 @@ export function LanguageCurrencySelector({
       {/* Divider */}
       <div className="h-5 w-[1px] bg-white/5" />
 
-      {/* Currency Popover */}
+      {/* Currency Trigger & Options Selection Popover */}
       <Popover open={currencyOpen} onOpenChange={setCurrencyOpen}>
         <PopoverTrigger className="flex flex-1 items-center justify-between px-3 py-2.5 text-[13px] text-white/90 transition hover:bg-white/5">
           <div className="flex items-center gap-2">
@@ -92,6 +115,7 @@ export function LanguageCurrencySelector({
           </div>
           <MdArrowDropDown className="text-lg text-white/30" />
         </PopoverTrigger>
+        
         <PopoverContent
           className="w-[280px] border-white/10 bg-[#1c243a] p-3 text-white"
           side="bottom"
@@ -121,3 +145,4 @@ export function LanguageCurrencySelector({
     </div>
   );
 }
+

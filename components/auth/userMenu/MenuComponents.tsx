@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 import { MdArrowDropDown } from "react-icons/md";
 import { ReactNode } from "react";
 
-/**
- * Reusable menu item component
- */
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 export interface MenuItemProps {
   icon: React.ReactNode;
   label: string;
@@ -17,6 +18,15 @@ export interface MenuItemProps {
   expandable?: boolean;
 }
 
+/* ==========================================================================
+   COMPONENTS: MenuItem & MenuSection
+   ========================================================================== */
+
+/**
+ * MenuItem Component
+ * Renders an individual button row within the sidebar drawer.
+ * Supports custom vector icons, badges, titles, and expansion indicators.
+ */
 export function MenuItem({
   icon,
   label,
@@ -59,7 +69,9 @@ export function MenuItem({
 }
 
 /**
- * Reusable menu section component
+ * MenuSection Component
+ * Renders a group of related menu items, prepended with a section heading
+ * and postpended with divider guidelines.
  */
 export function MenuSection({
   title,
@@ -79,3 +91,4 @@ export function MenuSection({
     </div>
   );
 }
+

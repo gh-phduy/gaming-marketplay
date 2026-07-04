@@ -15,17 +15,33 @@ import {
 import { FaTicketAlt, FaHandHoldingUsd } from "react-icons/fa";
 import { MenuItem, MenuSection } from "./MenuComponents";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface UserMenuContentProps {
   t: (key: string) => string;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: UserMenuContent Links List
+   ========================================================================== */
+
+/**
+ * UserMenuContent Component
+ *
+ * Renders the categorized menu sections list inside the user profile drawer sidebar.
+ * Composes list groups for Dashboard, Finances, Support Tickets, and Settings.
+ */
 export function UserMenuContent({ t }: UserMenuContentProps) {
+  // Reusable page redirection handler
   const navigateTo = (href: string) => {
     window.location.href = href;
   };
 
   return (
     <div className="custom-scrollbar flex-1 overflow-y-auto px-5">
+      {/* Group 1: Main Platform Dashboards */}
       <MenuSection title={t("mainSection")}>
         <MenuItem
           icon={<MdSpaceDashboard />}
@@ -40,6 +56,7 @@ export function UserMenuContent({ t }: UserMenuContentProps) {
         <MenuItem icon={<MdShoppingBag />} label={t("myOrders")} />
       </MenuSection>
 
+      {/* Group 2: User Wallet, Rewards & Balance info */}
       <MenuSection title={t("financesSection")}>
         <MenuItem
           icon={<MdAccountBalanceWallet />}
@@ -58,10 +75,12 @@ export function UserMenuContent({ t }: UserMenuContentProps) {
         <MenuItem icon={<FaHandHoldingUsd />} label={t("affiliateProgram")} />
       </MenuSection>
 
+      {/* Group 3: Help center support tickets */}
       <MenuSection title={t("casesSection")}>
         <MenuItem icon={<FaTicketAlt />} label={t("myTickets")} />
       </MenuSection>
 
+      {/* Group 4: Account settings profile settings */}
       <MenuSection title={t("generalSection")} noDivider>
         <MenuItem icon={<MdPerson />} label={t("accountSettings")} expandable />
         <MenuItem icon={<MdBookmark />} label={t("bookmarks")} />
@@ -72,3 +91,4 @@ export function UserMenuContent({ t }: UserMenuContentProps) {
     </div>
   );
 }
+
