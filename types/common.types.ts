@@ -1,22 +1,22 @@
 /**
  * Common Types
- * Các type dùng chung trong toàn bộ ứng dụng
+ * Shared TypeScript types across the application.
  */
 
-/** Prop types cho components có children */
+/** Component properties containing children */
 export interface WithChildren {
   children: React.ReactNode;
 }
 
-/** Prop types cho components có className */
+/** Component properties containing custom styling classes */
 export interface WithClassName {
   className?: string;
 }
 
-/** Kết hợp children và className */
+/** Base props interface combining both children and custom styles */
 export interface BaseComponentProps extends WithChildren, WithClassName {}
 
-/** Response wrapper cho API */
+/** Standard API response envelope wrapper */
 export interface ApiResponse<T> {
   data: T;
   success: boolean;

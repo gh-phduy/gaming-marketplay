@@ -4,31 +4,31 @@ import { useLayoutEffect } from "react";
 import { HOME_CATEGORY_SCROLL_KEY } from "./home-scroll-restoration";
 
 /**
- * Thời gian tối đa chờ layout ổn định trước khi reveal (ms).
+ * Maximum duration to wait for the layout to stabilize before revealing (ms).
  */
 const MAX_RESTORE_DURATION = 1500;
 
 /**
- * Số frame liên tiếp mà scrollHeight không đổi
- * để coi layout đã ổn định.
+ * Number of consecutive animation frames where scrollHeight remains unchanged
+ * to consider the layout fully stabilized.
  */
 const STABLE_FRAME_TARGET = 8;
 
 /**
- * Dung sai thay đổi height (px).
+ * Height change tolerance in pixels.
  */
 const HEIGHT_TOLERANCE = 2;
 
 /**
  * HomeScrollRestoration Component
  *
- * Khôi phục vị trí scroll khi quay lại trang chủ từ trang category.
+ * Restores the scroll position when returning to the homepage from a category page.
  *
- * Cách hoạt động:
- * 1. Ngay trong useLayoutEffect (trước paint), chặn hiển thị nội dung.
- * 2. Liên tục scrollTo vị trí đã lưu mỗi animation frame.
- * 3. Chờ cho đến khi scrollHeight ổn định (không thay đổi liên tiếp nhiều frame).
- * 4. Reveal nội dung với fade-in mượt.
+ * How it works:
+ * 1. Inside useLayoutEffect (before paint), block visible content via a black overlay.
+ * 2. Continuously scrollTo the saved position on every animation frame.
+ * 3. Wait until scrollHeight stabilizes (doesn't change for STABLE_FRAME_TARGET frames).
+ * 4. Reveal the page content with a smooth fade-out transition.
  */
 export default function HomeScrollRestoration() {
   useLayoutEffect(() => {
@@ -44,21 +44,21 @@ export default function HomeScrollRestoration() {
       return;
     }
 
-    // Xoá ngay để tránh trigger lại nếu component re-mount
+    // Remove immediately to prevent re-triggering if the component re-mounts
     window.sessionStorage.removeItem(HOME_CATEGORY_SCROLL_KEY);
 
     const htmlEl = document.documentElement;
     const body = document.body;
 
-    // Lưu style cũ
+    // Save previous scroll behavior
     const prevScrollBehavior = htmlEl.style.scrollBehavior;
 
-    // Tắt smooth scroll
+    // Disable smooth scrolling temporarily to prevent layout jumping
     htmlEl.style.scrollBehavior = "auto";
 
-    // Tạo overlay che toàn bộ viewport thay vì ẩn body.
-    // Cách này giữ nguyên layout, không gây reflow,
-    // và tránh flash trắng vì overlay có cùng màu background.
+    // Create a temporary overlay to cover the viewport instead of hiding the body.
+    // This maintains the original layout, avoids layout reflows,
+    // and prevents visual white flashes since the overlay matches the dark theme color.
     const overlay = document.createElement("div");
     overlay.setAttribute("data-scroll-restore-overlay", "");
     overlay.style.cssText = `
@@ -71,7 +71,7 @@ export default function HomeScrollRestoration() {
     `;
     body.appendChild(overlay);
 
-    // Scroll ngay đến vị trí đã lưu
+    // Scroll immediately to the saved position
     window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
 
     const startTime = performance.now();
@@ -86,23 +86,23 @@ export default function HomeScrollRestoration() {
     };
 
     const reveal = () => {
-      // Scroll lần cuối
+      // Perform a final scroll adjustment
       restoreScroll();
 
-      // Fade out overlay
+      // Fade out the overlay
       overlay.style.opacity = "0";
 
-      // Restore styles
+      // Restore original scroll styles
       htmlEl.style.scrollBehavior = prevScrollBehavior;
 
-      // Xoá overlay sau khi fade xong
+      // Remove overlay element after fade-out transition finishes
       fadeTimer = window.setTimeout(() => {
         overlay.remove();
       }, 170);
     };
 
     const waitForStableLayout = () => {
-      // Giữ scroll position mỗi frame
+      // Enforce scroll position on every frame
       restoreScroll();
 
       const currentScrollHeight = htmlEl.scrollHeight;

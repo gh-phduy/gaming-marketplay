@@ -1,9 +1,9 @@
 /**
  * Product Types
- * Định nghĩa các interface cho sản phẩm game
+ * Interfaces representing gaming and marketplace product catalog schemas.
  */
 
-/** Thông tin cơ bản của một game */
+/** Essential details profile of a game */
 export interface Game {
   id: string;
   name: string;
@@ -19,7 +19,7 @@ export interface Game {
   videoUrl?: string;
 }
 
-/** Thông tin giá và sale */
+/** Pricing metadata and active sale discount details */
 export interface Pricing {
   currentPrice: number;
   originalPrice?: number;
@@ -27,14 +27,14 @@ export interface Pricing {
   currency: string;
 }
 
-/** Thông tin đánh giá */
+/** Rating score statistics and total customer feedback reviews count */
 export interface Rating {
   score: number;
   reviewCount: number;
   maxScore?: number;
 }
 
-/** Sản phẩm đầy đủ (Game + Pricing + Rating) */
+/** Consolidated Product catalog schema (extends base Game details, Pricing, and Ratings) */
 export interface Product extends Game {
   pricing: Pricing;
   rating?: Rating;
