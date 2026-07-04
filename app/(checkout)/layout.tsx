@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import NavBar from "../components/layout/NavBar";
-import { AppProviders } from "../providers/AppProviders";
+import NavBar from "@/components/layout/NavBar";
+import { AppProviders } from "@/providers/AppProviders";
 
 export default function CheckoutLayout({
   children,

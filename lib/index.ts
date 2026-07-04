@@ -7,11 +7,10 @@
  * import { useScrollPosition, formatPrice, ROUTES } from '@/app/_lib';
  */
 
-// Hooks
-export * from "./hooks";
 
 // Utilities
 export * from "./utils";
+export * from "./supabase";
 
 // Constants
 export * from "./constants";

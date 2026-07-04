@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -18,12 +19,13 @@ import {
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/app/context/CartContext";
+import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   readCheckoutOrderSnapshot,
   type CheckoutOrderSnapshot,
-} from "@/app/components/checkout/checkout-session";
-import { addMarketplaceNotification } from "@/app/components/notifications/notification-store";
+} from "@/components/checkout/checkout-session";
+import { addMarketplaceNotification } from "@/components/notifications/notification-store";
 
 const PROCESSED_PAYMENT_INTENT_KEY = "processed_payment_intent";
 
@@ -93,15 +95,105 @@ function SuccessToast({
 export default function SuccessClient() {
   const searchParams = useSearchParams();
   const { resetCart } = useCart();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const [status, setStatus] = useState<"succeeded" | "failed" | null>(null);
   const [orderSnapshot, setOrderSnapshot] =
     useState<CheckoutOrderSnapshot | null>(null);
   const [showToast, setShowToast] = useState(false);
+  const [dbError, setDbError] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const paymentIntent = searchParams.get("payment_intent");
   const redirectStatus = searchParams.get("redirect_status");
+  const accountId = user?.id || user?.email || null;
+
+  const saveOrderToDb = async (snapshot: CheckoutOrderSnapshot | null, currentUser: any) => {
+    if (!snapshot || !currentUser?.id || !paymentIntent) return;
+
+    setIsSyncing(true);
+    setDbError(null);
+
+    const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+
+    if (!isUuid(currentUser.id)) {
+      setDbError("You are logged in with a mock user. Cannot save transaction to database. Please log in using Google.");
+      setIsSyncing(false);
+      return;
+    }
+
+    try {
+      // Step 1: Ensure user profile exists in public.users to satisfy Foreign Key constraint
+      const { error: upsertError } = await supabase
+        .from("users")
+        .upsert({
+          id: currentUser.id,
+          email: currentUser.email || "",
+          display_name: currentUser.name || currentUser.email || "User",
+          avatar_url: currentUser.picture || "/avt1.png",
+        }, { onConflict: "id" });
+
+      if (upsertError) {
+        console.error("Error upserting user in Supabase:", upsertError);
+        setDbError(`Failed to sync user profile: ${upsertError.message}`);
+        setIsSyncing(false);
+        return;
+      }
+
+      // Step 2: Insert order rows
+      const orderRows = snapshot.items.map((item) => ({
+        buyer_id: currentUser.id,
+        product_id: isUuid(item.id) ? item.id : null,
+        quantity: item.quantity,
+        total_price: item.price * item.quantity,
+        currency: item.currency || "USD",
+        status: "completed",
+        stripe_payment_intent: paymentIntent,
+      }));
+
+      const { error: orderError } = await supabase
+        .from("orders")
+        .insert(orderRows);
+
+      if (orderError) {
+        console.error("Error writing order to Supabase:", orderError);
+        setDbError(`Failed to save transaction: ${orderError.message}`);
+        setIsSyncing(false);
+        return;
+      }
+
+      console.log("Successfully recorded order in database");
+
+      // Step 3: Success! Reset cart, show notification, and mark as processed in localStorage
+      addMarketplaceNotification({
+        id: `payment-${paymentIntent}`,
+        kind: "payment",
+        title: "Payment confirmed",
+        description: getNotificationDescription(
+          snapshot,
+          formatCurrency(snapshot?.total ?? 0, snapshot?.currency ?? "$"),
+        ),
+        href: `/checkout/success?payment_intent=${encodeURIComponent(
+          paymentIntent,
+        )}&redirect_status=succeeded`,
+      }, accountId);
+
+      resetCart();
+      const processedPaymentIntentKey = accountId
+        ? `${PROCESSED_PAYMENT_INTENT_KEY}:${accountId}`
+        : PROCESSED_PAYMENT_INTENT_KEY;
+      localStorage.setItem(processedPaymentIntentKey, paymentIntent);
+      setDbError(null);
+    } catch (err: any) {
+      console.error("Unexpected sync error:", err);
+      setDbError(`Unexpected error during system sync: ${err.message || err}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   useEffect(() => {
+    if (isAuthLoading) return;
+
     if (!paymentIntent) {
       setStatus("failed");
       return;
@@ -117,30 +209,22 @@ export default function SuccessClient() {
     setStatus("succeeded");
     setShowToast(true);
 
-    const processedPaymentIntent = localStorage.getItem(
-      PROCESSED_PAYMENT_INTENT_KEY,
-    );
+    const processedPaymentIntentKey = accountId
+      ? `${PROCESSED_PAYMENT_INTENT_KEY}:${accountId}`
+      : PROCESSED_PAYMENT_INTENT_KEY;
+    const processedPaymentIntent = localStorage.getItem(processedPaymentIntentKey);
 
     if (processedPaymentIntent !== paymentIntent) {
-      addMarketplaceNotification({
-        id: `payment-${paymentIntent}`,
-        kind: "payment",
-        title: "Payment confirmed",
-        description: getNotificationDescription(
-          snapshot,
-          formatCurrency(snapshot?.total ?? 0, snapshot?.currency ?? "$"),
-        ),
-        href: `/checkout/success?payment_intent=${encodeURIComponent(
-          paymentIntent,
-        )}&redirect_status=succeeded`,
-      });
-      resetCart();
-      localStorage.setItem(PROCESSED_PAYMENT_INTENT_KEY, paymentIntent);
+      if (snapshot && user) {
+        void saveOrderToDb(snapshot, user);
+      } else if (!user) {
+        setDbError("No logged in user found. Please sign in to complete system sync.");
+      }
     }
 
     const timeoutId = window.setTimeout(() => setShowToast(false), 6200);
     return () => window.clearTimeout(timeoutId);
-  }, [paymentIntent, redirectStatus, resetCart]);
+  }, [accountId, isAuthLoading, paymentIntent, redirectStatus, user]);
 
   const itemCount = useMemo(
     () =>
@@ -203,6 +287,29 @@ export default function SuccessClient() {
         total={formattedTotal}
       />
 
+      {dbError && (
+        <div className="mb-6 rounded-lg border border-yellow-500/20 bg-[#2b2b1d] p-6 text-yellow-400 shadow-md">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="h-6 w-6 shrink-0 text-yellow-500" />
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-white">Payment succeeded, but system sync failed</h3>
+              <p className="mt-1 text-sm text-gray-300">
+                Your payment was processed successfully by Stripe, but we couldn't record the transaction in our database due to: <br/>
+                <span className="font-mono text-red-400 text-xs block mt-2 bg-black/35 p-2 rounded">{dbError}</span>
+              </p>
+              <div className="mt-4 flex gap-3">
+                <Button
+                  onClick={() => void saveOrderToDb(orderSnapshot, user)}
+                  disabled={isSyncing}
+                  className="h-9 rounded bg-[#62d676] px-4 text-xs font-bold text-[#111827] hover:bg-[#56c96a] disabled:opacity-50"
+                >
+                  {isSyncing ? "Syncing..." : "Retry System Sync"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-[#1f2937] shadow-[0_24px_70px_rgba(0,0,0,0.28)]">
         <div className="border-b border-white/[0.06] bg-[linear-gradient(135deg,rgba(98,214,118,0.16),rgba(31,41,55,0.3)_42%,rgba(51,65,85,0.38))] px-6 py-8 sm:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

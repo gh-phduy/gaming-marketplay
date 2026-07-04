@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import NewsCard from "../../components/home/NewsCard";
+import NewsCard from "@/components/home/NewsCard";
 import { NEWS_ARTICLES, getNewsArticleHref } from "@/lib/constants";
 
 export const metadata: Metadata = {

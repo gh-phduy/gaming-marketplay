@@ -5,16 +5,26 @@
  * HeroCarousel được render bởi (with-hero)/layout.tsx
  */
 
-import { DirectTopUpClient } from "@/app/components/home/directtopup/DirectTopUpClient";
+import { DirectTopUpClient } from "@/components/home/directtopup/DirectTopUpClient";
 
-export default function DirectTopUpPage() {
+interface DirectTopUpPageProps {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+}
+
+export default async function DirectTopUpPage({
+  searchParams,
+}: DirectTopUpPageProps) {
+  const { category } = await searchParams;
+
   return (
     <>
       <main
         id="main-content"
         className="flex w-full flex-col items-center gap-y-16 pt-8"
       >
-        {/* <DirectTopUpClient /> */}
+        <DirectTopUpClient category={category} />
       </main>
     </>
   );

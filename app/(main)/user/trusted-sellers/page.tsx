@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, Star } from "lucide-react";
-import { getTrustedSellers } from "@/app/components/user/seller-profile.data";
-import { getSellerProfilePath } from "@/app/components/user/seller-profile.route";
+import { getTrustedSellers } from "@/components/user/seller-profile.data";
+import { getSellerProfilePath } from "@/components/user/seller-profile.route";
 
 export default async function TrustedSellersPage() {
   const sellers = await getTrustedSellers();

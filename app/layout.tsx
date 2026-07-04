@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { CartProvider } from "./context/CartContext";
+import { CartProvider } from "@/contexts/CartContext";
 import "./globals.css";
 
 export const metadata: Metadata = {

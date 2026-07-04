@@ -1,6 +1,7 @@
-import Footer from "../components/layout/Footer";
-import NavBar from "../components/layout/NavBar";
-import { AppProviders } from "../providers/AppProviders";
+import Footer from "@/components/layout/Footer";
+import NavBar from "@/components/layout/NavBar";
+import { AppProviders } from "@/providers/AppProviders";
+import FloatingChatWidget from "@/components/chat/FloatingChatWidget";
 
 export default function MainLayout({
   children,
@@ -14,6 +15,7 @@ export default function MainLayout({
         <div className="flex flex-1 flex-col items-center pt-20">
           {children}
         </div>
+        <FloatingChatWidget />
       </AppProviders>
       <Footer />
     </>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Search, ChevronRight, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -16,14 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import CheckoutForm from "@/app/components/checkout/CheckoutForm";
+import CheckoutForm from "@/components/checkout/CheckoutForm";
 import {
   readCheckoutOrderSnapshot,
   type CheckoutOrderItem,
   type CheckoutOrderSnapshot,
-} from "@/app/components/checkout/checkout-session";
-import { ProductApiResponse } from "@/app/types/product";
-import { useCart } from "@/app/context/CartContext";
+} from "@/components/checkout/checkout-session";
+import { ProductApiResponse } from "@/types/api-product";
+import { useCart } from "@/contexts/CartContext";
 
 export default function CheckoutClient() {
   const searchParams = useSearchParams();
@@ -118,13 +119,56 @@ export default function CheckoutClient() {
 
     async function fetchProduct() {
       try {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${apiUrl}/api/products/${productId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setProductData(data);
+        const { data, error } = await supabase
+          .from("products")
+          .select(`
+            *,
+            seller:users (
+              id,
+              display_name,
+              avatar_url,
+              rating,
+              is_verified_seller
+            )
+          `)
+          .eq("id", productId)
+          .single();
+
+        if (error || !data) {
+          console.error("Failed to fetch product from Supabase:", error);
+          return;
         }
+
+        const mapped = {
+          data: {
+            id: data.id,
+            name: data.title,
+            type: data.category,
+            platform: data.platform || "PC",
+            edition: "Standard",
+            delivery: "Instant",
+            activationRegion: data.region,
+            price: Number(data.price),
+            currency: data.currency,
+            images: [data.image_url || "/cyberpunk_2077.jpg"],
+          },
+          seller: {
+            id: data.seller?.id || "unknown",
+            name: data.seller?.display_name || "Unknown Seller",
+            avatar: data.seller?.avatar_url || "/avt1.png",
+            isOnline: true,
+            badge: data.seller?.is_verified_seller ? "Verified Seller" : "Seller",
+            tier: "Pro",
+            rating: Number(data.seller?.rating || 5),
+            successRate: 100,
+            totalFeedbacks: 12,
+            timezone: "GMT+7",
+            totalSales: 10,
+            positiveFeedbacks: 12,
+            negativeFeedbacks: 0,
+          },
+        };
+        setProductData(mapped);
       } catch (e) {
         console.error("Failed to fetch product:", e);
       } finally {

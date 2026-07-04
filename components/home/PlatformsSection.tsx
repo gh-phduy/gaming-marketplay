@@ -1,0 +1,90 @@
+import PlatformCard from "./PlatformCard";
+import ProductCarousel from "../product/ProductCarousel";
+import SectionHeader from "../shared/SectionHeader";
+
+const PLATFORM_ITEMS = [
+  {
+    id: "playstation-5",
+    name: "Playstation 5",
+    href: "/product?platform=playstation",
+    consoleImageDark: "/ps5-hover.webp",
+    consoleImageLight: "/ps5.webp",
+  },
+  {
+    id: "playstation-4",
+    name: "Playstation 4",
+    href: "/product?platform=playstation",
+    consoleImageDark: "/platform-device/ps4-hover.webp",
+    consoleImageLight: "/platform-device/ps4.webp",
+  },
+  {
+    id: "pc",
+    name: "PC",
+    href: "/product?productType=pc-games",
+    consoleImageDark: "/platform-device/pc-hover.webp",
+    consoleImageLight: "/platform-device/pc.webp",
+  },
+  {
+    id: "xbox-series-x",
+    name: "Xbox series X",
+    href: "/product?platform=xbox-live",
+    consoleImageDark: "/platform-device/xboxX-hover.webp",
+    consoleImageLight: "/platform-device/xboxX.webp",
+  },
+  {
+    id: "xbox-one",
+    name: "Xbox One",
+    href: "/product?platform=xbox-live",
+    consoleImageDark: "/platform-device/xboxOne-hover.webp",
+    consoleImageLight: "/platform-device/xboxOne.webp",
+  },
+  {
+    id: "nintendo-switch",
+    name: "Nintendo Switch",
+    href: "/product?platform=nintendo",
+    consoleImageDark: "/platform-device/nintendo-hover.webp",
+    consoleImageLight: "/platform-device/nintendo.webp",
+  },
+] as const;
+
+export default function PlatformsSection() {
+  return (
+    <section
+      className="w-full responsive overflow-visible px-8 800:px-0"
+      aria-labelledby="platforms-heading"
+    >
+      <SectionHeader
+        headingId="platforms-heading"
+        headingText="Platforms"
+        title="PLATFORMS"
+        containerClassName="mb-10"
+        titleClassName="-translate-x-[22px]"
+        viewAllAriaLabel="View all platforms"
+      />
+      <div className="hidden grid-cols-2 gap-4 800:grid 990:grid-cols-3 990:gap-6">
+        {PLATFORM_ITEMS.map((platform) => (
+          <PlatformCard
+            key={platform.id}
+            name={platform.name}
+            href={platform.href}
+            consoleImageDark={platform.consoleImageDark}
+            consoleImageLight={platform.consoleImageLight}
+          />
+        ))}
+      </div>
+      <div className="block overflow-visible 800:hidden">
+        <ProductCarousel>
+          {PLATFORM_ITEMS.map((platform) => (
+            <PlatformCard
+              key={platform.id}
+              name={platform.name}
+              href={platform.href}
+              consoleImageDark={platform.consoleImageDark}
+              consoleImageLight={platform.consoleImageLight}
+            />
+          ))}
+        </ProductCarousel>
+      </div>
+    </section>
+  );
+}

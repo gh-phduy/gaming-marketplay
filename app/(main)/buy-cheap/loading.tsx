@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   TitleSkeleton,
   ProductSectionSkeleton,
-} from "../../components/product/PageSkeletons";
+} from "@/components/product/PageSkeletons";
 
 export default function Loading() {
   return (

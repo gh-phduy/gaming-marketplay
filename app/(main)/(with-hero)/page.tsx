@@ -6,19 +6,19 @@
  * HeroCarousel được render bởi (with-hero)/layout.tsx
  */
 
-import PopularGamesSection from "../../components/home/PopularGamesSection";
-import FeaturesSection from "../../components/home/FeaturesSection";
-import PromoBanner from "../../components/home/PromoBanner";
-import UpcomingGamesSection from "../../components/home/UpcomingGamesSection";
-import CategoryGridRow1 from "../../components/home/CategoryGridRow1";
-import CategoryGridRow2 from "../../components/home/CategoryGridRow2";
-import PopularSellersSection from "../../components/home/PopularSellersSection";
-import CategoryCarousel from "../../components/home/CategoryCarousel";
-import HomeScrollRestoration from "../../components/home/HomeScrollRestoration";
-import GamesSection from "../../components/shared/GamesSection";
-import FlashSaleSection from "../../components/home/FlashSaleSection";
-import PlatformsSection from "../../components/home/PlatformsSection";
-import LatestNewsSection from "../../components/home/LatestNewsSection";
+import PopularGamesSection from "@/components/home/PopularGamesSection";
+import FeaturesSection from "@/components/home/FeaturesSection";
+import PromoBanner from "@/components/home/PromoBanner";
+import UpcomingGamesSection from "@/components/home/UpcomingGamesSection";
+import CategoryGridRow1 from "@/components/home/CategoryGridRow1";
+import CategoryGridRow2 from "@/components/home/CategoryGridRow2";
+import PopularSellersSection from "@/components/home/PopularSellersSection";
+import CategoryCarousel from "@/components/home/CategoryCarousel";
+import HomeScrollRestoration from "@/components/home/HomeScrollRestoration";
+import GamesSection from "@/components/shared/GamesSection";
+import FlashSaleSection from "@/components/home/FlashSaleSection";
+import PlatformsSection from "@/components/home/PlatformsSection";
+import LatestNewsSection from "@/components/home/LatestNewsSection";
 export default function HomePage() {
   return (
     <>

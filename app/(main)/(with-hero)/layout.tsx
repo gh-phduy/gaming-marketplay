@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { HeroCarousel } from "../../components/home/HeroCarousel";
-import type { HeroTab } from "../../components/home/hero-carousel/types";
+import { HeroCarousel } from "@/components/home/HeroCarousel";
+import type { HeroTab } from "@/components/home/hero-carousel/types";
 
 export default function WithHeroLayout({
   children,

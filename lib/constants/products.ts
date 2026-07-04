@@ -3,7 +3,7 @@
  * Mock data cho development
  */
 
-import type { Product, Seller } from "@/app/_types";
+import type { Product, Seller } from "@/types";
 
 /**
  * Mock products cho development
@@ -305,7 +305,6 @@ export const TOPUP_GAMES: TopUpGame[] = [
 export const TOPUP_CATEGORIES_FILTER = [
   { id: "all", label: "All Categories" },
   { id: "mobile", label: "Mobile Games" },
-  { id: "pc", label: "PC Games" },
   { id: "services", label: "Services" },
 ];
 

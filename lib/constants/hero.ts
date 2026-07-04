@@ -139,7 +139,7 @@ export const TOPUP_CATEGORIES: HeroCategory[] = [
     icon: "package",
     image: "/bg-category-all-categories.jpg",
     heroImages: ["/category-hero-all-categories.webp"],
-    link: "/buy-cheap?category=all",
+    link: "/direct-top-up?category=all#top-up-products",
   },
   {
     id: "mobile-games",
@@ -147,7 +147,7 @@ export const TOPUP_CATEGORIES: HeroCategory[] = [
     icon: "gamepad-2",
     image: "/bg-category-mobile.jpg",
     heroImages: ["/category-hero-mobile.webp"],
-    link: "/buy-cheap?category=mobile-games",
+    link: "/direct-top-up?category=mobile#top-up-products",
   },
   {
     id: "services",
@@ -161,6 +161,6 @@ export const TOPUP_CATEGORIES: HeroCategory[] = [
       "/category-hero-services4.webp",
       "/category-hero-services5.webp",
     ],
-    link: "/buy-cheap?category=services",
+    link: "/direct-top-up?category=services#top-up-products",
   },
 ];

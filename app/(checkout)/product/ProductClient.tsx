@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
+import { supabase } from "@/lib/supabase";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronDown,
@@ -19,21 +20,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import ProductSidebar from "@/app/components/product/ProductSidebar";
-import ProductGridItem from "@/app/components/product/ProductGridItem";
+import ProductSidebar from "@/components/product/ProductSidebar";
+import ProductGridItem from "@/components/product/ProductGridItem";
 import { IoMdHome } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
-import { SiNintendoswitch } from "react-icons/si";
-import { FaPlaystation } from "react-icons/fa";
-import { BsXbox } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { BsSortDown } from "react-icons/bs";
 import { IoCloseSharp } from "react-icons/io5";
-import Pagination from "@/app/components/shared/Pagination";
-import LoadMoreButton from "@/app/components/shared/LoadMoreButton";
+import Pagination from "@/components/shared/Pagination";
+import LoadMoreButton from "@/components/shared/LoadMoreButton";
 import { useQuery } from "@tanstack/react-query";
-import { useProductFilter } from "@/app/contexts/ProductFilterContext";
-import { PRODUCT_TYPES_DATA } from "@/app/components/product/sidebar/filter-data";
+import { useProductFilter } from "@/contexts/ProductFilterContext";
+import { PRODUCT_TYPES_DATA } from "@/components/product/sidebar/filter-data";
 
 interface Product {
   id: number;
@@ -49,11 +47,33 @@ interface Product {
   filters?: string[];
 }
 
+const mapDbProductToClientProduct = (row: any): Product => {
+  return {
+    id: row.id,
+    title: row.title,
+    price: Number(row.price),
+    image: row.image_url || "/cyberpunk_2077.jpg",
+    platform: row.platform || "PC",
+    platformLabel: row.platform || "PC",
+    type: row.category,
+    productType: row.category,
+    category: row.category,
+    filters: [row.category, row.platform, row.region].filter(Boolean),
+  };
+};
+
 const fetchListingProducts = async (): Promise<Product[]> => {
-  const response = await fetch("http://localhost:5000/api/listing-products");
-  if (!response.ok) throw new Error("Failed to fetch products");
-  const data = await response.json();
-  return data.products;
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("status", "published");
+
+  if (error) {
+    console.error("Error fetching products from Supabase:", error);
+    throw error;
+  }
+
+  return (data || []).map(mapDbProductToClientProduct);
 };
 
 const FILTERS_COLLAPSED_HEIGHT = 36; // ~1 row height in px
@@ -99,7 +119,9 @@ const FILTER_LABEL_BY_ID = new Map<string, string>([
   ...PRODUCT_FILTER_LABEL_BY_ID,
   ...ROUTE_PRODUCT_TYPE_LABEL_BY_ID,
 ]);
-const ROUTE_PRODUCT_TYPE_FILTERS = new Set(ROUTE_PRODUCT_TYPE_LABEL_BY_ID.keys());
+const ROUTE_PRODUCT_TYPE_FILTERS = new Set(
+  ROUTE_PRODUCT_TYPE_LABEL_BY_ID.keys(),
+);
 const PLATFORM_QUERY_ALIASES: Record<string, string> = {
   "battle.net": "battle-net",
   battlenet: "battle-net",
@@ -162,7 +184,10 @@ function getProductFilterValues(product: Product) {
     .map(normalizeFilterId);
 }
 
-function productMatchesSelectedFilter(product: Product, selectedFilter: string) {
+function productMatchesSelectedFilter(
+  product: Product,
+  selectedFilter: string,
+) {
   const productFilterValues = getProductFilterValues(product);
   const selectedLabel = FILTER_LABEL_BY_ID.get(selectedFilter);
   const selectedLabelId = selectedLabel
@@ -295,7 +320,9 @@ export default function ProductClient() {
     const initialSearch =
       searchParams.get("name") || searchParams.get("search") || "";
     const initialPage = Number(searchParams.get("page") || "1");
-    const initialPlatforms = Array.from(new Set(getFilterQueryValues(searchParams)));
+    const initialPlatforms = Array.from(
+      new Set(getFilterQueryValues(searchParams)),
+    );
 
     setSearchTerm(initialSearch);
     setSelectedPlatforms(initialPlatforms);

@@ -3,7 +3,7 @@
  * Định nghĩa các menu items và routes
  */
 
-import type { NavLink, Category } from "@/app/_types";
+import type { NavLink, Category } from "@/types";
 
 /**
  * Main navigation links
