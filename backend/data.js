@@ -938,3 +938,212 @@ export const popularGames = ALL_PRODUCTS.filter((p) => p.isPopular).map(
     price: p.price,
   }),
 );
+
+export function normalizeSellerRouteKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function sanitizeSellerImageUrl(value) {
+  if (!value || value.startsWith("data:") || value.startsWith("blob:")) {
+    return "/cyberpunk_2077.jpg";
+  }
+
+  return value;
+}
+
+function createSellerOffer(listing, seller) {
+  return {
+    data: {
+      id: String(listing.id),
+      name: String(listing.title),
+      type: String(listing.productType || listing.type || "Product key"),
+      platform: String(listing.platform || "Steam"),
+      edition: String(listing.edition || "Standard"),
+      delivery: String(listing.delivery || "Instant"),
+      activationRegion: String(listing.activationRegion || "Global"),
+      price: Number(listing.price || 0),
+      currency: String(listing.currency || "$"),
+      images: [sanitizeSellerImageUrl(String(listing.imageUrl || ""))],
+    },
+    seller,
+  };
+}
+
+function createSellerProfileFromListings(profile, listings) {
+  const publishedListings = listings.filter(
+    (listing) => listing.status === "published",
+  );
+
+  if (publishedListings.length === 0) return null;
+
+  const seller = {
+    id: String(profile.id),
+    name: String(profile.name),
+    avatar: sanitizeSellerImageUrl(String(profile.avatar || "/avt1.png")),
+    isOnline: true,
+    badge: "Seller",
+    tier: "Expert",
+    rating: 5,
+    successRate: 100,
+    totalFeedbacks: 0,
+    timezone: "GMT +07:00",
+    totalSales: publishedListings.reduce(
+      (total, listing) => total + Number(listing.sales || 0),
+      0,
+    ),
+    positiveFeedbacks: 100,
+    negativeFeedbacks: 0,
+  };
+  const offers = publishedListings.map((listing) =>
+    createSellerOffer(listing, seller),
+  );
+
+  return {
+    id: seller.id,
+    name: seller.name,
+    avatar: seller.avatar,
+    banner:
+      sanitizeSellerImageUrl(String(profile.banner || "")) ||
+      offers[0]?.data.images[0] ||
+      "/cyberpunk_2077.jpg",
+    badge: seller.badge,
+    tier: seller.tier,
+    rating: seller.rating,
+    successRate: seller.successRate,
+    totalFeedbacks: seller.totalFeedbacks,
+    totalSales: seller.totalSales,
+    positiveFeedbacks: seller.positiveFeedbacks,
+    negativeFeedbacks: seller.negativeFeedbacks,
+    timezone: seller.timezone,
+    currency: String(profile.currency || "$"),
+    language: String(profile.language || "EN"),
+    location: String(profile.location || "VN"),
+    followers: 0,
+    memberSince: String(profile.memberSince || "Jun 2025"),
+    description:
+      "Digital marketplace seller account with published marketplace offers.",
+    averagePrice: Number(
+      (
+        offers.reduce((sum, offer) => sum + offer.data.price, 0) /
+        offers.length
+      ).toFixed(2),
+    ),
+    offerCount: offers.length,
+    offers,
+    reviews: [],
+    followersList: [],
+    followingList: [],
+  };
+}
+
+function createSellerEntry(profile, listings) {
+  return {
+    profile,
+    listings,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function cloneProfile(profile) {
+  return JSON.parse(JSON.stringify(profile));
+}
+
+const sellerProfiles = new Map();
+export const initialSellerEntries = [];
+
+function seedSellerProfile(profile, listings) {
+  const entry = createSellerEntry(profile, listings);
+  initialSellerEntries.push(cloneProfile(entry));
+  sellerProfiles.set(normalizeSellerRouteKey(profile.name), entry);
+  sellerProfiles.set(normalizeSellerRouteKey(profile.id), entry);
+}
+
+seedSellerProfile(
+  {
+    id: "usr_duy",
+    name: "Duy",
+    avatar: "/avt1.png",
+    memberSince: "Jun 2025",
+    location: "VN",
+    language: "EN",
+    currency: "$",
+    banner: "/cyberpunk_2077.jpg",
+  },
+  [
+    {
+      id: "duy-steam-wallet",
+      title: "Steam Wallet Code",
+      productType: "Gift card",
+      platform: "Steam",
+      edition: "Global",
+      activationRegion: "Global",
+      delivery: "Instant",
+      stock: 10,
+      price: 9.99,
+      currency: "$",
+      imageUrl: "/cyberpunk_2077.jpg",
+      description: "Fast digital delivery.",
+      status: "published",
+      views: 0,
+      sales: 0,
+      createdAt: "2026-05-24T00:00:00.000Z",
+      updatedAt: "2026-05-24T00:00:00.000Z",
+    },
+  ],
+);
+
+seedSellerProfile(
+  {
+    id: "usr_001",
+    name: "evnnpd",
+    avatar: "/avt1.png",
+    memberSince: "Jun 2025",
+    location: "VN",
+    language: "EN",
+    currency: "$",
+    banner: "/cyberpunk_2077.jpg",
+  },
+  [
+    {
+      id: "evnnpd-win11-pro",
+      title: "Windows 11 Pro Key",
+      productType: "Software license",
+      platform: "Microsoft",
+      edition: "Professional",
+      activationRegion: "Global",
+      delivery: "Instant",
+      stock: 8,
+      price: 19.99,
+      currency: "$",
+      imageUrl: "/product1.png",
+      description: "Windows activation key with instant delivery.",
+      status: "published",
+      views: 0,
+      sales: 0,
+      createdAt: "2026-05-24T00:00:00.000Z",
+      updatedAt: "2026-05-24T00:00:00.000Z",
+    },
+  ],
+);
+
+export function upsertSellerProfile(profile, listings) {
+  const entry = createSellerEntry(profile, listings);
+  sellerProfiles.set(normalizeSellerRouteKey(profile.name), entry);
+  sellerProfiles.set(normalizeSellerRouteKey(profile.id), entry);
+}
+
+export function getSellerProfileByRouteKey(sellerRouteKey) {
+  const entry = sellerProfiles.get(normalizeSellerRouteKey(sellerRouteKey));
+  if (!entry) return null;
+
+  const profile = createSellerProfileFromListings(
+    entry.profile,
+    entry.listings,
+  );
+
+  return profile ? cloneProfile(profile) : null;
+}
