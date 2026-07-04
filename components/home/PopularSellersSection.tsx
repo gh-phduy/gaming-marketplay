@@ -17,6 +17,10 @@ import { ImStarFull } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface SellerItemProps {
   avatar: string;
   name: string;
@@ -26,6 +30,15 @@ interface SellerItemProps {
   profileName?: string;
 }
 
+/* ==========================================================================
+   SUBCOMPONENT: SellerItem Card
+   ========================================================================== */
+
+/**
+ * SellerItem Component
+ * Renders a seller card previewing their name, avatar, rating stars,
+ * and current performance tier badge. Links to the seller profile page.
+ */
 function SellerItem({
   avatar,
   name,
@@ -40,6 +53,7 @@ function SellerItem({
       className="block w-[252px] cursor-pointer overflow-hidden rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-white/10 hover:brightness-125"
       aria-label={`View ${profileName} profile`}
     >
+      {/* Seller Identity & Rating Header */}
       <div className="flex h-[90px] w-full items-center bg-[#212937] px-4">
         <div className="relative overflow-visible">
           <Avatar>
@@ -91,6 +105,7 @@ function SellerItem({
         </div>
       </div>
 
+      {/* Seller Badge & Action Footer */}
       <div className="flex h-[44px] w-full items-center justify-between bg-[#2b3545] px-4">
         <div className="flex items-center gap-2 text-[14px] text-white">
           <Trophy className="h-4 w-4 text-cyan-300" aria-hidden="true" />
@@ -105,11 +120,21 @@ function SellerItem({
   );
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: PopularSellers Carousel Section
+   ========================================================================== */
+
+/**
+ * PopularSellers Component
+ * Renders a responsive seller slider featuring popular merchant storefronts.
+ * Integrates with Embla Carousel via hooks for custom prev/next button controls.
+ */
 export default function PopularSellers() {
   const [api, setApi] = useState<CarouselApi>();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
+  // Mock data representing top performing marketplace sellers
   const sellers: SellerItemProps[] = [
     {
       avatar: "/avt1.png",
@@ -169,6 +194,7 @@ export default function PopularSellers() {
     },
   ];
 
+  // Callback handlers for manually driving carousel movements
   const scrollPrev = useCallback(() => {
     api?.scrollPrev();
   }, [api]);
@@ -177,6 +203,7 @@ export default function PopularSellers() {
     api?.scrollNext();
   }, [api]);
 
+  // Synchronize Embla scrolling boundaries with arrow button disable states
   useEffect(() => {
     if (!api) {
       return;
@@ -202,6 +229,7 @@ export default function PopularSellers() {
       className="w-full max-w-[720px] rounded-lg px-8 800:px-0 990:max-w-[940px] 1200:max-w-[1140px] 1640:max-w-[1310px] 1920:max-w-[1590px]"
       aria-labelledby="popular-sellers-heading"
     >
+      {/* Section Heading & Link to Trusted Sellers directory */}
       <SectionHeader
         headingId="popular-sellers-heading"
         headingText="Popular Sellers"
@@ -220,6 +248,10 @@ export default function PopularSellers() {
           }}
           className="w-full"
         >
+          {/* 
+            Masked boundary: Applies a soft horizontal fade gradient on left and right edges
+            to indicate that the slider is scrollable beyond the screen edge.
+          */}
           <div
             className="carousel-content-wrapper"
             style={{
@@ -249,6 +281,7 @@ export default function PopularSellers() {
           </div>
         </Carousel>
 
+        {/* Prev / Next Custom Navigation Buttons */}
         <Button
           variant="outline"
           size="icon"
@@ -281,3 +314,4 @@ export default function PopularSellers() {
     </section>
   );
 }
+
