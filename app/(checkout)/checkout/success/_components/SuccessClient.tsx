@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowRight,
@@ -19,223 +17,27 @@ import {
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
 import {
-  readCheckoutOrderSnapshot,
-  type CheckoutOrderSnapshot,
-} from "@/components/checkout/checkout-session";
-import { addMarketplaceNotification } from "@/components/notifications/notification-store";
-
-const PROCESSED_PAYMENT_INTENT_KEY = "processed_payment_intent";
-
-function formatCurrency(value: number, currency: string) {
-  return `${currency} ${value.toFixed(2)}`;
-}
-
-function truncatePaymentId(paymentIntent: string | null) {
-  if (!paymentIntent) return "Unavailable";
-  if (paymentIntent.length <= 18) return paymentIntent;
-  return `${paymentIntent.slice(0, 12)}...${paymentIntent.slice(-6)}`;
-}
-
-function getNotificationDescription(
-  snapshot: CheckoutOrderSnapshot | null,
-  total: string,
-) {
-  if (!snapshot?.items.length) {
-    return `Your payment was confirmed successfully. Total paid: ${total}.`;
-  }
-
-  const itemCount = snapshot.items.reduce(
-    (count, item) => count + item.quantity,
-    0,
-  );
-  const firstItem = snapshot.items[0];
-  const extraItems = itemCount > 1 ? ` and ${itemCount - 1} more` : "";
-
-  return `${firstItem.name}${extraItems} ${
-    itemCount === 1 ? "was" : "were"
-  } paid successfully. Total paid: ${total}.`;
-}
-
-function SuccessToast({
-  isVisible,
-  itemCount,
-  total,
-}: {
-  isVisible: boolean;
-  itemCount: number;
-  total: string;
-}) {
-  if (!isVisible) return null;
-
-  return (
-    <div
-      role="status"
-      className="fixed top-24 right-5 z-50 w-[min(420px,calc(100vw-40px))] overflow-hidden rounded-lg border border-emerald-400/25 bg-[#1f2937] text-white shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
-    >
-      <div className="h-1 bg-[#62d676]" />
-      <div className="flex gap-4 p-4">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#62d676]/15 text-[#62d676]">
-          <CheckCircle2 className="h-6 w-6" aria-hidden />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-bold">Payment completed successfully</p>
-          <p className="mt-1 text-sm leading-5 text-slate-300">
-            {itemCount} {itemCount === 1 ? "product" : "products"} confirmed.
-            Total paid: <span className="font-semibold text-white">{total}</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+  useSuccessCheckout,
+  formatCurrency,
+  truncatePaymentId,
+} from "./useSuccessCheckout";
+import { SuccessToast } from "./SuccessCheckoutComponents";
 
 export default function SuccessClient() {
-  const searchParams = useSearchParams();
-  const { resetCart } = useCart();
-  const { user, isLoading: isAuthLoading } = useAuth();
-  const [status, setStatus] = useState<"succeeded" | "failed" | null>(null);
-  const [orderSnapshot, setOrderSnapshot] =
-    useState<CheckoutOrderSnapshot | null>(null);
-  const [showToast, setShowToast] = useState(false);
-  const [dbError, setDbError] = useState<string | null>(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-
-  const paymentIntent = searchParams.get("payment_intent");
-  const redirectStatus = searchParams.get("redirect_status");
-  const accountId = user?.id || user?.email || null;
-
-  const saveOrderToDb = async (snapshot: CheckoutOrderSnapshot | null, currentUser: any) => {
-    if (!snapshot || !currentUser?.id || !paymentIntent) return;
-
-    setIsSyncing(true);
-    setDbError(null);
-
-    const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
-
-    if (!isUuid(currentUser.id)) {
-      setDbError("You are logged in with a mock user. Cannot save transaction to database. Please log in using Google.");
-      setIsSyncing(false);
-      return;
-    }
-
-    try {
-      // Step 1: Ensure user profile exists in public.users to satisfy Foreign Key constraint
-      const { error: upsertError } = await supabase
-        .from("users")
-        .upsert({
-          id: currentUser.id,
-          email: currentUser.email || "",
-          display_name: currentUser.name || currentUser.email || "User",
-          avatar_url: currentUser.picture || "/avt1.png",
-        }, { onConflict: "id" });
-
-      if (upsertError) {
-        console.error("Error upserting user in Supabase:", upsertError);
-        setDbError(`Failed to sync user profile: ${upsertError.message}`);
-        setIsSyncing(false);
-        return;
-      }
-
-      // Step 2: Insert order rows
-      const orderRows = snapshot.items.map((item) => ({
-        buyer_id: currentUser.id,
-        product_id: isUuid(item.id) ? item.id : null,
-        quantity: item.quantity,
-        total_price: item.price * item.quantity,
-        currency: item.currency || "USD",
-        status: "completed",
-        stripe_payment_intent: paymentIntent,
-      }));
-
-      const { error: orderError } = await supabase
-        .from("orders")
-        .insert(orderRows);
-
-      if (orderError) {
-        console.error("Error writing order to Supabase:", orderError);
-        setDbError(`Failed to save transaction: ${orderError.message}`);
-        setIsSyncing(false);
-        return;
-      }
-
-      console.log("Successfully recorded order in database");
-
-      // Step 3: Success! Reset cart, show notification, and mark as processed in localStorage
-      addMarketplaceNotification({
-        id: `payment-${paymentIntent}`,
-        kind: "payment",
-        title: "Payment confirmed",
-        description: getNotificationDescription(
-          snapshot,
-          formatCurrency(snapshot?.total ?? 0, snapshot?.currency ?? "$"),
-        ),
-        href: `/checkout/success?payment_intent=${encodeURIComponent(
-          paymentIntent,
-        )}&redirect_status=succeeded`,
-      }, accountId);
-
-      resetCart();
-      const processedPaymentIntentKey = accountId
-        ? `${PROCESSED_PAYMENT_INTENT_KEY}:${accountId}`
-        : PROCESSED_PAYMENT_INTENT_KEY;
-      localStorage.setItem(processedPaymentIntentKey, paymentIntent);
-      setDbError(null);
-    } catch (err: any) {
-      console.error("Unexpected sync error:", err);
-      setDbError(`Unexpected error during system sync: ${err.message || err}`);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isAuthLoading) return;
-
-    if (!paymentIntent) {
-      setStatus("failed");
-      return;
-    }
-
-    if (redirectStatus !== "succeeded") {
-      setStatus("failed");
-      return;
-    }
-
-    const snapshot = readCheckoutOrderSnapshot();
-    setOrderSnapshot(snapshot);
-    setStatus("succeeded");
-    setShowToast(true);
-
-    const processedPaymentIntentKey = accountId
-      ? `${PROCESSED_PAYMENT_INTENT_KEY}:${accountId}`
-      : PROCESSED_PAYMENT_INTENT_KEY;
-    const processedPaymentIntent = localStorage.getItem(processedPaymentIntentKey);
-
-    if (processedPaymentIntent !== paymentIntent) {
-      if (snapshot && user) {
-        void saveOrderToDb(snapshot, user);
-      } else if (!user) {
-        setDbError("No logged in user found. Please sign in to complete system sync.");
-      }
-    }
-
-    const timeoutId = window.setTimeout(() => setShowToast(false), 6200);
-    return () => window.clearTimeout(timeoutId);
-  }, [accountId, isAuthLoading, paymentIntent, redirectStatus, user]);
-
-  const itemCount = useMemo(
-    () =>
-      orderSnapshot?.items.reduce((total, item) => total + item.quantity, 0) ??
-      0,
-    [orderSnapshot],
-  );
-  const currency = orderSnapshot?.currency ?? "$";
-  const total = orderSnapshot?.total ?? 0;
-  const formattedTotal = formatCurrency(total, currency);
-  const displayedItemCount = itemCount || 1;
+  const {
+    status,
+    orderSnapshot,
+    showToast,
+    setShowToast,
+    dbError,
+    isSyncing,
+    paymentIntent,
+    formattedTotal,
+    displayedItemCount,
+    user,
+    saveOrderToDb,
+  } = useSuccessCheckout();
 
   if (status === null) {
     return (
