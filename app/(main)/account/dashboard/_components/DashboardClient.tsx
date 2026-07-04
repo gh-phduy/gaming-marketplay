@@ -11,15 +11,15 @@ import {
   ChevronRight,
   Clock,
 } from "lucide-react";
-import type { UserDashboardProfile } from "./dashboard.data";
-import DashboardVerificationBanner from "./_components/VerificationBanner";
-import DashboardLevelCard from "./_components/LevelCard";
-import DashboardSpentCard from "./_components/SpentCard";
-import DashboardReviewsCard from "./_components/ReviewsCard";
-import DashboardWalletSection from "./_components/WalletSection";
-import DashboardRecentOrders from "./_components/RecentOrders";
-import DashboardSecurityCard from "./_components/SecurityCard";
-import DashboardSellerWorkspace from "./_components/DashboardSellerWorkspace";
+import type { UserDashboardProfile } from "../_lib/dashboard.data";
+import DashboardVerificationBanner from "./VerificationBanner";
+import DashboardLevelCard from "./LevelCard";
+import DashboardSpentCard from "./SpentCard";
+import DashboardReviewsCard from "./ReviewsCard";
+import DashboardWalletSection from "./WalletSection";
+import DashboardRecentOrders from "./RecentOrders";
+import DashboardSecurityCard from "./SecurityCard";
+import DashboardSellerWorkspace from "./DashboardSellerWorkspace";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { LANGUAGES, CURRENCIES } from "@/components/auth/userMenu/constants";

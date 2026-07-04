@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import AuthTabs from "./components/AuthTabs"
-import { AppProviders } from '@/providers/AppProviders'
+import AuthTabs from "./_components/AuthTabs"
+import { AppProviders } from '@/contexts/AppProviders'
 
 export default function AuthLayout({
   children,

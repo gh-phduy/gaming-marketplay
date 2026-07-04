@@ -8,7 +8,7 @@ import {
   Bookmark,
   ShieldCheck,
 } from "lucide-react";
-import type { QuickAction } from "../dashboard.data";
+import type { QuickAction } from "../_lib/dashboard.data";
 
 const iconMap: Record<string, React.ElementType> = {
   "shopping-bag": ShoppingBag,

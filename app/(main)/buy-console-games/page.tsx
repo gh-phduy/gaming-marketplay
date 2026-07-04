@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BuyConsoleGamesClient } from "./BuyConsoleGamesClient";
+import { BuyConsoleGamesClient } from "./_components/BuyConsoleGamesClient";
 
 export const metadata: Metadata = {
   title: "Console Games - Difmark",

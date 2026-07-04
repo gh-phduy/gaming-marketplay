@@ -22,7 +22,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import type { UserDashboardProfile } from "../dashboard.data";
+import type { UserDashboardProfile } from "../_lib/dashboard.data";
 import {
   createSellerListing,
   deleteSellerListing,

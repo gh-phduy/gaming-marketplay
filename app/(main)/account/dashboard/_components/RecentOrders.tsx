@@ -8,7 +8,7 @@ import {
   Loader2,
   XCircle,
 } from "lucide-react";
-import type { OrderSummary } from "../dashboard.data";
+import type { OrderSummary } from "../_lib/dashboard.data";
 
 interface RecentOrdersProps {
   orders: OrderSummary[];

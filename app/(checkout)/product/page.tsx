@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { ProductFilterProvider } from "@/contexts/ProductFilterContext";
-import { QueryProvider } from "@/providers/QueryProvider";
-import ProductClient from "./ProductClient";
+import { QueryProvider } from "@/contexts/QueryProvider";
+import ProductClient from "./_components/ProductClient";
 
 export default function ProductPage() {
   return (

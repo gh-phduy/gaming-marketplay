@@ -18,7 +18,7 @@ import {
 import {
   CategoryLandingClient,
   type LandingCategory,
-} from "../_components/CategoryLandingClient";
+} from "../../_components/CategoryLandingClient";
 
 const categories: LandingCategory[] = [
   {

@@ -1,6 +1,6 @@
 import Footer from "@/components/layout/Footer";
 import NavBar from "@/components/layout/NavBar";
-import { AppProviders } from "@/providers/AppProviders";
+import { AppProviders } from "@/contexts/AppProviders";
 import FloatingChatWidget from "@/components/chat/FloatingChatWidget";
 
 export default function MainLayout({

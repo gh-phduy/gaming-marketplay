@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BuyGameKeysClient } from "./BuyGameKeysClient";
+import { BuyGameKeysClient } from "./_components/BuyGameKeysClient";
 
 export const metadata: Metadata = {
   title: "Game Keys - Difmark",
