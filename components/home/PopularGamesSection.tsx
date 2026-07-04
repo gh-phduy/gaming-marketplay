@@ -2,6 +2,14 @@ import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
 import PopularGameCard from "./PopularGameCard";
 
+/* ==========================================================================
+   DATA FETCHING HELPERS (SERVER SIDE)
+   ========================================================================== */
+
+/**
+ * Fetches popular game data from the internal API endpoint.
+ * Configured as a server-side fetch with no-store caching to bypass build-time static generation.
+ */
 async function getPopularGames() {
   try {
     const res = await fetch(
@@ -16,6 +24,16 @@ async function getPopularGames() {
   }
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: PopularGamesSection
+   ========================================================================== */
+
+/**
+ * PopularGamesSection Component
+ * Server-side Component that fetches popular game products and presents them.
+ * Adapts responsively: renders a multi-column grid on desktop screens (>= 800px)
+ * and falls back to a touch-swipeable ProductCarousel on mobile devices (< 800px).
+ */
 export default async function PopularGamesSection() {
   const { games } = await getPopularGames();
 
@@ -24,6 +42,7 @@ export default async function PopularGamesSection() {
       className="w-full responsive px-8 800:px-0"
       aria-labelledby="popular-games-heading"
     >
+      {/* Section Header */}
       <SectionHeader
         headingId="popular-games-heading"
         headingText="Popular Games"
@@ -33,6 +52,8 @@ export default async function PopularGamesSection() {
         viewAllHref="/product"
         viewAllAriaLabel="View all popular games"
       />
+      
+      {/* Grid Layout (Desktop >= 800px) */}
       <div
         className="mt-10 hidden grid-cols-1 gap-4 800:grid 990:grid-cols-3 1920:grid-cols-4"
         role="list"
@@ -50,6 +71,8 @@ export default async function PopularGamesSection() {
           />
         ))}
       </div>
+      
+      {/* Carousel Slider Layout (Mobile/Tablet < 800px) */}
       <div className="block 800:hidden">
         <ProductCarousel>
           {games.map((game: any) => (
@@ -68,3 +91,4 @@ export default async function PopularGamesSection() {
     </section>
   );
 }
+
