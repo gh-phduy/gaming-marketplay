@@ -26,12 +26,24 @@ import {
 import { ProductApiResponse } from "@/types/api-product";
 import { useCart } from "@/contexts/CartContext";
 
+/* ==========================================================================
+   MAIN COMPONENT: CheckoutClient Page Coordinator
+   ========================================================================== */
+
+/**
+ * CheckoutClient Component
+ *
+ * Coordinates checkout flow. Performs calculations for cart total additions or
+ * direct topup orders, builds PaymentIntents from Stripe API endpoints, and
+ * maps mock seller data configurations.
+ */
 export default function CheckoutClient() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
   const isDirectTopUpCheckout = searchParams.get("directTopUp") === "1";
   const { cartItems } = useCart();
 
+  // Component local states
   const [selectedMethod, setSelectedMethod] = useState("visa");
   const [clientSecret, setClientSecret] = useState("");
   const [directTopUpOrder, setDirectTopUpOrder] = useState<
@@ -42,6 +54,7 @@ export default function CheckoutClient() {
   );
   const [isLoading, setIsLoading] = useState(true);
 
+  // Memoized lazy initializer for loadStripe promise wrapper
   const stripePromise = useMemo(() => {
     if (!clientSecret || !process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
       return null;
@@ -50,12 +63,14 @@ export default function CheckoutClient() {
     return loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
   }, [clientSecret]);
 
+  // Compute total value sum of standard items in the cart
   const cartTotal = useMemo(
     () =>
       cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
     [cartItems],
   );
 
+  // Compute actual billing total based on routing flow parameters
   const amount = useMemo(() => {
     if (isDirectTopUpCheckout && directTopUpOrder)
       return directTopUpOrder.total;
@@ -71,6 +86,7 @@ export default function CheckoutClient() {
     productId,
   ]);
 
+  // Consolidate array list of items being purchased
   const orderItems = useMemo<CheckoutOrderItem[]>(() => {
     if (productData) {
       return [
@@ -101,6 +117,7 @@ export default function CheckoutClient() {
     }));
   }, [cartItems, directTopUpOrder, isDirectTopUpCheckout, productData]);
 
+  // Sync direct topup cache snapshot details
   useEffect(() => {
     if (!isDirectTopUpCheckout) {
       setDirectTopUpOrder(undefined);
@@ -110,7 +127,7 @@ export default function CheckoutClient() {
     setDirectTopUpOrder(readCheckoutOrderSnapshot());
   }, [isDirectTopUpCheckout]);
 
-  // Fetch product data
+  // Fetch product data details from Supabase database
   useEffect(() => {
     if (!productId) {
       setIsLoading(false);
@@ -139,6 +156,7 @@ export default function CheckoutClient() {
           return;
         }
 
+        // Map product details with seller credentials
         const mapped = {
           data: {
             id: data.id,
@@ -178,13 +196,13 @@ export default function CheckoutClient() {
     fetchProduct();
   }, [productId]);
 
+  // Generate PaymentIntent secrets via backend API
   useEffect(() => {
     if (amount <= 0) {
       setClientSecret("");
       return;
     }
 
-    // Create PaymentIntent as soon as the product data is available
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     fetch(`${apiUrl}/api/create-payment-intent`, {
       method: "POST",
@@ -195,6 +213,7 @@ export default function CheckoutClient() {
       .then((data) => setClientSecret(data.clientSecret));
   }, [amount]);
 
+  // Loading indicator overlay boundary
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center text-white">
@@ -205,9 +224,12 @@ export default function CheckoutClient() {
 
   return (
     <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-6 pt-8 lg:grid-cols-3">
-      {/* Left Column - Payment Selection */}
+      
+      {/* ==========================================
+         LEFT COLUMN - Payment Selection & Provider Lists
+         ========================================== */}
       <div className="space-y-4 lg:col-span-2">
-        {/* Filters */}
+        {/* Search bar and Country selections */}
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
@@ -242,7 +264,7 @@ export default function CheckoutClient() {
           </Select>
         </div>
 
-        {/* Warning Banner */}
+        {/* Currency Mismatch Warning Banner */}
         <div className="flex flex-col items-start justify-between gap-3 rounded-md border border-[#30363d] bg-[#2a2a35] p-3 text-xs text-gray-400 sm:flex-row sm:items-center sm:text-sm">
           <div className="flex items-center gap-2">
             <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
@@ -256,7 +278,7 @@ export default function CheckoutClient() {
           </button>
         </div>
 
-        {/* Payment Methods List */}
+        {/* Active Payment Elements Forms (Loaded once keys sync up) */}
         <div className="space-y-3">
           {clientSecret && stripePromise && (
             <Elements
@@ -280,9 +302,11 @@ export default function CheckoutClient() {
         </div>
       </div>
 
-      {/* Right Column - Order Summary */}
+      {/* ==========================================
+         RIGHT COLUMN - Order Summary Cards
+         ========================================== */}
       <div className="space-y-6 lg:col-span-1">
-        {/* Checkout Total Card */}
+        {/* Checkout Billing Total details */}
         <div className="space-y-6 rounded-lg border border-[#30363d] bg-midnight-700 p-6">
           <h2 className="text-xl font-semibold text-white">Checkout total</h2>
 
@@ -316,6 +340,7 @@ export default function CheckoutClient() {
             </span>
           </div>
 
+          {/* Promo code entry */}
           <div className="relative">
             <Input
               placeholder="DISCOUNT CODE"
@@ -327,7 +352,7 @@ export default function CheckoutClient() {
           </div>
         </div>
 
-        {/* Product Card */}
+        {/* Product details thumbnail display (Buy-now redirects) */}
         {productData && (
           <div className="overflow-hidden rounded-lg border border-[#30363d] bg-midnight-750">
             <div className="relative h-48 w-full overflow-hidden bg-black/50">
@@ -339,7 +364,7 @@ export default function CheckoutClient() {
                   className="object-cover opacity-60"
                 />
               )}
-              {/* Seller Info Overlay */}
+              {/* Seller credentials overlay */}
               <div className="absolute right-0 bottom-0 left-0 flex items-end justify-between bg-gradient-to-t from-black/90 to-transparent p-3">
                 <div className="flex items-center gap-2">
                   <div className="relative h-6 w-6 overflow-hidden rounded-full bg-purple-600">
@@ -368,6 +393,7 @@ export default function CheckoutClient() {
           </div>
         )}
 
+        {/* Cart items list summary details (Standard/topup carts) */}
         {!productData && orderItems.length > 0 && (
           <div className="space-y-3 rounded-lg border border-[#30363d] bg-midnight-750 p-4">
             <h3 className="text-sm font-semibold text-gray-300">
@@ -394,3 +420,4 @@ export default function CheckoutClient() {
     </div>
   );
 }
+
