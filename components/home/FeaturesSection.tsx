@@ -1,8 +1,8 @@
 /**
  * AboutSection1 Component
  *
- * Section hiển thị 3 tính năng chính: Buyer Protection, Payment, Support
- * Có hover effect với background images
+ * Section displaying 3 key features: Buyer Protection, Payment, and Support
+ * Features hover effects with dynamic background images
  */
 
 import Image from "next/image";

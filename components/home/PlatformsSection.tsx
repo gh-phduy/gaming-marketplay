@@ -2,6 +2,10 @@ import PlatformCard from "./PlatformCard";
 import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
 
+/* ==========================================================================
+   PLATFORMS DATA CONSTANTS
+   ========================================================================== */
+
 const PLATFORM_ITEMS = [
   {
     id: "playstation-5",
@@ -47,12 +51,23 @@ const PLATFORM_ITEMS = [
   },
 ] as const;
 
+/* ==========================================================================
+   MAIN COMPONENT: PlatformsSection
+   ========================================================================== */
+
+/**
+ * PlatformsSection Component
+ * Displays a grid of available console/PC platforms.
+ * Uses a media query query toggle: renders a grid layout on desktops (>= 800px)
+ * and slides into a carousel slider on mobile/tablets.
+ */
 export default function PlatformsSection() {
   return (
     <section
       className="w-full responsive overflow-visible px-8 800:px-0"
       aria-labelledby="platforms-heading"
     >
+      {/* Section Title Header */}
       <SectionHeader
         headingId="platforms-heading"
         headingText="Platforms"
@@ -61,6 +76,8 @@ export default function PlatformsSection() {
         titleClassName="-translate-x-[22px]"
         viewAllAriaLabel="View all platforms"
       />
+      
+      {/* Desktop Layout Grid (>= 800px) */}
       <div className="hidden grid-cols-2 gap-4 800:grid 990:grid-cols-3 990:gap-6">
         {PLATFORM_ITEMS.map((platform) => (
           <PlatformCard
@@ -72,6 +89,8 @@ export default function PlatformsSection() {
           />
         ))}
       </div>
+      
+      {/* Mobile Layout Carousel (< 800px) */}
       <div className="block overflow-visible 800:hidden">
         <ProductCarousel>
           {PLATFORM_ITEMS.map((platform) => (
@@ -88,3 +107,4 @@ export default function PlatformsSection() {
     </section>
   );
 }
+
