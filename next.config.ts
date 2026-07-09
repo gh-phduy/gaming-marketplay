@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
      NEXT.JS CONFIGURATION
      ============================================ */
 
-  // Temporarily ignore ESLint errors during build
-  // TODO: Remove after migrating all img elements to next/image
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 
   // Image optimization
   images: {
