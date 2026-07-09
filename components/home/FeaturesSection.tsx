@@ -68,19 +68,24 @@ function FeatureCard({
       />
 
       {/* Content */}
-      <div className="relative z-20 flex h-full w-full flex-col items-center justify-center">
+      <div className="relative z-20 flex h-full w-full flex-col items-center justify-center px-1 sm:px-2 md:px-4">
         {/* Icon container */}
-        <div className="mb-3 flex h-[56px] w-[56px] items-center justify-center rounded-lg text-dm-text-muted shadow-custom">
-          <Icon size={iconSize} aria-hidden="true" />
+        <div className="mb-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-dm-text-muted shadow-custom md:mb-3 md:h-[56px] md:w-[56px]">
+          {/* Responsive icon sizing via wrapper since size prop overrides class */}
+          <div className="scale-[0.6] md:scale-100">
+            <Icon size={iconSize} aria-hidden="true" />
+          </div>
         </div>
 
         {/* Title */}
-        <h3 className="text-[18px] font-semibold text-dm-text-primary">
+        <h3 className="text-center text-[11px] leading-tight font-semibold text-dm-text-primary sm:text-[13px] md:text-[18px]">
           {title}
         </h3>
 
         {/* Description */}
-        <span className="text-[14px] text-dm-text-muted">{description}</span>
+        <span className="mt-1 hidden text-center text-[9px] leading-tight text-dm-text-muted sm:block sm:text-[11px] md:mt-0 md:text-[14px]">
+          {description}
+        </span>
       </div>
     </div>
   );
