@@ -64,34 +64,34 @@ export default function CheckoutNavBar() {
           </div>
         </Link>
 
-        {/* Progress Tracker Steps (hidden on mobile) */}
-        <div className="hidden items-center gap-4 text-sm font-medium md:flex">
-          {/* Step 1: Shopping Cart (completed by default during checkout) */}
-          <div className="flex items-center gap-2 text-[#46ca43]">
+        {/* Progress Tracker Steps (compact on mobile) */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-sm font-medium md:static md:translate-x-0 md:gap-4">
+          {/* Step 1: Shopping Cart */}
+          <div className="flex items-center gap-1.5 md:gap-2 text-[#46ca43]">
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#46ca43] text-black">
               <ShoppingCart className="h-3.5 w-3.5" />
             </div>
-            <span>{t("shoppingCart")}</span>
+            <span className="hidden md:inline">{t("shoppingCart")}</span>
           </div>
 
-          <div className="h-[2px] w-24 bg-[#46ca43]"></div>
+          <div className="h-[2px] w-6 md:w-24 bg-[#46ca43]"></div>
 
-          {/* Step 2: Checkout (active/completed) */}
-          <div className={`flex items-center gap-2 ${checkoutStepClass}`}>
+          {/* Step 2: Checkout */}
+          <div className={`flex items-center gap-1.5 md:gap-2 ${checkoutStepClass}`}>
             <div
               className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${checkoutIconClass}`}
             >
               <CreditCard className="h-3.5 w-3.5" />
             </div>
-            <span>{t("checkout")}</span>
+            <span className="hidden md:inline">{t("checkout")}</span>
           </div>
 
           <div
-            className={`h-[2px] w-24 ${isCompleted ? "bg-[#46ca43]" : isFailed ? "bg-[#f85149]" : "bg-[#2d3544]"}`}
+            className={`h-[2px] w-6 md:w-24 ${isCompleted ? "bg-[#46ca43]" : isFailed ? "bg-[#f85149]" : "bg-[#2d3544]"}`}
           ></div>
 
-          {/* Step 3: Success / Fail / Processing status indicator */}
-          <div className={`flex items-center gap-2 ${lastStepClass}`}>
+          {/* Step 3: Status */}
+          <div className={`flex items-center gap-1.5 md:gap-2 ${lastStepClass}`}>
             <div
               className={`flex h-6 w-6 items-center justify-center rounded-full ${isCompleted ? "bg-[#46ca43] text-black" : isFailed ? "bg-[#f85149] text-white" : "bg-[#21262d]"}`}
             >
@@ -103,12 +103,12 @@ export default function CheckoutNavBar() {
                 <div className="h-2 w-2 rounded-full bg-[#8b949e]"></div>
               )}
             </div>
-            <span>{lastStepLabel}</span>
+            <span className="hidden md:inline">{lastStepLabel}</span>
           </div>
         </div>
 
         {/* Currency & Language Indicators */}
-        <div className="flex items-center gap-4 text-sm text-[#8b949e]">
+        <div className="hidden items-center gap-4 text-sm text-[#8b949e] sm:flex">
           <div className="flex items-center gap-4">
             <span className="cursor-pointer hover:text-white">USD</span>
             <span className="cursor-pointer hover:text-white">LNG</span>

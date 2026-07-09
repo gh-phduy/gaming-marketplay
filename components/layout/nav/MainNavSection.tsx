@@ -266,11 +266,16 @@ export default function MainNavSection() {
         </div>
       </div>
       {user ? (
-        <div className="flex items-center gap-2 990:hidden">
+        <div className="flex items-center gap-3 990:hidden">
           <NotificationButton accountId={user.id} />
           <ChatInboxButton accountId={user.id} />
+          <CartButton />
         </div>
-      ) : null}
+      ) : (
+        <div className="flex items-center gap-3 990:hidden">
+          <CartButton />
+        </div>
+      )}
       <SignInButton />
     </>
   );
