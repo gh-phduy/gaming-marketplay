@@ -48,6 +48,14 @@ export default function CheckoutForm({
       return;
     }
 
+    // Trigger form validation and wallet collection IMMEDIATELY
+    // to preserve the trusted user gesture required by mobile browsers
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setMessage(submitError.message ?? t("unexpectedError"));
+      return;
+    }
+
     setIsLoading(true);
     const currency = orderItems[0]?.currency ?? "$";
 
@@ -59,14 +67,6 @@ export default function CheckoutForm({
       currency,
       createdAt: new Date().toISOString(),
     });
-
-    // Trigger form validation and wallet collection
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setMessage(submitError.message ?? t("unexpectedError"));
-      setIsLoading(false);
-      return;
-    }
 
     // Request payment validation and redirection
     const { error } = await stripe.confirmPayment({
