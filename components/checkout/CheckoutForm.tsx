@@ -48,42 +48,55 @@ export default function CheckoutForm({
       return;
     }
 
-    // Trigger form validation and wallet collection IMMEDIATELY
-    // to preserve the trusted user gesture required by mobile browsers
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setMessage(submitError.message ?? t("unexpectedError"));
-      return;
+    try {
+      // Trigger form validation and wallet collection IMMEDIATELY
+      // to preserve the trusted user gesture required by mobile browsers
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setMessage(submitError.message ?? t("unexpectedError"));
+        return;
+      }
+
+      setIsLoading(true);
+      const currency = orderItems[0]?.currency ?? "$";
+
+      // Cache order details in sessionStorage prior to redirecting to Stripe
+      saveCheckoutOrderSnapshot({
+        items: orderItems,
+        subtotal: amount,
+        total: amount,
+        currency,
+        createdAt: new Date().toISOString(),
+      });
+
+      // Request payment validation and redirection
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/checkout/success`,
+        },
+        redirect: "if_required",
+      });
+
+      if (error) {
+        // Capture and translate Stripe processing issues
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setMessage(error.message ?? t("unexpectedError"));
+        } else {
+          setMessage(t("unexpectedError"));
+        }
+        setIsLoading(false);
+      } else if (paymentIntent) {
+        // Fallback for when redirect: "if_required" resolves directly
+        // Manually navigate the user to the success page with required params
+        const status = paymentIntent.status === "succeeded" ? "succeeded" : paymentIntent.status;
+        window.location.href = `/checkout/success?payment_intent=${paymentIntent.id}&redirect_status=${status}`;
+      }
+    } catch (err: any) {
+      console.error("Payment submission crashed:", err);
+      setMessage(err.message || t("unexpectedError"));
+      setIsLoading(false);
     }
-
-    setIsLoading(true);
-    const currency = orderItems[0]?.currency ?? "$";
-
-    // Cache order details in sessionStorage prior to redirecting to Stripe
-    saveCheckoutOrderSnapshot({
-      items: orderItems,
-      subtotal: amount,
-      total: amount,
-      currency,
-      createdAt: new Date().toISOString(),
-    });
-
-    // Request payment validation and redirection
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/checkout/success`,
-      },
-    });
-
-    // Capture and translate Stripe processing issues
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message ?? t("unexpectedError"));
-    } else {
-      setMessage(t("unexpectedError"));
-    }
-
-    setIsLoading(false);
   };
 
   return (
