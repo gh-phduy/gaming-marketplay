@@ -14,6 +14,7 @@ import {
 import { MdPerson, MdInfo } from "react-icons/md";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { useState } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 import { Card, CardContent } from "@/components/ui/card";
 import { OptimizedAvatar } from "@/components/shared/OptimizedAvatar";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ export default function PurchaseCard({
   onChat,
 }: PurchaseCardProps) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const t = useTranslations("product");
 
   return (
     <Card className="w-full border-none bg-[#2a3441]/80 backdrop-blur-md lg:max-w-[780px]">
@@ -133,7 +135,7 @@ export default function PurchaseCard({
               <div className="mb-3 grid grid-cols-2 gap-3">
                 <div>
                   <div className="mb-1 text-xs text-gray-400">
-                    Success rate:
+                    {t("successRate")}
                   </div>
                   <div className="font-semibold text-white">
                     {seller.successRate.toFixed(2)}%
@@ -141,7 +143,7 @@ export default function PurchaseCard({
                 </div>
                 <div>
                   <div className="mb-1 text-xs text-gray-400">
-                    Total feedbacks:
+                    {t("totalFeedbacks")}
                   </div>
                   <div className="font-semibold text-white">
                     {seller.totalFeedbacks.toLocaleString()}
@@ -149,14 +151,14 @@ export default function PurchaseCard({
                 </div>
                 <div>
                   <div className="mb-1 text-xs text-gray-400">
-                    Seller's time zone:
+                    {t("sellerTimeZone")}
                   </div>
                   <div className="font-semibold text-white">
                     {seller.timezone}
                   </div>
                 </div>
                 <div>
-                  <div className="mb-1 text-xs text-gray-400">Total sales:</div>
+                  <div className="mb-1 text-xs text-gray-400">{t("totalSales")}</div>
                   <div className="font-semibold text-white">
                     {seller.totalSales.toLocaleString()}
                   </div>
@@ -167,7 +169,7 @@ export default function PurchaseCard({
               <div className="mb-4 grid grid-cols-2 gap-3">
                 <div>
                   <div className="mb-1 text-xs text-gray-400">
-                    Positive feedbacks:
+                    {t("positiveFeedbacks")}
                   </div>
                   <div className="font-semibold text-green-500">
                     {seller.positiveFeedbacks.toFixed(2)}%
@@ -175,7 +177,7 @@ export default function PurchaseCard({
                 </div>
                 <div>
                   <div className="mb-1 text-xs text-gray-400">
-                    Negative feedbacks:
+                    {t("negativeFeedbacks")}
                   </div>
                   <div className="font-semibold text-red-500">
                     {seller.negativeFeedbacks.toFixed(2)}%
@@ -189,7 +191,7 @@ export default function PurchaseCard({
                 onClick={onChat}
               >
                 <FaComments className="mr-2 h-4 w-4" />
-                CHAT
+                {t("chat")}
               </Button>
             </PopoverContent>
           </Popover>
@@ -223,7 +225,7 @@ export default function PurchaseCard({
             <div className="flex items-center gap-2 sm:gap-3">
               <FaKey className="h-4 w-4 shrink-0 text-gray-400" />
               <span className="text-xs text-gray-400 sm:text-sm">
-                Product type:
+                {t("productType")}
               </span>
               <span className="text-sm font-medium text-white sm:text-base">
                 {product.type}
@@ -234,7 +236,7 @@ export default function PurchaseCard({
             <div className="flex items-center gap-2 sm:gap-3">
               <FaGamepad className="h-4 w-4 shrink-0 text-gray-400" />
               <span className="text-xs text-gray-400 sm:text-sm">
-                Platform:
+                {t("platform")}
               </span>
               <span className="text-sm font-medium text-white sm:text-base">
                 {product.platform}
@@ -247,7 +249,7 @@ export default function PurchaseCard({
             {/* Edition */}
             <div className="flex items-center gap-2 sm:gap-3">
               <MdPerson className="h-4 w-4 shrink-0 text-gray-400" />
-              <span className="text-xs text-gray-400 sm:text-sm">Edition:</span>
+              <span className="text-xs text-gray-400 sm:text-sm">{t("edition")}</span>
               <span className="text-sm font-medium text-white sm:text-base">
                 {product.edition}
               </span>
@@ -257,7 +259,7 @@ export default function PurchaseCard({
             <div className="flex items-center gap-2 sm:gap-3">
               <FaTruck className="h-4 w-4 shrink-0 text-gray-400" />
               <span className="text-xs text-gray-400 sm:text-sm">
-                Delivery:
+                {t("delivery")}
               </span>
               <span className="text-sm font-medium text-white sm:text-base">
                 {product.delivery}
@@ -270,7 +272,7 @@ export default function PurchaseCard({
         <div className="flex items-center gap-2 text-sm">
           <IoMdCheckmarkCircle className="h-5 w-5 shrink-0 text-green-500" />
           <span className="text-gray-300">
-            Can be activated from{" "}
+            {t("canBeActivatedFrom")}{" "}
             <span className="font-medium text-white">
               {product.activationRegion}
             </span>
@@ -287,13 +289,13 @@ export default function PurchaseCard({
         {/* Divider with Price Label */}
         <div className="flex w-full items-center gap-x-4">
           <Separator className="flex-1 bg-gray-600" />
-          <span className="text-xs text-gray-400">Price</span>
+          <span className="text-xs text-gray-400">{t("price")}</span>
           <Separator className="flex-1 bg-gray-600" />
         </div>
 
         {/* Price Section */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-400">Total amount:</span>
+          <span className="text-sm text-gray-400">{t("totalAmount")}</span>
           <div className="flex items-center gap-3">
             <span className="text-2xl font-bold text-white sm:text-3xl">
               {product.currency} {product.price.toFixed(2)}
@@ -305,7 +307,7 @@ export default function PurchaseCard({
                 className="rounded-full bg-white px-2 py-1 text-black sm:px-3 sm:py-1.5"
               >
                 <FcGoogle size={16} />
-                <span className="text-xs font-medium sm:text-sm">Pay</span>
+                <span className="text-xs font-medium sm:text-sm">{t("pay")}</span>
               </Badge>
               <Badge
                 variant="secondary"
@@ -325,13 +327,13 @@ export default function PurchaseCard({
             onClick={onAddToCart}
           >
             <FaShoppingCart className="mr-2 h-4 w-4" />
-            ADD TO CART
+            {t("addToCartUpper")}
           </Button>
           <Button
             className="flex-1 cursor-pointer bg-[#4ade80] text-sm font-semibold text-white hover:bg-[#3bc66d] sm:text-base"
             onClick={onCheckout}
           >
-            GO TO CHECKOUT
+            {t("goToCheckout")}
           </Button>
         </div>
       </CardContent>

@@ -8,12 +8,14 @@ import { ProductApiResponse } from "@/types/api-product";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface ProductOverviewProps {
   data: ProductApiResponse;
 }
 
 export default function ProductOverview({ data }: ProductOverviewProps) {
+  const t = useTranslations("product");
   const router = useRouter();
   const { addToCart } = useCart();
   const { user } = useAuth();
@@ -40,7 +42,7 @@ export default function ProductOverview({ data }: ProductOverviewProps) {
 
   const handleChat = useCallback(async () => {
     if (!user) {
-      alert("Please sign in to chat with the seller.");
+      alert(t("pleaseSignInToChat"));
       router.push("/login");
       return;
     }
@@ -48,7 +50,7 @@ export default function ProductOverview({ data }: ProductOverviewProps) {
     if (!data?.seller.id || !data?.data.name) return;
 
     if (user.id === data.seller.id) {
-      alert("You cannot chat with yourself.");
+      alert(t("cannotChatWithYourself"));
       return;
     }
 
@@ -98,9 +100,9 @@ export default function ProductOverview({ data }: ProductOverviewProps) {
       }
     } catch (err) {
       console.error("Failed to initialize chat:", err);
-      alert("Failed to initialize chat. Please try again.");
+      alert(t("failedToInitializeChat"));
     }
-  }, [data, user, router]);
+  }, [data, user, router, t]);
 
   return (
     <div className="flex w-full flex-col gap-5 lg:flex-row lg:gap-6">

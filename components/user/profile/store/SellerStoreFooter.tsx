@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Pagination from "@/components/shared/Pagination";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SellerStoreFooterProps {
   totalProducts: number;
@@ -30,18 +31,21 @@ export default function SellerStoreFooter({
   pageSize,
   onChangePageSize,
 }: SellerStoreFooterProps) {
+  const t = useTranslations("user");
+  const tProduct = useTranslations("product");
+
   return (
     <div className="grid grid-cols-1 items-center gap-4 pt-6 lg:grid-cols-[1fr_auto_1fr]">
       <p className="text-center text-sm text-steel-500 lg:text-left">
-        {totalProducts} products - avg {currency} {averagePrice.toFixed(2)}
+        {t("productsAvg", { count: totalProducts })} {currency} {averagePrice.toFixed(2)}
       </p>
 
       <Pagination
         currentPage={Math.min(currentPage, totalPages)}
         totalPages={totalPages}
         onPageChange={onPageChange}
-        previousLabel="Back"
-        nextLabel="Next"
+        previousLabel={tProduct("back")}
+        nextLabel={tProduct("next")}
       />
 
       <div className="flex justify-center lg:justify-end">

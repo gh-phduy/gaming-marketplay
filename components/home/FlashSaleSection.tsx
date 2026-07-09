@@ -9,7 +9,10 @@
  * Displays flash sale with time remaining
  */
 
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "@/hooks/useTranslations";
 import CountdownTimer from "../shared/CountdownTimer";
 
 /* ============================================
@@ -92,11 +95,12 @@ function DiagonalImage({
  *
  * Flash sale countdown section with diagonal game images
  */
-export default function SaleTime() {
+export default function FlashSaleSection() {
+  const t = useTranslations("home");
   return (
     <section
       className="w-full overflow-hidden px-0"
-      aria-label="Flash Sale Countdown"
+      aria-label={t("flashSaleCountdown")}
     >
       <div className="h-[222px] 1000:h-[280px] 1300:h-[380px] 1440:h-[455px] w-full flex items-center justify-center relative bg-surface-base overflow-hidden">
         {/* Background */}

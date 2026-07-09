@@ -8,7 +8,10 @@
  * - Legal disclaimers
  */
 
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 // Social Icons
 import { BiLogoFacebook } from "react-icons/bi";
@@ -37,35 +40,35 @@ import { PiContactlessPaymentFill } from "react-icons/pi";
    ============================================ */
 
 /** Footer navigation sections */
-const FOOTER_SECTIONS = [
+const getFooterSections = (t: any) => [
   {
-    title: "DIFMARK",
+    title: t("difmarkTitle"),
     links: [
-      { label: "About us", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-      { label: "Blog", href: "/blog" },
-      { label: "Contact", href: "/contact" },
+      { label: t("aboutUs"), href: "/about" },
+      { label: t("careers"), href: "/careers" },
+      { label: t("press"), href: "/press" },
+      { label: t("blog"), href: "/blog" },
+      { label: t("contact"), href: "/contact" },
     ],
   },
   {
-    title: "SUPPORT",
+    title: t("supportTitle"),
     links: [
-      { label: "Help Center", href: "/help" },
-      { label: "FAQ", href: "/faq" },
-      { label: "Refund Policy", href: "/refund" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Privacy Policy", href: "/privacy" },
+      { label: t("helpCenter"), href: "/help" },
+      { label: t("faq"), href: "/faq" },
+      { label: t("refundPolicy"), href: "/refund" },
+      { label: t("termsOfService"), href: "/terms" },
+      { label: t("privacyPolicy"), href: "/privacy" },
     ],
   },
   {
-    title: "CATEGORIES",
+    title: t("categoriesTitle"),
     links: [
-      { label: "Steam Games", href: "/games/steam" },
-      { label: "Xbox Games", href: "/games/xbox" },
-      { label: "PlayStation", href: "/games/playstation" },
-      { label: "Gift Cards", href: "/gift-cards" },
-      { label: "Software", href: "/software" },
+      { label: t("steamGames"), href: "/games/steam" },
+      { label: t("xboxGames"), href: "/games/xbox" },
+      { label: t("playStation"), href: "/games/playstation" },
+      { label: t("giftCards"), href: "/gift-cards" },
+      { label: t("software"), href: "/software" },
     ],
   },
 ] as const;
@@ -80,7 +83,7 @@ const SOCIAL_LINKS = [
 ] as const;
 
 /** Payment methods */
-const PAYMENT_METHODS = [
+const getPaymentMethods = (t: any) => [
   { icon: RiVisaLine, label: "Visa", size: 48 },
   { icon: SiMastercard, label: "Mastercard", size: 34 },
   { icon: IoLogoWechat, label: "WeChat Pay", size: 28 },
@@ -94,8 +97,9 @@ const PAYMENT_METHODS = [
   { icon: SiSamsungpay, label: "Samsung Pay", size: 32 },
   { icon: PiContactlessPaymentFill, label: "Contactless", size: 28 },
   { icon: SiAfterpay, label: "Afterpay", size: 28 },
-  { icon: SiPayloadcms, label: "Other", size: 28 },
+  { icon: SiPayloadcms, label: t("otherPayment"), size: 28 },
 ] as const;
+
 
 /* ============================================
    SUB-COMPONENTS
@@ -110,12 +114,13 @@ interface FooterSectionProps {
 }
 
 function FooterSection({ title, links }: FooterSectionProps) {
+  const t = useTranslations("common");
   return (
     <div className="flex flex-col gap-y-5">
       <h3 className="text-[16px] font-bold mb-2 text-dm-text-primary">
         {title}
       </h3>
-      <nav aria-label={`${title} navigation`}>
+      <nav aria-label={`${title} ${t("navigation")}`}>
         <ul className="flex flex-col gap-y-5">
           {links.map((link) => (
             <li key={link.href}>
@@ -143,13 +148,14 @@ interface SocialIconProps {
 }
 
 function SocialIcon({ icon: Icon, label, href }: SocialIconProps) {
+  const t = useTranslations("common");
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="h-8 w-8 flex items-center justify-center rounded-sm bg-surface-overlay text-dm-text-muted hover:text-dm-text-primary hover:bg-state-hover transition-colors"
-      aria-label={`Follow us on ${label}`}
+      aria-label={`${t("followUsOn")} ${label}`}
     >
       <Icon size={24} aria-hidden="true" />
     </a>
@@ -196,6 +202,7 @@ function Divider({ className = "" }: { className?: string }) {
  * Footer Component
  */
 export default function Footer() {
+  const t = useTranslations("common");
   return (
     <footer className="bg-[#11151a] 800:px-0 px-8 w-full flex justify-center">
       <div className="max-w-[720px] 990:max-w-[940px] 1200:max-w-[1140px] 1640:max-w-[1310px] 1920:max-w-[1590px] w-full py-8">
@@ -203,7 +210,7 @@ export default function Footer() {
         <div className="1025:flex-row flex-col flex mb-8 justify-between">
           {/* Navigation Links */}
           <div className="flex justify-between 1025:justify-normal 1025:gap-x-20 1200:gap-x-40">
-            {FOOTER_SECTIONS.map((section) => (
+            {getFooterSections(t).map((section) => (
               <FooterSection
                 key={section.title}
                 title={section.title}
@@ -233,19 +240,19 @@ export default function Footer() {
             <div className="flex gap-x-8">
               <div className="flex gap-x-2 items-center">
                 <GrLocation size={22} aria-hidden="true" />
-                <span>Asia</span>
+                <span>{t("asia")}</span>
               </div>
 
               <div className="flex gap-x-2 items-center">
                 <div className="h-7 w-[0.5px] bg-dm-border-subtle" />
                 <FaMoneyBills size={22} aria-hidden="true" />
-                <span>USD</span>
+                <span>{t("usd")}</span>
               </div>
 
               <div className="flex gap-x-2 items-center">
                 <div className="h-7 w-[0.5px] bg-dm-border-subtle" />
                 <BsTranslate size={22} aria-hidden="true" />
-                <span>EN</span>
+                <span>{t("en")}</span>
               </div>
             </div>
           </div>
@@ -256,9 +263,9 @@ export default function Footer() {
         {/* Payment Methods */}
         <div
           className="1200:flex hidden items-center gap-x-4"
-          aria-label="Accepted payment methods"
+          aria-label={t("acceptedPaymentMethods")}
         >
-          {PAYMENT_METHODS.map((payment) => (
+          {getPaymentMethods(t).map((payment) => (
             <PaymentIcon
               key={payment.label}
               icon={payment.icon}
@@ -274,21 +281,19 @@ export default function Footer() {
         <div className="w-full mt-5 flex justify-between">
           {/* Disclaimer */}
           <div className="text-dm-text-secondary max-w-[310px] text-[14px] font-semibold">
-            DISCLAIMER:{" "}
+            {t("disclaimer")}{" "}
             <span className="text-[12px] font-normal">
-              Trademarks, names, images, and any copyrighted materials,
-              displayed on marketplace solely as a venue platform, are the
-              property of their respective owners.
+              {t("disclaimerText")}
             </span>
           </div>
 
           {/* Copyright */}
           <div className="text-[12px] text-dm-text-primary max-w-[324px] text-right">
-            Accepting more than 300 payment methods
+            {t("acceptingMoreThan300PaymentMethods")}
             <br />
-            ©Technical platform (solution) is provided by&nbsp;
+            {t("technicalPlatformProvidedBy")}&nbsp;
             <Link href="/" className="hover:underline">
-              Difmark
+              {t("difmark")}
             </Link>
             &nbsp;2025
           </div>

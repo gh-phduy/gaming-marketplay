@@ -11,6 +11,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { IoMdDesktop } from "react-icons/io";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -68,6 +69,7 @@ export default function UpcomingGameItem({
   coverImage = DEFAULTS.coverImage,
   previewVideo = DEFAULTS.previewVideo,
 }: UpcomingGameItemProps) {
+  const t = useTranslations("home");
   // State
   const [isHovered, setIsHovered] = useState(false);
 
@@ -158,17 +160,17 @@ export default function UpcomingGameItem({
         tabIndex={0}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
-        aria-label={`${title} - Release: ${releaseDate} - ${price}`}
+        aria-label={`${title} - ${t("releaseLabel")} ${releaseDate} - ${price}`}
       >
         {/* Media Container */}
         <div className="relative flex-1">
           {/* Release Date Badge */}
           <div
             className="absolute z-20 px-2 py-[10px] bg-[#95740080] flex justify-center items-center pointer-events-none"
-            aria-label={`Release date: ${releaseDate}`}
+            aria-label={`${t("releaseDateLabel")} ${releaseDate}`}
           >
             <span className="text-dm-accent-yellow text-[12px]">
-              Release: {releaseDate}
+              {t("releaseLabel")} {releaseDate}
             </span>
           </div>
 
@@ -197,7 +199,7 @@ export default function UpcomingGameItem({
           {/* Price Overlay */}
           <div className="absolute bottom-0 w-full">
             <div className="w-full text-dm-text-primary relative gap-x-2 backdrop-blur-xs bg-surface-card/30 h-[65px] justify-between flex items-center px-4">
-              <IoMdDesktop size={20} aria-label="PC Platform" />
+              <IoMdDesktop size={20} aria-label={t("pcPlatform")} />
               <span className="text-xl font-semibold">{price}</span>
             </div>
           </div>

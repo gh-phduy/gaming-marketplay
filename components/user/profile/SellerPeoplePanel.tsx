@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Star, UserCheck, UserPlus, Users } from "lucide-react";
 import type { SellerFollower } from "../seller-profile.data";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SellerPeoplePanelProps {
   title: string;
@@ -17,6 +18,8 @@ export default function SellerPeoplePanel({
   people,
   onNotify,
 }: SellerPeoplePanelProps) {
+  const t = useTranslations("user");
+
   if (people.length === 0) {
     return (
       <section className="rounded-lg border border-midnight-700 bg-midnight-800 px-4 py-10 text-center text-steel-500">
@@ -34,7 +37,7 @@ export default function SellerPeoplePanel({
           </span>
           <div>
             <h2 className="text-lg font-bold text-white">{title}</h2>
-            <p className="text-sm text-steel-500">{people.length} profiles</p>
+            <p className="text-sm text-steel-500">{people.length} {t("profiles")}</p>
           </div>
         </div>
       </div>
@@ -75,7 +78,7 @@ export default function SellerPeoplePanel({
                 type="button"
                 onClick={() =>
                   onNotify(
-                    person.isFollowing ? "Unfollow user" : "Follow user",
+                    person.isFollowing ? t("unfollowUser") : t("followUser"),
                   )
                 }
                 className={`inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold transition ${
@@ -89,19 +92,19 @@ export default function SellerPeoplePanel({
                 ) : (
                   <UserPlus className="h-4 w-4" />
                 )}
-                {person.isFollowing ? "Following" : "Follow"}
+                {person.isFollowing ? t("following") : t("follow")}
               </button>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-md bg-midnight-750 px-3 py-2">
-                <p className="text-steel-500">Followers</p>
+                <p className="text-steel-500">{t("followers")}</p>
                 <p className="mt-1 font-bold text-white">
                   {person.followers.toLocaleString("en-US")}
                 </p>
               </div>
               <div className="rounded-md bg-midnight-750 px-3 py-2">
-                <p className="text-steel-500">Reviews</p>
+                <p className="text-steel-500">{t("reviews")}</p>
                 <p className="mt-1 font-bold text-white">
                   {person.totalReviews.toLocaleString("en-US")}
                 </p>

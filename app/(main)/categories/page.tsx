@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 type CatalogCategory = {
   title: string;
@@ -146,7 +147,8 @@ function CatalogCard({ category }: { category: CatalogCategory }) {
   );
 }
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const t = await getTranslations("home");
   return (
     <main className="relative flex min-h-[calc(100vh-80px)] w-full justify-center overflow-hidden bg-[#171f2a] px-4 pb-[50px] text-dm-text-primary sm:px-6 lg:px-8">
       <div
@@ -165,12 +167,10 @@ export default function CategoriesPage() {
       <section className="responsive relative z-10 w-full pt-[30px]">
         <div className="mx-auto max-w-[650px] text-center">
           <h1 className="text-[28px] leading-[1.4] font-semibold text-[#f6f6f6] sm:text-[32px]">
-            Our Categories
+            {t("ourCategories")}
           </h1>
           <p className="mx-auto mt-2.5 text-sm leading-[1.4] text-[#9ba1ab]">
-            The difmark.com marketplace provides a huge selection of categories
-            in which you can find your favorite games, top up cards, game
-            currency and much more at the best price
+            {t("categoriesDescription")}
           </p>
         </div>
 

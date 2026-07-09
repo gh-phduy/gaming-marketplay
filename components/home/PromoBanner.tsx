@@ -4,18 +4,23 @@
  * Banner section displaying promotional text about game deals
  */
 
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /**
  * AboutSection2 Component
  *
  * Full-width banner with background image and promotional text
  */
-export default function AboutSection2() {
+export default function PromoBanner() {
+  const t = useTranslations("home");
+
   return (
     <section
       className="h-[130px] 800:h-[204px] flex items-center justify-center text-center relative w-full"
-      aria-label="Promotional banner"
+      aria-label={t("promotionalBanner")}
     >
       {/* Background image */}
       <Image
@@ -30,12 +35,12 @@ export default function AboutSection2() {
       {/* Content */}
       <div className="relative z-20 flex flex-col gap-y-5 text-dm-text-primary p-4">
         <h2 className="text-[16px] 800:text-[32px] font-bold">
-          Game Keys, Gift Cards &amp; Software — Best Prices on Difmark
+          {t("promoTitle")}
         </h2>
         <p className="text-[14px] 800:text-[18px] text-dm-text-muted">
-          Buy your favourite games for a low price.
+          {t("promoSubtitle1")}
           <br />
-          Discounts, Prices, Bonuses for Games
+          {t("promoSubtitle2")}
         </p>
       </div>
     </section>

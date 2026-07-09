@@ -1,14 +1,8 @@
-/**
- * Countdown Component
- *
- * Countdown timer for flash sales
- * Shows hours, minutes, seconds with hover CTA button
- */
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -42,7 +36,6 @@ const DEFAULTS = {
   initialMinutes: 32,
   initialSeconds: 48,
   ctaHref: "/deals",
-  ctaText: "SEE ALL PRODUCTS",
 } as const;
 
 /* ============================================
@@ -105,13 +98,16 @@ export default function Countdown({
   initialMinutes = DEFAULTS.initialMinutes,
   initialSeconds = DEFAULTS.initialSeconds,
   ctaHref = DEFAULTS.ctaHref,
-  ctaText = DEFAULTS.ctaText,
+  ctaText,
 }: CountdownProps) {
+  const t = useTranslations("home");
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     hours: initialHours,
     minutes: initialMinutes,
     seconds: initialSeconds,
   });
+
+  const buttonText = ctaText || t("seeAllProducts");
 
   // Countdown logic
   useEffect(() => {
@@ -153,13 +149,12 @@ export default function Countdown({
     <div className="flex h-full py-4 1000:py-6 1300:py-10 flex-col group justify-center items-center gap-y-1 1000:gap-y-2">
       {/* Heading */}
       <h2 className="text-[20px] 1000:text-[28px] 1300:text-[35px] text-center text-dm-text-primary font-bold">
-        BEST DEALS OF THE WEEK
+        {t("bestDealsOfTheWeek")}
       </h2>
 
       {/* Description */}
       <p className="text-[12px] 1000:text-[14px] 1300:text-[16px] max-w-[300px] 1000:max-w-[400px] 1300:max-w-[450px] text-center font-medium text-dm-text-muted">
-        Do not miss the best offer of the week. Great discounts, nice prices and
-        nice bonuses
+        {t("doNotMissTheBestOffer")}
       </p>
 
       {/* Timer Container */}
@@ -170,11 +165,11 @@ export default function Countdown({
       >
         {/* Countdown Timer */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 ease-out group-hover:opacity-0 transition-all duration-1000 flex justify-center gap-x-3 1000:gap-x-4 1300:gap-x-6">
-          <TimeBlock value={timeLeft.hours} label="Hours" />
+          <TimeBlock value={timeLeft.hours} label={t("hours")} />
           <TimeSeparator />
-          <TimeBlock value={timeLeft.minutes} label="Minutes" />
+          <TimeBlock value={timeLeft.minutes} label={t("minutes")} />
           <TimeSeparator />
-          <TimeBlock value={timeLeft.seconds} label="Seconds" />
+          <TimeBlock value={timeLeft.seconds} label={t("seconds")} />
         </div>
 
         {/* CTA Button (shows on hover) */}
@@ -183,7 +178,7 @@ export default function Countdown({
             href={ctaHref}
             className="relative bg-dm-accent-green hover:bg-dm-accent-green-hover w-[200px] 1000:w-[230px] 1300:w-[260px] text-dm-text-primary flex items-center justify-center font-semibold text-[12px] 1000:text-[14px] 1300:text-[15px] rounded-lg h-10 1000:h-11 1300:h-12 transition-colors"
           >
-            {ctaText}
+            {buttonText}
           </Link>
         </div>
       </div>

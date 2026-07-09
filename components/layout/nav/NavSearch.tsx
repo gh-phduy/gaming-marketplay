@@ -1,3 +1,5 @@
+import { useTranslations } from "@/hooks/useTranslations";
+
 interface NavSearchProps {
   value: string;
   onChange: (value: string) => void;
@@ -13,6 +15,8 @@ export default function NavSearch({
   onBlur,
   onKeyDown,
 }: NavSearchProps) {
+  const t = useTranslations("common");
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -35,8 +39,8 @@ export default function NavSearch({
           className="pointer-events-none absolute top-1/2 left-4 flex -translate-y-1/2 items-center gap-x-1"
           aria-hidden="true"
         >
-          Search by
-          <span className="font-bold">Product</span>
+          {t("searchBy", "Search by")}
+          <span className="font-bold">{t("product", "Product")}</span>
         </div>
       )}
     </div>

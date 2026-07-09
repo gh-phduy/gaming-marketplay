@@ -2,6 +2,10 @@
 
 import { Star } from "lucide-react";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface ReviewsCardProps {
   reviews: {
     count: number;
@@ -9,6 +13,15 @@ interface ReviewsCardProps {
   };
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: DashboardReviewsCard
+   ========================================================================== */
+
+/**
+ * DashboardReviewsCard Component
+ *
+ * Displays star rating icons and reviews sum counts.
+ */
 export default function DashboardReviewsCard({ reviews }: ReviewsCardProps) {
   return (
     <div
@@ -29,7 +42,7 @@ export default function DashboardReviewsCard({ reviews }: ReviewsCardProps) {
           </span>
         </div>
 
-        {/* Star rating visualization */}
+        {/* Star rating visualization icons list */}
         <div className="mt-3 flex items-center gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
@@ -46,3 +59,4 @@ export default function DashboardReviewsCard({ reviews }: ReviewsCardProps) {
     </div>
   );
 }
+

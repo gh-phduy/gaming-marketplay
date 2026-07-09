@@ -2,6 +2,7 @@
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { I18nProvider } from "@/contexts/I18nProvider";
 import type { ReactNode } from "react";
 
 /**
@@ -11,7 +12,9 @@ import type { ReactNode } from "react";
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      <SettingsProvider>{children}</SettingsProvider>
+      <SettingsProvider>
+        <I18nProvider>{children}</I18nProvider>
+      </SettingsProvider>
     </AuthProvider>
   );
 }

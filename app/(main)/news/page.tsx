@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import NewsCard from "@/components/home/NewsCard";
 import { NEWS_ARTICLES, getNewsArticleHref } from "@/lib/constants";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "News - Difmark",
   description: "Read the latest sample gaming news and marketplace updates.",
 };
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const t = await getTranslations("home");
   return (
     <main
       id="main-content"
@@ -18,7 +20,7 @@ export default function NewsPage() {
           id="news-page-heading"
           className="mb-8 text-2xl font-bold text-dm-text-primary uppercase"
         >
-          Latest News
+          {t("latestNews")}
         </h1>
 
         <div className="grid gap-7 800:grid-cols-2 1200:grid-cols-3 1920:grid-cols-4">

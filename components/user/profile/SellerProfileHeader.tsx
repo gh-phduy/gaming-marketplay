@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   BadgeCheck,
   Banknote,
@@ -45,11 +46,13 @@ function formatNumber(value: number) {
 }
 
 function FlagBadge({ code }: { code: string }) {
+  const t = useTranslations("user");
+
   if (code === "BG") {
     return (
       <span
         className="inline-flex h-4 w-7 overflow-hidden rounded-sm border border-white/20"
-        aria-label="Bulgaria"
+        aria-label={t("bulgaria")}
       >
         <span className="h-full flex-1 bg-white" />
         <span className="h-full flex-1 bg-forest-500" />
@@ -61,7 +64,7 @@ function FlagBadge({ code }: { code: string }) {
   if (code === "EN") {
     return (
       <span className="relative inline-flex h-5 w-7 overflow-hidden rounded-sm">
-        <Image src="/en.svg" alt="English" fill className="object-cover" />
+        <Image src="/en.svg" alt={t("english")} fill className="object-cover" />
       </span>
     );
   }
@@ -107,6 +110,8 @@ export default function SellerProfileHeader({
   onOpenChat,
   onNotify,
 }: SellerProfileHeaderProps) {
+  const t = useTranslations("user");
+
   const profilePath = getSellerProfilePath(profile.name);
 
   const getShareUrl = () => {
@@ -124,9 +129,9 @@ export default function SellerProfileHeader({
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(shareUrl);
       }
-      onNotify("Profile link copied");
+      onNotify(t("profileLinkCopied"));
     } catch {
-      onNotify("Profile link ready to copy");
+      onNotify(t("profileLinkReadyToCopy"));
     }
   };
 
@@ -156,7 +161,7 @@ export default function SellerProfileHeader({
         <Popover>
           <PopoverTrigger className="absolute top-4 right-5 inline-flex h-10 items-center gap-2 rounded-lg bg-midnight-700/80 px-4 text-sm font-bold text-white shadow-lg transition hover:bg-midnight-650">
             <Share2 className="h-4 w-4" />
-            Share
+            {t("share")}
           </PopoverTrigger>
           <PopoverContent
             align="end"
@@ -167,7 +172,7 @@ export default function SellerProfileHeader({
               type="button"
               onClick={copyProfileLink}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-midnight-650 text-steel-300 transition hover:text-white"
-              aria-label="Copy profile link"
+              aria-label={t("copyProfileLink")}
             >
               <Link2 className="h-4 w-4" />
             </button>
@@ -175,7 +180,7 @@ export default function SellerProfileHeader({
               type="button"
               onClick={() => openShareWindow("telegram")}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white transition hover:bg-sky-400"
-              aria-label="Share on Telegram"
+              aria-label={t("shareOnTelegram")}
             >
               <Send className="h-4 w-4" />
             </button>
@@ -183,7 +188,7 @@ export default function SellerProfileHeader({
               type="button"
               onClick={() => openShareWindow("twitter")}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white transition hover:bg-blue-400"
-              aria-label="Share on Twitter"
+              aria-label={t("shareOnTwitter")}
             >
               <Twitter className="h-4 w-4" />
             </button>
@@ -191,7 +196,7 @@ export default function SellerProfileHeader({
               type="button"
               onClick={() => openShareWindow("whatsapp")}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-500 text-white transition hover:bg-forest-500/80"
-              aria-label="Share on WhatsApp"
+              aria-label={t("shareOnWhatsApp")}
             >
               <MessageCircle className="h-4 w-4" />
             </button>
@@ -199,7 +204,7 @@ export default function SellerProfileHeader({
               type="button"
               onClick={copyProfileLink}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white transition hover:bg-indigo-400"
-              aria-label="Copy profile URL"
+              aria-label={t("copyProfileUrl")}
             >
               <Copy className="h-4 w-4" />
             </button>
@@ -228,10 +233,10 @@ export default function SellerProfileHeader({
             <div className="min-w-0">
               <h1 className="flex items-center gap-2 text-3xl leading-tight font-bold sm:text-4xl">
                 {profile.name}
-                <BadgeCheck className="h-5 w-5 text-white" aria-label="Verified" />
+                <BadgeCheck className="h-5 w-5 text-white" aria-label={t("verified")} />
               </h1>
               <p className="mt-1 text-sm text-steel-500">
-                Member since {profile.memberSince}
+                {t("memberSince")} {profile.memberSince}
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-4 text-base">
                 <button
@@ -240,7 +245,7 @@ export default function SellerProfileHeader({
                   className="inline-flex items-center gap-2 text-forest-500 transition hover:text-forest-100"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Open chat
+                  {t("openChat")}
                 </button>
                 <span className="hidden h-6 w-px bg-midnight-650 sm:block" />
                 <button
@@ -257,14 +262,14 @@ export default function SellerProfileHeader({
                   ) : (
                     <UserPlus className="h-5 w-5" />
                   )}
-                  {isFollowing ? "Unfollow" : "Follow"}
+                  {isFollowing ? t("unfollow") : t("follow")}
                 </button>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-steel-300 md:self-start md:pt-2">
-            <span>Seller:</span>
+            <span>{t("seller")}</span>
             <Trophy className="h-4 w-4 text-cyan-200" />
             <span className="font-bold text-white">{profile.tier}</span>
           </div>
@@ -274,13 +279,13 @@ export default function SellerProfileHeader({
       <div className="grid gap-5 bg-midnight-800 px-5 py-6 text-base sm:px-8 md:grid-cols-4 md:gap-0">
         <div className="space-y-3 md:border-r md:border-midnight-650 md:pr-8">
           <StatPair
-            label="Positive feedbacks"
+            label={t("positiveFeedbacks")}
             value={`${profile.positiveFeedbacks.toFixed(2)} %`}
             icon={<ThumbsUp className="h-4 w-4 text-forest-500" />}
             tone="positive"
           />
           <StatPair
-            label="Negative feedbacks"
+            label={t("negativeFeedbacks")}
             value={`${profile.negativeFeedbacks.toFixed(2)} %`}
             icon={<ThumbsDown className="h-4 w-4 text-red-400" />}
             tone="negative"
@@ -289,12 +294,12 @@ export default function SellerProfileHeader({
 
         <div className="space-y-3 md:border-r md:border-midnight-650 md:px-8">
           <StatPair
-            label="Total trades"
+            label={t("totalTrades")}
             value={formatNumber(profile.totalSales)}
             icon={<Trophy className="h-4 w-4 text-steel-500" />}
           />
           <StatPair
-            label="Total reviews"
+            label={t("totalReviews")}
             value={formatNumber(profile.totalFeedbacks)}
             icon={<ShieldCheck className="h-4 w-4 text-steel-500" />}
           />
@@ -302,7 +307,7 @@ export default function SellerProfileHeader({
 
         <div className="space-y-3 md:border-r md:border-midnight-650 md:px-8">
           <StatPair
-            label="Location"
+            label={t("location")}
             value=""
             icon={<MapPin className="h-4 w-4 text-steel-500" />}
           />
@@ -310,7 +315,7 @@ export default function SellerProfileHeader({
             <FlagBadge code={profile.location} />
           </div>
           <StatPair
-            label="Language"
+            label={t("language")}
             value=""
             icon={<Languages className="h-4 w-4 text-steel-500" />}
           />
@@ -321,11 +326,11 @@ export default function SellerProfileHeader({
 
         <div className="space-y-3 md:pl-8">
           <StatPair
-            label="Currency"
+            label={t("currency")}
             value={profile.currency}
             icon={<Banknote className="h-4 w-4 text-steel-500" />}
           />
-          <StatPair label="Followers" value={formatNumber(profile.followers)} />
+          <StatPair label={t("followers")} value={formatNumber(profile.followers)} />
         </div>
       </div>
 
@@ -338,10 +343,10 @@ export default function SellerProfileHeader({
           >
             <span className="inline-flex items-center gap-2 text-lg font-bold">
               <Copy className="h-5 w-5" />
-              Store description
+              {t("storeDescription")}
             </span>
             <span className="inline-flex items-center gap-3 text-forest-500">
-              {isDescriptionOpen ? "Hide" : "Show"}
+              {isDescriptionOpen ? t("hide") : t("show")}
               <ChevronDown
                 className={`h-5 w-5 transition-transform ${
                   isDescriptionOpen ? "rotate-180" : ""

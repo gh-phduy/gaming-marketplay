@@ -5,10 +5,13 @@
  * Features hover effects with dynamic background images
  */
 
+"use client";
+
 import Image from "next/image";
 import { HiShieldCheck } from "react-icons/hi";
 import { FaCreditCard } from "react-icons/fa";
 import { IoPerson } from "react-icons/io5";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    CONSTANTS
@@ -24,34 +27,6 @@ const RADIAL_GRADIENT_STYLE = {
   background: `radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 60%, rgba(0,0,0,0.15) 100%)`,
   pointerEvents: "none" as const,
 };
-
-/** Feature items data */
-const FEATURES = [
-  {
-    id: "buyer-protection",
-    icon: HiShieldCheck,
-    iconSize: 30,
-    title: "Buyer Protection",
-    description: "Secure transactions and personal data",
-    hoverImage: "/hover-ab-1.webp",
-  },
-  {
-    id: "secure-payment",
-    icon: FaCreditCard,
-    iconSize: 28,
-    title: "Secure Payment",
-    description: "Secure transactions and personal data",
-    hoverImage: "/hover-ab-3.webp",
-  },
-  {
-    id: "customer-support",
-    icon: IoPerson,
-    iconSize: 28,
-    title: "24/7 Support",
-    description: "Secure transactions and personal data",
-    hoverImage: "/hover-ab-2.webp",
-  },
-] as const;
 
 /* ============================================
    SUB-COMPONENTS
@@ -120,11 +95,40 @@ function FeatureCard({
  *
  * Displays three key features with interactive hover effects
  */
-export default function AboutSection1() {
+export default function FeaturesSection() {
+  const t = useTranslations("home");
+
+  const FEATURES = [
+    {
+      id: "buyer-protection",
+      icon: HiShieldCheck,
+      iconSize: 30,
+      title: t("buyerProtection"),
+      description: t("secureTransactionsAndPersonalData"),
+      hoverImage: "/hover-ab-1.webp",
+    },
+    {
+      id: "secure-payment",
+      icon: FaCreditCard,
+      iconSize: 28,
+      title: t("securePayment"),
+      description: t("secureTransactionsAndPersonalData"),
+      hoverImage: "/hover-ab-3.webp",
+    },
+    {
+      id: "customer-support",
+      icon: IoPerson,
+      iconSize: 28,
+      title: t("support247"),
+      description: t("secureTransactionsAndPersonalData"),
+      hoverImage: "/hover-ab-2.webp",
+    },
+  ];
+
   return (
     <section
       className="relative z-10 flex h-[156px] w-full items-center justify-center text-center"
-      aria-label="Key Features"
+      aria-label={t("keyFeatures")}
     >
       {/* Background image */}
       <Image

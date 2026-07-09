@@ -9,6 +9,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const selectTriggerClassName =
   "h-11 w-full rounded-md border border-midnight-700 bg-midnight-800 px-4 text-base text-white shadow-none transition-colors hover:bg-midnight-750 focus-visible:border-forest-500 focus-visible:ring-2 focus-visible:ring-forest-500/20 data-[popup-open]:border-midnight-650 data-[popup-open]:bg-midnight-700 [&>svg:last-child]:ml-auto [&>svg:last-child]:text-white";
@@ -18,13 +19,6 @@ const selectContentClassName =
 
 const selectItemClassName =
   "min-h-12 rounded-none border-l-2 border-transparent px-5 py-3 pr-10 text-base text-steel-300 transition-colors hover:bg-midnight-650 hover:text-white focus:bg-midnight-650 focus:text-white data-[highlighted]:bg-midnight-650 data-[highlighted]:text-white data-[selected]:border-forest-500 data-[selected]:bg-midnight-650 data-[selected]:text-white [&>span:last-child]:right-4 [&>span:last-child]:text-forest-500";
-
-const sortLabels: Record<string, string> = {
-  popular: "Sort by",
-  "price-desc": "Price: higher to lower",
-  "price-asc": "Price: lower to higher",
-  title: "Product name A-Z",
-};
 
 interface SellerStoreFiltersProps {
   searchTerm: string;
@@ -49,12 +43,32 @@ export default function SellerStoreFilters({
   viewMode,
   onToggleViewMode,
 }: SellerStoreFiltersProps) {
+  const t = useTranslations("user");
+  const tProduct = useTranslations("product");
+  const tCommon = useTranslations("common");
+
+  function translateCategory(opt: string) {
+    const lower = opt.toLowerCase();
+    if (lower === "mobile games") return tProduct("mobileGames");
+    if (lower === "services") return tProduct("services");
+    return opt;
+  }
+
   const categoryLabel =
     category === "all"
-      ? "All categories"
-      : categoryOptions.find((option) => option.toLowerCase() === category) ??
-        "All categories";
-  const sortLabel = sortLabels[sortBy] ?? "Sort by";
+      ? tCommon("allCategories")
+      : translateCategory(
+          categoryOptions.find((option) => option.toLowerCase() === category) ?? ""
+        ) || tCommon("allCategories");
+
+  const sortLabel =
+    sortBy === "price-desc"
+      ? t("priceHigherToLower")
+      : sortBy === "price-asc"
+      ? t("priceLowerToHigher")
+      : sortBy === "title"
+      ? t("productNameAZ")
+      : t("sortBy");
 
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_265px_265px_96px]">
@@ -66,7 +80,7 @@ export default function SellerStoreFilters({
         <Input
           value={searchTerm}
           onChange={(event) => onChangeSearchTerm(event.target.value)}
-          placeholder="Search by Product name"
+          placeholder={tProduct("searchProductPlaceholder")}
           className="h-11 border border-midnight-700 bg-midnight-800 pl-12 text-white"
         />
       </div>
@@ -88,7 +102,7 @@ export default function SellerStoreFilters({
         </SelectTrigger>
         <SelectContent className={selectContentClassName}>
           <SelectItem className={selectItemClassName} value="all">
-            All categories
+            {tCommon("allCategories")}
           </SelectItem>
           {categoryOptions.map((option) => (
             <SelectItem
@@ -96,7 +110,7 @@ export default function SellerStoreFilters({
               className={selectItemClassName}
               value={option.toLowerCase()}
             >
-              {option}
+              {translateCategory(option)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -117,16 +131,16 @@ export default function SellerStoreFilters({
         </SelectTrigger>
         <SelectContent className={selectContentClassName}>
           <SelectItem className={selectItemClassName} value="price-desc">
-            Price: from higher to lower
+            {t("priceHigherToLower")}
           </SelectItem>
           <SelectItem className={selectItemClassName} value="price-asc">
-            Price: from lower to higher
+            {t("priceLowerToHigher")}
           </SelectItem>
           <SelectItem className={selectItemClassName} value="popular">
-            Newest first
+            {t("newestFirst")}
           </SelectItem>
           <SelectItem className={selectItemClassName} value="title">
-            Product name A-Z
+            {t("productNameAZ")}
           </SelectItem>
         </SelectContent>
       </Select>
@@ -136,14 +150,14 @@ export default function SellerStoreFilters({
         variant="outline"
         onClick={onToggleViewMode}
         className="h-11 border-midnight-700 bg-midnight-800 text-steel-300 hover:bg-midnight-700"
-        aria-label={`Switch to ${viewMode === "grid" ? "list" : "grid"} view`}
+        aria-label={t(viewMode === "grid" ? "switchToList" : "switchToGrid")}
       >
         {viewMode === "grid" ? (
           <List size={16} className="mr-2" />
         ) : (
           <Grid3X3 size={16} className="mr-2" />
         )}
-        {viewMode === "grid" ? "List" : "Grid"}
+        {viewMode === "grid" ? tProduct("list") : t("grid")}
       </Button>
     </div>
   );

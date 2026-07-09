@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import SellerFilterBar from "./SellerFilterBar";
-import SellerRow, { SellerOffer } from "./SellerRow";
+import { SellerOffer } from "./SellerRow";
+import SellerListClient from "./SellerListClient";
+import { getTranslations } from "next-intl/server";
 
 async function getSellers(): Promise<SellerOffer[] | null> {
   try {
@@ -32,6 +34,8 @@ async function getSellers(): Promise<SellerOffer[] | null> {
         activationRegion: row.region,
         price: Number(row.price),
         currency: row.currency,
+        title: row.title || "Game Key",
+        image_url: row.image_url || "/cyberpunk_2077.jpg",
       },
       seller: {
         id: row.seller?.id || "unknown",
@@ -50,29 +54,18 @@ async function getSellers(): Promise<SellerOffer[] | null> {
 
 export default async function SellerList() {
   const products = await getSellers();
+  const t = await getTranslations("product");
 
   if (products === null) {
     return (
       <div className="flex w-full flex-col gap-y-2">
         <SellerFilterBar />
         <div className="rounded-lg bg-red-500/10 p-4 text-red-500">
-          Failed to load sellers. Please try again later.
+          {t("failedToLoad")}
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="flex w-full flex-col gap-y-2">
-      <SellerFilterBar />
-      {products.map((offer: SellerOffer) => (
-        <SellerRow key={offer.data.id} offer={offer} />
-      ))}
-      {products.length === 0 && (
-        <div className="rounded-lg bg-[#2a3441] p-4 text-center text-gray-400">
-          No sellers available at the moment.
-        </div>
-      )}
-    </div>
-  );
+  return <SellerListClient initialOffers={products} />;
 }

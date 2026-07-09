@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CreditCard, ShoppingCart, CheckCircle2, XCircle } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ==========================================================================
    MAIN COMPONENT: CheckoutNavBar
@@ -17,6 +18,7 @@ import { CreditCard, ShoppingCart, CheckCircle2, XCircle } from "lucide-react";
  * is completed, failed, or processing, updating progress bars and steps.
  */
 export default function CheckoutNavBar() {
+  const t = useTranslations("checkout");
   const pathname = usePathname();
   const searchParams = useSearchParams();
   
@@ -35,10 +37,10 @@ export default function CheckoutNavBar() {
 
   // Label configuration for the final checkout status indicator
   const lastStepLabel = isCompleted
-    ? "Completed"
+    ? t("completed")
     : isFailed
-      ? "Failed"
-      : "Processing";
+      ? t("failed")
+      : t("processing");
   const lastStepClass = isCompleted
     ? "text-[#46ca43]"
     : isFailed
@@ -53,7 +55,7 @@ export default function CheckoutNavBar() {
           <div className="relative h-[40px] w-[150px]">
             <Image
               src="/Difmark-logo.png"
-              alt="Difmark Logo"
+              alt={t("difmarkLogo")}
               width={150}
               height={40}
               className="object-contain"
@@ -69,7 +71,7 @@ export default function CheckoutNavBar() {
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#46ca43] text-black">
               <ShoppingCart className="h-3.5 w-3.5" />
             </div>
-            <span>Shopping Cart</span>
+            <span>{t("shoppingCart")}</span>
           </div>
 
           <div className="h-[2px] w-24 bg-[#46ca43]"></div>
@@ -81,7 +83,7 @@ export default function CheckoutNavBar() {
             >
               <CreditCard className="h-3.5 w-3.5" />
             </div>
-            <span>Checkout</span>
+            <span>{t("checkout")}</span>
           </div>
 
           <div

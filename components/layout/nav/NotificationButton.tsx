@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   Bell,
   CheckCircle2,
@@ -132,6 +133,7 @@ interface NotificationButtonProps {
 
 export default function NotificationButton({ accountId }: NotificationButtonProps) {
   const router = useRouter();
+  const t = useTranslations("nav");
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<NotificationFilter>("all");
   const [notifications, setNotifications] = useState<
@@ -195,7 +197,7 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
     <div ref={notificationRef} className="relative">
       <button
         type="button"
-        aria-label="Notifications"
+        aria-label={t("notificationsTitle")}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
@@ -212,7 +214,7 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
       {isOpen ? (
         <div
           role="dialog"
-          aria-label="Notifications"
+          aria-label={t("notificationsTitle")}
           className="fixed top-[78px] right-3 left-3 z-[90] max-h-[calc(100vh-96px)] overflow-hidden rounded-xl border border-[#2a3545] bg-[#161e28] text-white shadow-[0_24px_64px_rgba(0,0,0,0.55)] sm:absolute sm:top-[calc(100%+14px)] sm:right-0 sm:left-auto sm:w-[400px]"
         >
           {/* Arrow */}
@@ -228,23 +230,23 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
                 <div className="flex items-center gap-2">
                   <span className="h-[6px] w-[6px] rounded-full bg-[#4ade80] shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
                   <p className="text-[10px] font-bold tracking-[0.18em] text-[#6b7a8d] uppercase">
-                    Activity center
+                    {t("activityCenter")}
                   </p>
                 </div>
                 <h2 className="mt-2.5 text-xl leading-none font-bold tracking-tight">
-                  Notifications
+                  {t("notificationsTitle")}
                 </h2>
               </div>
 
               <div className="flex items-center gap-2">
                 {unreadCount > 0 ? (
                   <span className="rounded-md border border-[#4ade80]/20 bg-[#4ade80]/10 px-2.5 py-1 text-[11px] font-bold text-[#4ade80]">
-                    {unreadCount} unread
+                    {unreadCount} {t("unreadBadge")}
                   </span>
                 ) : null}
                 <button
                   type="button"
-                  aria-label="Mark all notifications as read"
+                  aria-label={t("markAllAsReadLabel")}
                   onClick={handleMarkAllRead}
                   className="flex h-7 w-7 items-center justify-center rounded-md text-[#6b7a8d] transition hover:bg-white/[0.06] hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
                 >
@@ -266,7 +268,7 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
                   : "text-[#6b7a8d] hover:text-[#9aaabe]"
               }`}
             >
-              All
+              {t("all")}
             </button>
             <button
               type="button"
@@ -278,21 +280,21 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
                   : "text-[#6b7a8d] hover:text-[#9aaabe]"
               }`}
             >
-              Unread
+              {t("unread")}
             </button>
           </div>
 
           {/* Section Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-2">
             <span className="text-[10px] font-bold tracking-[0.14em] text-[#6b7a8d] uppercase">
-              Recent activity
+              {t("recentActivity")}
             </span>
             <button
               type="button"
               onClick={() => setFilter("all")}
               className="text-[12px] font-semibold text-[#58a6ff] transition hover:text-[#8fc5ff] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
             >
-              See all
+              {t("seeAll")}
             </button>
           </div>
 
@@ -312,10 +314,10 @@ export default function NotificationButton({ accountId }: NotificationButtonProp
                   <Clock3 className="h-5 w-5 text-[#6b7a8d]" />
                 </span>
                 <p className="mt-3 text-sm font-semibold text-white">
-                  You&apos;re all caught up
+                  {t("caughtUp")}
                 </p>
                 <p className="mt-1 text-[12px] text-[#6b7a8d]">
-                  New order updates will appear here.
+                  {t("caughtUpDescription")}
                 </p>
               </div>
             )}

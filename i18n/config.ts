@@ -18,6 +18,7 @@ export const locales = [
   "no",
   "da",
   "sv",
+  "vi",
 ] as const;
 
 export type Locale = (typeof locales)[number];
@@ -41,6 +42,7 @@ export const localeNames: Record<Locale, string> = {
   no: "Norsk",
   da: "Dansk",
   sv: "Svenska",
+  vi: "Tiếng Việt",
 };
 
 export const localeToLanguageCode: Record<string, Locale> = {
@@ -62,4 +64,5 @@ export const localeToLanguageCode: Record<string, Locale> = {
   NO: "no",
   DA: "da",
   SV: "sv",
+  VI: "vi",
 };

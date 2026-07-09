@@ -2,9 +2,10 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { MessageCircle, Send, X } from "lucide-react";
+import { MessageCircle, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { playNotificationSound } from "@/lib/utils/audio";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface ChatInboxButtonProps {
   accountId?: string | null;
@@ -25,6 +26,7 @@ type ChatPreview = {
 };
 
 export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
+  const t = useTranslations("nav");
   const [isOpen, setIsOpen] = useState(false);
   const [chats, setChats] = useState<ChatPreview[]>([]);
   const inboxRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +41,7 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     );
     const lastMsg = sortedMessages[sortedMessages.length - 1];
-    const lastMsgText = lastMsg ? lastMsg.text : "No messages yet";
+    const lastMsgText = lastMsg ? lastMsg.text : t("noMessagesYet");
 
     const formattedTime = lastMsg
       ? new Date(lastMsg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
@@ -51,14 +53,14 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
       id: row.id,
       sellerId: row.seller_id,
       buyerId: row.buyer_id,
-      sellerName: recipient?.display_name || "Unknown",
+      sellerName: recipient?.display_name || t("unknown"),
       avatar: recipient?.avatar_url || "/avt1.png",
       message: lastMsgText,
       createdAt: formattedTime,
       unread: unreadCountVal > 0,
       unreadCount: unreadCountVal,
       recipientId: recipient?.id || "",
-      listingTitle: row.listing_title || "Chat",
+      listingTitle: row.listing_title || t("chat"),
     };
   };
 
@@ -189,7 +191,7 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
     <div ref={inboxRef} className="relative">
       <button
         type="button"
-        aria-label="Messages"
+        aria-label={t("messages")}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
@@ -206,7 +208,7 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
       {isOpen ? (
         <div
           role="dialog"
-          aria-label="Messages"
+          aria-label={t("messages")}
           className="fixed top-[78px] right-3 left-3 z-[90] overflow-hidden rounded-xl border border-[#2a3545] bg-[#161e28] text-white shadow-[0_24px_64px_rgba(0,0,0,0.55)] sm:absolute sm:top-[calc(100%+14px)] sm:right-0 sm:left-auto sm:w-[380px]"
         >
           <span
@@ -219,18 +221,18 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
               <div className="flex items-center gap-2">
                 <span className="h-[6px] w-[6px] rounded-full bg-[#4ade80]" />
                 <p className="text-[10px] font-bold tracking-[0.18em] text-[#6b7a8d] uppercase">
-                  Inbox
+                  {t("inbox")}
                 </p>
               </div>
               <h2 className="mt-2.5 text-xl leading-none font-bold">
-                Messages
+                {t("messages")}
               </h2>
             </div>
             <button
               type="button"
               className="flex h-7 w-7 items-center justify-center rounded-md text-[#6b7a8d] transition hover:bg-white/[0.06] hover:text-white"
               onClick={() => setIsOpen(false)}
-              aria-label="Close messages"
+              aria-label={t("closeMessages")}
             >
               <X className="h-4 w-4" />
             </button>
@@ -277,7 +279,7 @@ export default function ChatInboxButton({ accountId }: ChatInboxButtonProps) {
             ))}
             {chats.length === 0 && (
               <div className="px-5 py-8 text-center text-sm text-[#7a8ba0]">
-                No messages yet
+                {t("noMessagesYet")}
               </div>
             )}
           </div>

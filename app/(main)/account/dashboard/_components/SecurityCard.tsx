@@ -9,10 +9,23 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface SecurityCardProps {
   isVerified: boolean;
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: DashboardSecurityCard
+   ========================================================================== */
+
+/**
+ * DashboardSecurityCard Component
+ *
+ * Renders safety parameters scoring and details checklist items (2FA, Email verify, identity check).
+ */
 export default function DashboardSecurityCard({
   isVerified,
 }: SecurityCardProps) {
@@ -60,7 +73,7 @@ export default function DashboardSecurityCard({
         <h2 className="text-base font-bold text-white">Account Security</h2>
       </div>
 
-      {/* Security Score */}
+      {/* Dynamic circular SVG Security Score */}
       <div className="mt-4 flex items-center gap-3">
         <div className="relative flex h-14 w-14 items-center justify-center">
           <svg className="h-14 w-14 -rotate-90" viewBox="0 0 56 56">
@@ -98,7 +111,7 @@ export default function DashboardSecurityCard({
         </div>
       </div>
 
-      {/* Security Items */}
+      {/* Security Checklist items */}
       <div className="mt-4 space-y-2">
         {securityItems.map((item) => {
           const Icon = item.icon;
@@ -122,7 +135,7 @@ export default function DashboardSecurityCard({
         })}
       </div>
 
-      {/* Enable 2FA CTA */}
+      {/* 2FA activation warning CTA */}
       {!securityItems.find((i) => i.id === "2fa")?.isActive && (
         <button
           type="button"
@@ -134,3 +147,4 @@ export default function DashboardSecurityCard({
     </div>
   );
 }
+

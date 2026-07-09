@@ -51,8 +51,8 @@ import { ProductApiResponse } from '@/types/product';
 export function useProduct(productId: string) {
     return useQuery<ProductApiResponse>({
         queryKey: ['product', productId],
-        queryFn: async () => {
-            const response = await fetch(`/api/products/${productId}`);
+        queryFn: async ({ signal }) => {
+            const response = await fetch(`/api/products/${productId}`, { signal });
             if (!response.ok) throw new Error('Failed to fetch product');
             return response.json();
         }

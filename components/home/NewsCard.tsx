@@ -4,10 +4,13 @@
  * News article card for the Latest News section
  */
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { LuClock3 } from "react-icons/lu";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -59,6 +62,8 @@ export default function NewsItem({
   views = DEFAULTS.views,
   href,
 }: NewsItemProps) {
+  const t = useTranslations("home");
+
   const cardClassName =
     "bg-surface-card gap-y-2 flex flex-col w-fit rounded-sm p-5 transition-colors hover:bg-state-hover cursor-pointer focus-visible:ring-2 focus-visible:ring-dm-accent-green/70 focus-visible:outline-none";
 
@@ -94,7 +99,7 @@ export default function NewsItem({
       {/* View Count */}
       <div className="mt-2 flex items-center gap-x-1 text-[16px] text-dm-text-secondary">
         <MdOutlineRemoveRedEye size={24} aria-hidden="true" />
-        <span aria-label={`${views.toLocaleString()} views`}>
+        <span aria-label={`${views.toLocaleString()} ${t("views")}`}>
           {views.toLocaleString()}
         </span>
       </div>

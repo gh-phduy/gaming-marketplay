@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   /* ============================================
@@ -34,6 +37,13 @@ const nextConfig: NextConfig = {
         hostname: "placehold.co",
         port: "",
         pathname: "/**",
+      },
+      // Allow loading images from Supabase Storage (game assets, product images, avatars)
+      {
+        protocol: "https",
+        hostname: "qqrmbooglxuxbikrnpnh.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/**",
       },
     ],
   },
@@ -118,4 +128,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

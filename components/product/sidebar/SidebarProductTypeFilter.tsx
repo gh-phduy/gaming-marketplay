@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useMemo, useState } from "react";
 import { Check, Search } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -11,6 +9,7 @@ import {
   REGION_FILTER_ITEMS,
   type FilterSubItem,
 } from "./filter-data";
+import { useTranslations } from "@/hooks/useTranslations";
 
 type SidebarFilterSection = {
   id: string;
@@ -94,6 +93,9 @@ function FilterSection({
   onToggleOpen: (sectionId: string) => void;
   onToggleItem: (item: FilterSubItem, isProductFilter: boolean) => void;
 }) {
+  const t = useTranslations("product");
+  const tNav = useTranslations("nav");
+
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLowerCase();
   const selectedCount = section.items.filter((item) =>
@@ -117,6 +119,47 @@ function FilterSection({
     });
   }, [checkedIds, normalizedQuery, section.items]);
 
+  function translateFilterItemLabel(id: string, label: string) {
+    switch (id) {
+      case "game-keys": return tNav("gameKeys");
+      case "console-games": return tNav("consoleGames");
+      case "pc-games": return tNav("pcGames");
+      case "mobile": return tNav("mobile");
+      case "game-currency": return tNav("gameCurrency");
+      case "game-accounts": return tNav("gameAccounts");
+      case "game-items": return tNav("gameItems");
+      case "power-leveling": return tNav("powerLeveling");
+      case "software": return tNav("software");
+      case "gift-cards": return tNav("giftCards");
+      case "game-cards": return tNav("gameCards");
+      case "upcoming": return t("upcoming");
+      case "random-keys": return t("randomKeys");
+      case "official-website": return t("officialWebsite");
+      case "global": return t("global");
+      case "europe": return t("europe");
+      case "north-america": return t("northAmerica");
+      case "latin-america": return t("latinAmerica");
+      case "united-states": return t("unitedStates");
+      case "pre-order": return t("preOrder");
+      case "bundle": return t("bundle");
+      case "pack": return t("pack");
+      case "other-dlc":
+      case "dlc":
+        return t("dlc");
+      default:
+        return label;
+    }
+  }
+
+  const placeholderKey = section.id === "product-type"
+    ? "searchProductType"
+    : section.id === "platform"
+    ? "searchPlatform"
+    : section.id === "region"
+    ? "searchRegion"
+    : "";
+  const placeholder = placeholderKey ? t(placeholderKey) : undefined;
+
   return (
     <section className="w-full border-t border-[#3b4554]">
       <button
@@ -126,7 +169,7 @@ function FilterSection({
         aria-expanded={isOpen}
       >
         <span className="flex min-w-0 items-center gap-3">
-          <span className="truncate text-lg font-bold">{section.title}</span>
+          <span className="truncate text-lg font-bold">{t(section.id)}</span>
           {section.showSelectedCount && selectedCount > 0 ? (
             <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#465266] text-sm font-semibold text-[#cbd4e0]">
               {selectedCount}
@@ -146,14 +189,14 @@ function FilterSection({
             className="overflow-hidden"
           >
             <div className="pb-5">
-              {section.placeholder ? (
+              {placeholder ? (
                 <div className="relative mb-4">
                   <Search className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-[#a8b2c0]" />
                   <input
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder={section.placeholder}
+                    placeholder={placeholder}
                     className="h-10 w-full rounded bg-[#3a4555] pr-3 pl-11 text-sm text-white placeholder:text-[#a8b2c0] focus:ring-2 focus:ring-forest-500/60 focus:outline-none"
                   />
                 </div>
@@ -185,7 +228,7 @@ function FilterSection({
                           </span>
                         ) : null}
                         <span className="truncate text-base text-[#eef3f8]">
-                          {item.label}
+                          {translateFilterItemLabel(item.id, item.label)}
                         </span>
                       </span>
                       <span className="shrink-0 text-xs text-[#9aa4b3] tabular-nums">
@@ -197,7 +240,7 @@ function FilterSection({
 
                 {visibleItems.length === 0 ? (
                   <div className="px-2 py-4 text-sm text-[#9aa4b3]">
-                    No filters found.
+                    {t("noFiltersFound")}
                   </div>
                 ) : null}
               </div>

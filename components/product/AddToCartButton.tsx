@@ -10,6 +10,7 @@
 import { useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { BsPersonFillCheck, BsBasket3Fill } from "react-icons/bs";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -65,6 +66,7 @@ export default function AddToCartCard({
   sellerRank = DEFAULTS.sellerRank,
   onAddToCart,
 }: AddToCartCardProps) {
+  const t = useTranslations("product");
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -145,7 +147,7 @@ export default function AddToCartCard({
                   <BsPersonFillCheck size={15} aria-label="Verified seller" />
                 </div>
                 <span className="text-[10px] text-dm-text-muted">
-                  Rank: {sellerRank}
+                  {t("rank")}: {sellerRank}
                 </span>
               </div>
 
@@ -165,7 +167,7 @@ export default function AddToCartCard({
                     aria-hidden="true"
                   />
                   <span className="text-[14px] font-bold text-dm-text-primary">
-                    ADD TO CART
+                    {t("addToCart")}
                   </span>
                 </button>
               </div>

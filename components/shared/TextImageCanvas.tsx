@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface TextImageProps {
   text: string;
@@ -16,6 +17,24 @@ export function CanvasTextImage({
   className = "",
 }: TextImageProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const t = useTranslations("home");
+
+  // Determine translation key based on input text (case-insensitive)
+  let displayText = text;
+  const upperText = text.toUpperCase();
+  if (upperText === "POPULAR GAMES") {
+    displayText = t("popularGames", text);
+  } else if (upperText === "POPULAR SELLERS") {
+    displayText = t("popularSellers", text);
+  } else if (upperText === "UPCOMING GAMES") {
+    displayText = t("upcomingGames", text);
+  } else if (upperText === "NEW ON DIFMARK") {
+    displayText = t("newOnDifmark", text);
+  } else if (upperText === "WEEKLY CHART") {
+    displayText = t("weeklyChart", text);
+  } else if (upperText.includes("UNDER")) {
+    displayText = t("under100", text);
+  }
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +48,7 @@ export function CanvasTextImage({
 
     img.onload = () => {
       const fontSize = parseInt(size) || 48;
-      canvas.width = text.length * fontSize * 0.8;
+      canvas.width = displayText.length * fontSize * 0.8;
       canvas.height = fontSize * 1.5;
 
       // Vẽ ảnh
@@ -43,11 +62,11 @@ export function CanvasTextImage({
       ctx.fillStyle = "black";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(text.toUpperCase(), canvas.width / 2, canvas.height / 2);
+      ctx.fillText(displayText.toUpperCase(), canvas.width / 2, canvas.height / 2);
     };
 
     img.src = imageUrl;
-  }, [text, imageUrl, size]);
+  }, [displayText, imageUrl, size]);
 
   return (
     <canvas

@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook, FaTwitch, FaMicrosoft } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { PiSignInBold } from "react-icons/pi";
-import { type ReactNode } from "react";
+import { Check, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { PiSignInBold as SignInIcon } from "react-icons/pi";
 
 import {
   Dialog,
@@ -14,189 +13,204 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
 
-/* ==========================================================================
-   HELPER UTILITIES
-   ========================================================================== */
+// Import the sub-components
+import OAuthProviders from "./OAuthProviders";
+import EmailLoginForm from "./EmailLoginForm";
+import EmailSignUpForm from "./EmailSignUpForm";
 
-/**
- * Builds the Google OAuth callback API endpoint based on configuration parameters.
- * Normalizes trailing slashes and ensures standard path namespaces are populated.
- */
-const getGoogleAuthUrl = () => {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-  const normalizedBaseUrl = rawBaseUrl.replace(/\/$/, "");
-  const apiBaseUrl = normalizedBaseUrl.endsWith("/api")
-    ? normalizedBaseUrl
-    : `${normalizedBaseUrl}/api`;
+import { useTranslations } from "@/hooks/useTranslations";
 
-  return `${apiBaseUrl}/auth/google`;
-};
-
-/* ==========================================================================
-   MAIN COMPONENT: SignIn Modal Dialog
-   ========================================================================== */
+type AuthView = "providers" | "email-login" | "email-signup";
 
 /**
- * SignIn Component
- *
- * Renders the modal trigger button and login popup layout dialog.
- * Integrates Google OAuth via Supabase client, alongside other mock SSO providers.
+ * Main SignIn Modal Dialog container component.
+ * Responsible for orchestrating:
+ * - Opening and closing of the dialog modal.
+ * - Transitioning views (OAuth, Login, Signup) with slide animations.
+ * - Active UI Toast notifications for success alerts.
  */
 export default function SignIn() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [view, setView] = useState<AuthView>("providers");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "warning" } | null>(null);
+  const t = useTranslations("nav");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Displays the toast message for 4 seconds then auto-hides
+  const showToast = (msg: string, type: "success" | "warning" = "success") => {
+    setToast({ message: msg, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 4000);
+  };
+
+  // Listens for external redirects or page reloads with active success toast messages
+  useEffect(() => {
+    const msg = sessionStorage.getItem("auth_success_toast");
+    if (msg) {
+      showToast(msg, "success");
+      sessionStorage.removeItem("auth_success_toast");
+    }
+  }, []);
+
+  // Resets views and toast alerts when the dialog modal is closed
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setTimeout(() => {
+        setView("providers");
+      }, 300);
+    }
+  };
+
+  // Navigates between auth sub-views
+  const goTo = (v: AuthView) => {
+    setView(v);
+  };
+
+  // Invoked upon successful authentication events from sub-components
+  const handleSuccess = (msg: string) => {
+    showToast(msg, "success");
+    setIsOpen(false);
+  };
+
+  // Builds CSS transition styling for sliding panels during view changes
+  const slide = (activeView: AuthView) => ({
+    opacity: view === activeView ? 1 : 0,
+    transform:
+      view === activeView
+        ? "translateX(0)"
+        : view === "providers"
+        ? "translateX(60px)"
+        : "translateX(-60px)",
+    pointerEvents: (view === activeView ? "auto" : "none") as React.CSSProperties["pointerEvents"],
+    transition: "opacity 400ms ease, transform 400ms ease",
+  });
+
   return (
-    <Dialog modal={true}>
-      {/* Sign In Header Nav Trigger */}
-      <DialogTrigger className="flex cursor-pointer items-center gap-x-2 border-none bg-transparent px-2 py-4 text-dm-text-secondary outline-hidden transition-colors duration-500 hover:text-dm-text-primary">
-        <PiSignInBold size={24} aria-hidden="true" />
-        <span className="hidden 770:block">SIGN IN</span>
-      </DialogTrigger>
-      <DialogContent
-        showCloseButton={true}
-        className="w-full max-w-[950px] gap-0 overflow-hidden border-dm-border-subtle bg-surface-base p-0 duration-1000 ease-out data-closed:animate-out data-closed:fade-out-0 data-closed:slide-out-to-bottom-[100%] data-open:animate-in data-open:fade-in-0 data-open:slide-in-from-bottom-[100%] sm:rounded-3xl"
-      >
-        <DialogTitle className="sr-only">Sign In</DialogTitle>
-        <DialogDescription className="sr-only">
-          Login to your account and join the world of games together
-        </DialogDescription>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        {/* Trigger button to open the modal */}
+        <DialogTrigger
+          onClick={() => setIsOpen(true)}
+          className="flex cursor-pointer items-center gap-x-2 border-none bg-transparent px-2 py-4 text-dm-text-secondary outline-hidden transition-colors duration-500 hover:text-dm-text-primary"
+        >
+          <SignInIcon size={24} aria-hidden="true" />
+          <span className="hidden 770:block">{t("signIn", "SIGN IN").toUpperCase()}</span>
+        </DialogTrigger>
 
-        <div className="grid min-h-[550px] grid-cols-1 md:grid-cols-2">
-          {/* Left Column: Hero Cover Art (hidden on mobile) */}
-          <div className="relative hidden h-full w-full overflow-hidden md:block">
-            <Image
-              src="/modal-animate-bg.jpg"
-              alt="Modal Background"
-              fill
-              className="object-cover"
-              priority
-            />
+        {/* Modal Dialog Content Panel */}
+        <DialogContent
+          showCloseButton={true}
+          className="w-full max-w-[950px] gap-0 overflow-hidden border-dm-border-subtle bg-surface-base p-0 duration-1000 ease-out data-closed:animate-out data-closed:fade-out-0 data-closed:slide-out-to-bottom-[100%] data-open:animate-in data-open:fade-in-0 data-open:slide-in-from-bottom-[100%] sm:rounded-3xl"
+        >
+          <DialogTitle className="sr-only">Sign In</DialogTitle>
+          <DialogDescription className="sr-only">
+            Login to your account and join the world of games together
+          </DialogDescription>
 
-            <Image
-              src="/modal-hero.webp"
-              alt="Sign In Hero"
-              fill
-              className="z-10 object-cover"
-              priority
-            />
+          <div className="grid min-h-[550px] grid-cols-1 md:grid-cols-2">
+            {/* Left Column: Cover Hero Art */}
+            <div className="relative hidden h-full w-full overflow-hidden md:block">
+              <Image
+                src="/modal-animate-bg.jpg"
+                alt="Modal Background"
+                fill
+                className="object-cover"
+                priority
+              />
+              <Image
+                src="/modal-hero.webp"
+                alt="Sign In Hero"
+                fill
+                className="z-10 object-cover"
+                priority
+              />
+              <div className="absolute inset-0 z-20 bg-linear-to-t from-surface-base/80 to-transparent" />
 
-            <div className="absolute inset-0 z-20 bg-linear-to-t from-surface-base/80 to-transparent" />
+              <div className="absolute right-8 bottom-12 left-8 z-30 rounded-2xl border border-white/10 bg-surface-base/40 p-6 backdrop-blur-md">
+                <h3 className="mb-2 text-xl font-bold text-white">Get your Cashback</h3>
+                <p className="text-sm leading-relaxed text-dm-text-secondary">
+                  Log in and get up to <span className="font-bold text-white">10%</span> cashback!
+                </p>
+              </div>
+            </div>
 
-            {/* Cashback Reward Banner */}
-            <div className="absolute right-8 bottom-12 left-8 z-30 rounded-2xl border border-white/10 bg-surface-base/40 p-6 backdrop-blur-md">
-              <h3 className="mb-2 text-xl font-bold text-white">
-                Get your Cashback
-              </h3>
-              <p className="text-sm leading-relaxed text-dm-text-secondary">
-                Log in and get up to{" "}
-                <span className="font-bold text-white">10%</span> cashback!
-              </p>
+            {/* Right Column: Sliding auth forms container */}
+            <div className="relative flex flex-col justify-center overflow-hidden bg-[#161b26]">
+              
+              {/* VIEW 1: Providers list (OAuth, Email navigation option) */}
+              <div
+                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                style={slide("providers")}
+              >
+                <OAuthProviders onEmailClick={() => goTo("email-login")} onShowToast={showToast} />
+              </div>
+
+              {/* VIEW 2: Email Login Form (using conditional keys to reset values on modal toggle) */}
+              <div
+                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                style={slide("email-login")}
+              >
+                <EmailLoginForm
+                  key={isOpen ? "login-open" : "login-closed"}
+                  onBack={() => goTo("providers")}
+                  onSignUpClick={() => goTo("email-signup")}
+                  onSuccess={handleSuccess}
+                />
+              </div>
+
+              {/* VIEW 3: Email Sign Up Form (using conditional keys to reset values on modal toggle) */}
+              <div
+                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                style={slide("email-signup")}
+              >
+                <EmailSignUpForm
+                  key={isOpen ? "signup-open" : "signup-closed"}
+                  onBack={() => goTo("email-login")}
+                  onLoginClick={() => goTo("email-login")}
+                  onSuccess={handleSuccess}
+                />
+              </div>
+
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
 
-          {/* Right Column: Provider Action Buttons */}
-          <div className="relative flex flex-col justify-center bg-[#161b26] p-8 md:p-12">
-            <div className="mb-10">
-              <h2 className="mb-3 text-3xl font-bold text-white">
-                Log in to your account
-              </h2>
-              <p className="text-sm text-dm-text-secondary">
-                Login to your account and join the world of games together
-              </p>
-            </div>
-
-            {/* Google Authentication SSO */}
-            <Button
-              variant="default"
-              className="mb-8 flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-white text-base font-bold text-black transition-all hover:bg-gray-200"
-              onClick={async () => {
-                try {
-                  const { error } = await supabase.auth.signInWithOAuth({
-                    provider: "google",
-                    options: {
-                      redirectTo: `${window.location.origin}/`,
-                    },
-                  });
-                  if (error) throw error;
-                } catch (err) {
-                  console.error("Google sign in error:", err);
-                }
-              }}
-            >
-              <FcGoogle className="h-6 w-6" />
-              <span>Log in with Google</span>
-            </Button>
-
-            <div className="mb-8 h-px w-full bg-white/10" />
-
-            {/* Other OAuth Social Integrations */}
-            <div className="grid grid-cols-2 gap-4">
-              <SocialButton
-                icon={
-                  <MdEmail
-                    className="text-dm-text-secondary transition-colors group-hover:text-white"
-                    size={20}
-                  />
-                }
-                label="Email"
-              />
-              <SocialButton
-                icon={
-                  <FaFacebook
-                    className="text-dm-text-secondary transition-colors group-hover:text-[#1877F2]"
-                    size={20}
-                  />
-                }
-                label="Facebook"
-              />
-              <SocialButton
-                icon={
-                  <FaTwitch
-                    className="text-dm-text-secondary transition-colors group-hover:text-[#9146FF]"
-                    size={20}
-                  />
-                }
-                label="Twitch"
-              />
-              <SocialButton
-                icon={
-                  <FaMicrosoft
-                    className="text-dm-text-secondary transition-colors group-hover:text-[#00A4EF]"
-                    size={20}
-                  />
-                }
-                label="Microsoft"
-              />
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-/* ==========================================================================
-   SUPPORTING WIDGETS
-   ========================================================================== */
-
-interface SocialButtonProps {
-  icon: ReactNode;
-  label: string;
-}
-
-/**
- * SocialButton Component
- * Renders individual SSO provider buttons with specialized hover transitions.
- */
-function SocialButton({ icon, label }: SocialButtonProps) {
-  return (
-    <Button
-      variant="outline"
-      className="group flex h-12 w-full items-center justify-center gap-3 rounded-lg border-none bg-[#1F2533] font-medium text-dm-text-secondary transition-all duration-300 hover:bg-[#2A3140] hover:text-white"
-    >
-      {icon}
-      <span>{label}</span>
-    </Button>
+      {/* Dynamic typed notification popup toast */}
+      {toast && mounted && createPortal(
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 z-[99999] flex w-[calc(100%-2rem)] max-w-[360px] sm:w-80 items-center justify-between gap-3 rounded-xl border ${
+          toast.type === "success" ? "border-[#46ca43]/30" : "border-yellow-500/30"
+        } bg-[#161b26]/95 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300`}>
+          <span className="inline-flex items-center gap-3">
+            <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+              toast.type === "success" ? "bg-[#46ca43]/20 text-[#46ca43]" : "bg-yellow-500/20 text-yellow-500"
+            }`}>
+              {toast.type === "success" ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <span className="font-bold text-[14px]">!</span>
+              )}
+            </span>
+            <span className="font-medium text-gray-200">{toast.message}</span>
+          </span>
+          <button
+            type="button"
+            className="text-gray-400 hover:text-white transition-colors"
+            onClick={() => setToast(null)}
+            aria-label="Dismiss notification"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

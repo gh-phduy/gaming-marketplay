@@ -3,26 +3,30 @@
 import { Lock, Star, Users, UserRoundCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { useTranslations } from "@/hooks/useTranslations";
+
 interface SellerProfileTabsProps {
   activeTab: "store" | "reviews" | "followers" | "following";
   onChangeTab: (tab: "store" | "reviews" | "followers" | "following") => void;
 }
 
-const TABS: Array<{
-  key: "store" | "reviews" | "followers" | "following";
-  label: string;
-  icon: ReactNode;
-}> = [
-  { key: "store", label: "STORE", icon: <Lock size={14} /> },
-  { key: "reviews", label: "REVIEWS", icon: <Star size={14} /> },
-  { key: "followers", label: "FOLLOWERS", icon: <Users size={14} /> },
-  { key: "following", label: "FOLLOWING", icon: <UserRoundCheck size={14} /> },
-];
-
 export default function SellerProfileTabs({
   activeTab,
   onChangeTab,
 }: SellerProfileTabsProps) {
+  const t = useTranslations("user");
+
+  const TABS: Array<{
+    key: "store" | "reviews" | "followers" | "following";
+    label: string;
+    icon: ReactNode;
+  }> = [
+    { key: "store", label: t("storeTab"), icon: <Lock size={14} /> },
+    { key: "reviews", label: t("reviewsTab"), icon: <Star size={14} /> },
+    { key: "followers", label: t("followersTab"), icon: <Users size={14} /> },
+    { key: "following", label: t("followingTab"), icon: <UserRoundCheck size={14} /> },
+  ];
+
   return (
     <section className="rounded-lg border border-midnight-700 bg-midnight-800 p-1.5">
       <div className="grid grid-cols-2 gap-2 800:grid-cols-4">

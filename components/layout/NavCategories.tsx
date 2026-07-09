@@ -25,6 +25,7 @@ import {
   MdComputer,
   MdInventory2,
 } from "react-icons/md";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -50,24 +51,24 @@ interface Category {
 const CATEGORIES_DATA: Category[] = [
   {
     id: 1,
-    title: "Video games",
+    title: "videoGames",
     items: [
-      { id: 1, name: "Game Keys", icon: IoKey, href: "/buy-game-keys" },
+      { id: 1, name: "gameKeys", icon: IoKey, href: "/buy-game-keys" },
       {
         id: 2,
-        name: "Console Games",
+        name: "consoleGames",
         icon: FaGamepad,
         href: "/buy-console-games",
       },
       {
         id: 3,
-        name: "PC Games",
+        name: "pcGames",
         icon: MdComputer,
         href: "/buy-pc-games",
       },
       {
         id: 4,
-        name: "Mobile",
+        name: "mobile",
         icon: IoPhonePortraitOutline,
         href: "/buy-mobile",
       },
@@ -75,29 +76,29 @@ const CATEGORIES_DATA: Category[] = [
   },
   {
     id: 2,
-    title: "Online games",
+    title: "onlineGames",
     items: [
       {
         id: 5,
-        name: "Game Currency",
+        name: "gameCurrency",
         icon: FaMobileAlt,
         href: "/buy-game-currency",
       },
       {
         id: 6,
-        name: "Game Accounts",
+        name: "gameAccounts",
         icon: MdAccountCircle,
         href: "/buy-game-accounts",
       },
       {
         id: 7,
-        name: "Game Items",
+        name: "gameItems",
         icon: FaTools,
         href: "/buy-game-items",
       },
       {
         id: 8,
-        name: "Power Leveling",
+        name: "powerLeveling",
         icon: FaBolt,
         href: "/buy-power-leveling",
       },
@@ -105,23 +106,23 @@ const CATEGORIES_DATA: Category[] = [
   },
   {
     id: 3,
-    title: "Gift Cards and Software",
+    title: "giftCardsAndSoftware",
     items: [
       {
         id: 9,
-        name: "Software",
+        name: "software",
         icon: FaWindows,
         href: "/buy-software",
       },
       {
         id: 10,
-        name: "Gift Cards",
+        name: "giftCards",
         icon: MdCardGiftcard,
         href: "/buy-gift-cards",
       },
       {
         id: 11,
-        name: "Game Cards",
+        name: "gameCards",
         icon: MdInventory2,
         href: "/buy-game-cards",
       },
@@ -162,6 +163,7 @@ interface ItemCardProps {
  * Individual category item card
  */
 function ItemCard({ item }: ItemCardProps) {
+  const t = useTranslations("nav");
   const IconComponent = item.icon;
 
   return (
@@ -189,7 +191,7 @@ function ItemCard({ item }: ItemCardProps) {
 
       {/* Item name */}
       <span className="relative z-20 text-[10px] 990:text-xs 1200:text-sm">
-        {item.name}
+        {t(item.name as any)}
       </span>
     </Link>
   );
@@ -207,9 +209,10 @@ function CategorySection({
   category,
   showTopMargin = false,
 }: CategorySectionProps) {
+  const t = useTranslations("nav");
   return (
     <div className={showTopMargin ? "mt-2 990:mt-3" : ""}>
-      <CategoryHeader title={category.title} />
+      <CategoryHeader title={t(category.title as any)} />
       <div
         className="mt-2 flex items-center justify-center gap-x-2 990:mt-3 990:gap-x-3 1200:gap-x-4"
         role="list"
@@ -232,10 +235,11 @@ function CategorySection({
  * Dropdown menu showing all product categories
  */
 export default function NavCategories() {
+  const t = useTranslations("nav");
   return (
     <nav
       className="max-w-[440px] 990:max-w-[580px] 1200:max-w-[760px]"
-      aria-label="Product categories"
+      aria-label={t("productCategories")}
     >
       {/* Categories content */}
       <div className="flex flex-col items-start gap-y-2 p-3 990:gap-y-3 990:p-4">
@@ -254,7 +258,7 @@ export default function NavCategories() {
         className="flex cursor-pointer items-center justify-center gap-x-2 bg-brand-light p-2 text-dm-text-muted transition-colors hover:text-dm-text-primary"
       >
         <span className="text-[14px] 990:text-[16px] 1200:text-[18px]">
-          See all categories
+          {t("seeAllCategories")}
         </span>
         <IoIosArrowForward size={18} aria-hidden="true" />
       </Link>

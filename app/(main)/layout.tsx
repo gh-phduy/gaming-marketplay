@@ -16,8 +16,8 @@ export default function MainLayout({
           {children}
         </div>
         <FloatingChatWidget />
+        <Footer />
       </AppProviders>
-      <Footer />
     </>
   );
 }

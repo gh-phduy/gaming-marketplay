@@ -5,6 +5,7 @@ import type { SellerProfile } from "../seller-profile.data";
 import SellerStoreFilters from "./store/SellerStoreFilters";
 import SellerStoreOfferRow from "./store/SellerStoreOfferRow";
 import SellerStoreFooter from "./store/SellerStoreFooter";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SellerStorePanelProps {
   profile: SellerProfile;
@@ -17,6 +18,7 @@ export default function SellerStorePanel({
   profile,
   onNotify,
 }: SellerStorePanelProps) {
+  const t = useTranslations("user");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
@@ -122,7 +124,7 @@ export default function SellerStorePanel({
       >
         {paginatedOffers.length === 0 && (
           <div className="rounded-lg border border-midnight-700 bg-midnight-800 px-4 py-8 text-center text-steel-500 md:col-span-2 xl:col-span-3">
-            No products match your filters.
+            {t("noProductsMatchFilters")}
           </div>
         )}
 
@@ -131,7 +133,7 @@ export default function SellerStorePanel({
             key={offer.data.id}
             offer={offer}
             viewMode={viewMode}
-            onAddedToCart={() => onNotify("Product added to cart")}
+            onAddedToCart={() => onNotify(t("productAddedToCart"))}
           />
         ))}
       </div>

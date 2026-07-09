@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { BiSolidKey } from "react-icons/bi";
@@ -5,6 +7,7 @@ import { HiComputerDesktop } from "react-icons/hi2";
 import { SiNintendoswitch } from "react-icons/si";
 import { FaPlaystation } from "react-icons/fa";
 import { BsXbox } from "react-icons/bs";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -53,6 +56,7 @@ export default function ProductGridItem({
   image = DEFAULTS.image,
   platform = DEFAULTS.platform,
 }: ProductGridItemProps) {
+  const t = useTranslations("product");
   const displayPrice =
     formattedPrice || (price ? `$${price.toFixed(2)}` : "$0.00");
 
@@ -87,7 +91,7 @@ export default function ProductGridItem({
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-xs font-medium text-steel-500 sm:text-sm">
-              from
+              {t("from")}
             </span>
             <span className="text-sm font-bold tracking-tight text-white sm:text-base">
               {displayPrice}

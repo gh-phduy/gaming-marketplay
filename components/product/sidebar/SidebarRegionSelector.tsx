@@ -1,14 +1,14 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function SidebarRegionSelector() {
+  const t = useTranslations("product");
   return (
     <div className="flex items-center justify-center gap-3 pt-5 text-lg">
       <Switch className="h-8 w-12 cursor-pointer" />
-      <span className="text-white">Your region:</span>
+      <span className="text-white">{t("yourRegion")}</span>
       <span className="flex items-center gap-1 text-steel-300">
         <Image
           src="/vn.svg"

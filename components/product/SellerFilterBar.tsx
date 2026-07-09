@@ -7,38 +7,41 @@ import { FaMedal } from "react-icons/fa6";
 import { RiGlobalLine } from "react-icons/ri";
 import { MdSort } from "react-icons/md";
 
-const REGION_OPTIONS: FilterOption[] = [
-  { id: "all", label: "All regions" },
-  { id: "au", label: "Australia", count: 1, flagCode: "au" },
-  { id: "ca", label: "Canada", count: 1, flagCode: "ca" },
-  { id: "eu", label: "Europe", count: 4, flagCode: "eu" },
-  { id: "global", label: "Global", count: 5, flagCode: "un" },
-  { id: "gb", label: "United Kingdom", count: 1, flagCode: "gb" },
-  { id: "us", label: "United States", count: 1, flagCode: "us" },
-];
-
-const PLATFORM_OPTIONS: FilterOption[] = [
-  { id: "all", label: "All platforms" },
-  { id: "steam", label: "Steam" },
-  { id: "xbox", label: "Xbox" },
-  { id: "ps5", label: "PlayStation 5" },
-  { id: "epic", label: "Epic Games" },
-];
-
-const EDITION_OPTIONS: FilterOption[] = [
-  { id: "all", label: "All editions" },
-  { id: "standard", label: "Standard Edition" },
-  { id: "deluxe", label: "Deluxe Edition" },
-  { id: "ultimate", label: "Ultimate Edition" },
-];
-
-const SORT_OPTIONS: FilterOption[] = [
-  { id: "price_asc", label: "Price: Low to High" },
-  { id: "price_desc", label: "Price: High to Low" },
-  { id: "rating", label: "Seller Rating" },
-];
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function SellerFilterBar() {
+  const t = useTranslations("product");
+
+  const REGION_OPTIONS: FilterOption[] = [
+    { id: "all", label: t("allRegions") },
+    { id: "au", label: t("australia"), count: 1, flagCode: "au" },
+    { id: "ca", label: t("canada"), count: 1, flagCode: "ca" },
+    { id: "eu", label: t("europe"), count: 4, flagCode: "eu" },
+    { id: "global", label: t("global"), count: 5, flagCode: "un" },
+    { id: "gb", label: t("unitedKingdom"), count: 1, flagCode: "gb" },
+    { id: "us", label: t("unitedStates"), count: 1, flagCode: "us" },
+  ];
+
+  const PLATFORM_OPTIONS: FilterOption[] = [
+    { id: "all", label: t("allPlatforms") },
+    { id: "steam", label: "Steam" },
+    { id: "xbox", label: "Xbox" },
+    { id: "ps5", label: "PlayStation 5" },
+    { id: "epic", label: "Epic Games" },
+  ];
+
+  const EDITION_OPTIONS: FilterOption[] = [
+    { id: "all", label: t("allEditions") },
+    { id: "standard", label: t("standardEdition") },
+    { id: "deluxe", label: t("deluxeEdition") },
+    { id: "ultimate", label: t("ultimateEdition") },
+  ];
+
+  const SORT_OPTIONS: FilterOption[] = [
+    { id: "price_asc", label: t("priceLowToHigh") },
+    { id: "price_desc", label: t("priceHighToLow") },
+    { id: "rating", label: t("sellerRating") },
+  ];
   return (
     <div className="mb-4 flex w-full flex-col gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:flex-nowrap lg:justify-between lg:gap-x-4">
       <FilterDropdown

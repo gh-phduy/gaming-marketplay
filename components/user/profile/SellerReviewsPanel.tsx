@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MessageSquareReply, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
 import type { SellerProfile, SellerReview } from "../seller-profile.data";
 
 interface SellerReviewsPanelProps {
@@ -33,6 +34,7 @@ function ReviewRow({
   review: SellerReview;
   onNotify: (message: string) => void;
 }) {
+  const t = useTranslations("user");
   const isPositive = review.sentiment === "positive";
 
   return (
@@ -65,7 +67,7 @@ function ReviewRow({
                 ) : (
                   <ThumbsDown className="h-3.5 w-3.5" />
                 )}
-                {isPositive ? "Positive" : "Negative"}
+                {isPositive ? t("positive") : t("negative")}
               </span>
             </div>
             <p className="mt-1 text-sm text-steel-500">{review.createdAt}</p>
@@ -80,7 +82,7 @@ function ReviewRow({
         <div className="mt-4 rounded-md border border-midnight-650 bg-midnight-750 px-4 py-3">
           <p className="flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-steel-500 uppercase">
             <MessageSquareReply className="h-4 w-4" />
-            Seller reply
+            {t("sellerReply")}
           </p>
           <p className="mt-2 text-sm text-steel-300">{review.sellerReply}</p>
         </div>
@@ -89,10 +91,10 @@ function ReviewRow({
       <div className="mt-4 flex justify-end">
         <button
           type="button"
-          onClick={() => onNotify("Review action saved")}
+          onClick={() => onNotify(t("reviewActionSaved"))}
           className="text-sm font-semibold text-forest-500 transition hover:text-forest-100"
         >
-          Helpful
+          {t("helpful")}
         </button>
       </div>
     </article>
@@ -103,6 +105,8 @@ export default function SellerReviewsPanel({
   profile,
   onNotify,
 }: SellerReviewsPanelProps) {
+  const t = useTranslations("user");
+
   const positiveCount = profile.reviews.filter(
     (review) => review.sentiment === "positive",
   ).length;
@@ -111,19 +115,19 @@ export default function SellerReviewsPanel({
     <section className="space-y-4">
       <div className="grid gap-3 md:grid-cols-3">
         <div className="rounded-lg border border-midnight-700 bg-midnight-800 p-4">
-          <p className="text-sm text-steel-500">Rating</p>
+          <p className="text-sm text-steel-500">{t("rating")}</p>
           <p className="mt-2 text-3xl font-bold text-white">
             {profile.rating.toFixed(1)}
           </p>
         </div>
         <div className="rounded-lg border border-midnight-700 bg-midnight-800 p-4">
-          <p className="text-sm text-steel-500">Positive reviews</p>
+          <p className="text-sm text-steel-500">{t("positiveReviews")}</p>
           <p className="mt-2 text-3xl font-bold text-forest-500">
             {positiveCount}
           </p>
         </div>
         <div className="rounded-lg border border-midnight-700 bg-midnight-800 p-4">
-          <p className="text-sm text-steel-500">Total feedbacks</p>
+          <p className="text-sm text-steel-500">{t("totalFeedbacks")}</p>
           <p className="mt-2 text-3xl font-bold text-white">
             {profile.totalFeedbacks.toLocaleString("en-US")}
           </p>
@@ -138,7 +142,7 @@ export default function SellerReviewsPanel({
         </div>
       ) : (
         <div className="rounded-lg border border-midnight-700 bg-midnight-800 px-4 py-10 text-center text-steel-500">
-          This seller has no reviews yet.
+          {t("noReviewsYet")}
         </div>
       )}
     </section>

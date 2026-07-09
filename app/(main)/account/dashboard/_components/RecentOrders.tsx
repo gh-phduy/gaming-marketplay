@@ -10,6 +10,10 @@ import {
 } from "lucide-react";
 import type { OrderSummary } from "../_lib/dashboard.data";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & CONFIGURATIONS
+   ========================================================================== */
+
 interface RecentOrdersProps {
   orders: OrderSummary[];
 }
@@ -44,6 +48,15 @@ const statusConfig: Record<
   },
 };
 
+/* ==========================================================================
+   MAIN COMPONENT: DashboardRecentOrders
+   ========================================================================== */
+
+/**
+ * DashboardRecentOrders Component
+ *
+ * Renders a listing feed of the buyer/seller transaction orders.
+ */
 export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
   return (
     <div
@@ -80,11 +93,13 @@ export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
                 className="group flex items-center justify-between rounded-lg bg-midnight-750/50 px-4 py-3 ring-1 ring-midnight-650 transition-all hover:bg-midnight-750 hover:ring-midnight-600"
               >
                 <div className="flex items-center gap-3">
+                  {/* Status Indicator Icon wrap */}
                   <div
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${status.bgColor}`}
                   >
                     <StatusIcon className={`h-4 w-4 ${status.color}`} />
                   </div>
+                  
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-white">
                       {order.productName}
@@ -98,11 +113,13 @@ export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {/* Hidden on mobile responsive text */}
                   <span
                     className={`hidden rounded-full px-2 py-0.5 text-xs font-medium sm:inline-flex ${status.bgColor} ${status.color}`}
                   >
                     {status.label}
                   </span>
+                  
                   <span className="text-sm font-bold text-white">
                     {order.currencySymbol}
                     {order.amount.toFixed(2)}
@@ -117,3 +134,4 @@ export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
     </div>
   );
 }
+

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface Product {
   id: number;
@@ -15,6 +16,7 @@ interface Product {
 }
 
 export default function ProductCard() {
+  const t = useTranslations("product");
   const [cartItems, setCartItems] = useState<number[]>([]);
 
   const products: Product[] = [
@@ -72,10 +74,10 @@ export default function ProductCard() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-4xl font-bold text-gray-900">
-            🛍️ Product Cards với Hover Animation
+            {t("titleHoverAnimation")}
           </h1>
           <p className="text-lg text-gray-600">
-            Hover vào sản phẩm để xem hiệu ứng Add to Cart từ trái sang phải
+            {t("hoverDescription")}
           </p>
         </div>
 
@@ -118,7 +120,7 @@ export default function ProductCard() {
                     <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-lg bg-gray-300">
                       <Eye className="h-8 w-8" />
                     </div>
-                    <p className="text-sm font-medium">Product Image</p>
+                    <p className="text-sm font-medium">{t("productImage")}</p>
                   </div>
                 </div>
 
@@ -126,7 +128,7 @@ export default function ProductCard() {
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/20">
                   <button className="translate-y-4 transform rounded-lg bg-white/90 px-4 py-2 font-medium text-gray-900 opacity-0 backdrop-blur-xs transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
                     <Eye className="mr-2 inline h-4 w-4" />
-                    Quick View
+                    {t("quickView")}
                   </button>
                 </div>
               </div>
@@ -173,7 +175,7 @@ export default function ProductCard() {
                 <div className="relative h-12 overflow-hidden rounded-xl">
                   {/* Default State Button - Luôn ở đó làm nền */}
                   <button className="h-full w-full rounded-xl bg-gray-100 font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200">
-                    View Details
+                    {t("viewDetails")}
                   </button>
 
                   {/* Add to Cart Button - Bắt đầu từ center, chỉ che nửa */}
@@ -196,12 +198,12 @@ export default function ProductCard() {
                       {isInCart(product.id) ? (
                         <>
                           <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                          Added to Cart!
+                          {t("addedToCart")}
                         </>
                       ) : (
                         <>
                           <ShoppingCart className="mr-2 h-5 w-5" />
-                          Add to Cart
+                          {t("addToCart")}
                         </>
                       )}
                     </button>
@@ -215,23 +217,23 @@ export default function ProductCard() {
         {/* Variants Demo */}
         <div className="rounded-2xl bg-white p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">
-            🎨 Các biến thể khác
+            {t("otherVariants")}
           </h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Variant 1: Overlay từ center */}
             <div className="group relative rounded-xl bg-linear-to-br from-purple-50 to-purple-100 p-6 transition-all duration-300 hover:shadow-lg">
               <h3 className="mb-4 font-semibold text-gray-900">
-                Overlay from Center
+                {t("overlayFromCenter")}
               </h3>
               <div className="relative h-12 rounded-lg">
                 {/* Background button */}
                 <button className="h-full w-full rounded-lg bg-gray-200 font-medium text-gray-600">
-                  Hover me
+                  {t("hoverMe")}
                 </button>
                 {/* Overlay button */}
                 <div className="absolute inset-0 flex origin-center scale-x-0 transform items-center justify-center rounded-lg bg-blue-600 transition-transform duration-500 group-hover:scale-x-100">
-                  <span className="font-medium text-white">Add to Cart</span>
+                  <span className="font-medium text-white">{t("addToCart")}</span>
                 </div>
               </div>
             </div>
@@ -239,16 +241,16 @@ export default function ProductCard() {
             {/* Variant 2: Overlay từ bottom */}
             <div className="group relative rounded-xl bg-linear-to-br from-green-50 to-green-100 p-6 transition-all duration-300 hover:shadow-lg">
               <h3 className="mb-4 font-semibold text-gray-900">
-                Overlay from Bottom
+                {t("overlayFromBottom")}
               </h3>
               <div className="relative h-12 rounded-lg">
                 {/* Background button */}
                 <button className="h-full w-full rounded-lg bg-gray-200 font-medium text-gray-600">
-                  Hover me
+                  {t("hoverMe")}
                 </button>
                 {/* Overlay button */}
                 <div className="absolute inset-0 flex translate-y-full items-center justify-center rounded-lg bg-green-600 transition-transform duration-500 group-hover:translate-y-0">
-                  <span className="font-medium text-white">Add to Cart</span>
+                  <span className="font-medium text-white">{t("addToCart")}</span>
                 </div>
               </div>
             </div>
@@ -256,16 +258,16 @@ export default function ProductCard() {
             {/* Variant 3: Fade In từ trái */}
             <div className="group relative rounded-xl bg-linear-to-br from-orange-50 to-orange-100 p-6 transition-all duration-300 hover:shadow-lg">
               <h3 className="mb-4 font-semibold text-gray-900">
-                Fade In từ trái
+                {t("fadeInFromLeft")}
               </h3>
               <div className="relative h-12 rounded-lg">
                 {/* Background button */}
                 <button className="h-full w-full rounded-lg bg-gray-200 font-medium text-gray-600 transition-colors duration-200">
-                  Hover me
+                  {t("hoverMe")}
                 </button>
                 {/* Fade in button */}
                 <div className="absolute inset-0 flex -translate-x-full items-center justify-center rounded-lg bg-orange-600 opacity-0 transition-all duration-800 group-hover:translate-x-0 group-hover:opacity-100">
-                  <span className="font-medium text-white">Add to Cart</span>
+                  <span className="font-medium text-white">{t("addToCart")}</span>
                 </div>
               </div>
             </div>
@@ -275,7 +277,7 @@ export default function ProductCard() {
         {/* Code Examples */}
         <div className="mt-8 rounded-2xl bg-gray-900 p-6">
           <h3 className="mb-4 text-xl font-bold text-white">
-            💻 Code chính (Fade In Pattern):
+            {t("mainCodeFadeIn")}
           </h3>
           <div className="overflow-x-auto rounded-lg bg-black/50 p-4">
             <pre className="text-sm text-green-400">

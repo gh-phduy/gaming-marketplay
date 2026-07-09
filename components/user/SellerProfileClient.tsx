@@ -10,6 +10,7 @@ import SellerReviewsPanel from "./profile/SellerReviewsPanel";
 import SellerFollowersPanel from "./profile/SellerFollowersPanel";
 import SellerFollowingPanel from "./profile/SellerFollowingPanel";
 import SellerChatPanel from "./profile/SellerChatPanel";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SellerProfileClientProps {
   profile: SellerProfile;
@@ -23,6 +24,7 @@ const sellerFollowStorageKey = (sellerId: string) =>
 export default function SellerProfileClient({
   profile,
 }: SellerProfileClientProps) {
+  const t = useTranslations("user");
   const [activeTab, setActiveTab] = useState<TabKey>("store");
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isFollowingSeller, setIsFollowingSeller] = useState(false);
@@ -65,7 +67,7 @@ export default function SellerProfileClient({
         sellerFollowStorageKey(profile.id),
         String(nextValue),
       );
-      showToast(nextValue ? "Follow user" : "Unfollow user");
+      showToast(nextValue ? t("followUser") : t("unfollowUser"));
       return nextValue;
     });
   };
@@ -121,7 +123,7 @@ export default function SellerProfileClient({
             type="button"
             className="text-steel-300 transition hover:text-white"
             onClick={() => setToastMessage(null)}
-            aria-label="Dismiss notification"
+            aria-label={t("dismissNotification")}
           >
             <X className="h-5 w-5" />
           </button>

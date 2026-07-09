@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
   List,
   SlidersHorizontal,
@@ -26,8 +26,13 @@ import Pagination from "@/components/shared/Pagination";
 import LoadMoreButton from "@/components/shared/LoadMoreButton";
 import { useProductDetail, FILTERS_COLLAPSED_HEIGHT } from "./useProductDetail";
 import { ProductSortDropdown } from "./ProductDetailComponents";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function ProductClient() {
+  const t = useTranslations("product");
+  const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
+
   const {
     isLoading,
     searchTerm,
@@ -44,11 +49,48 @@ export default function ProductClient() {
     totalPages,
     selectedPlatformFilters,
     primarySelectedPlatform,
-    selectedSortLabel,
     selectedPlatforms,
     setSelectedPlatforms,
     resetProductFilters,
   } = useProductDetail();
+
+  function getSortLabelKey(value: string) {
+    switch (value) {
+      case "newer": return "sortNewer";
+      case "older": return "sortOlder";
+      case "name-asc": return "sortNameAsc";
+      case "name-desc": return "sortNameDesc";
+      case "price-asc": return "sortPriceAsc";
+      case "price-desc": return "sortPriceDesc";
+      case "popular":
+      default:
+        return "sortPopular";
+    }
+  }
+
+  function translateFilterLabel(label: string, id: string) {
+    switch (id) {
+      case "game-keys": return tNav("gameKeys");
+      case "console-games": return tNav("consoleGames");
+      case "pc-games": return tNav("pcGames");
+      case "mobile": return tNav("mobile");
+      case "game-currency": return tNav("gameCurrency");
+      case "game-accounts": return tNav("gameAccounts");
+      case "game-items": return tNav("gameItems");
+      case "power-leveling": return tNav("powerLeveling");
+      case "software": return tNav("software");
+      case "gift-cards": return tNav("giftCards");
+      case "game-cards": return tNav("gameCards");
+      default:
+        return label;
+    }
+  }
+
+  const translatedPlatformLabel = useMemo(() => {
+    if (!primarySelectedPlatform) return "";
+    const filterId = selectedPlatformFilters.find(f => f.label === primarySelectedPlatform)?.id || "";
+    return translateFilterLabel(primarySelectedPlatform, filterId);
+  }, [primarySelectedPlatform, selectedPlatformFilters, tNav]);
 
   return (
     <div className="flex min-h-screen w-full bg-[#0d1117] font-sans text-white">
@@ -63,21 +105,21 @@ export default function ProductClient() {
         <div className="mb-2 flex items-center gap-2 text-sm text-steel-500 sm:mb-4 sm:text-base">
           <IoMdHome size={18} />
           <FaChevronRight size={12} />
-          <span className="font-medium">Game keys</span>
-          {primarySelectedPlatform && (
+          <span className="font-medium">{t("gameKeys")}</span>
+          {translatedPlatformLabel && (
             <>
               <FaChevronRight size={12} />
               <span className="font-medium text-steel-300">
-                {primarySelectedPlatform}
+                {translatedPlatformLabel}
               </span>
             </>
           )}
         </div>
 
         <h1 className="mb-4 text-2xl font-bold sm:mb-6 sm:text-3xl">
-          {primarySelectedPlatform
-            ? `${primarySelectedPlatform} game keys`
-            : "Products"}
+          {translatedPlatformLabel
+            ? `${translatedPlatformLabel} ${t("gameKeys").toLowerCase()}`
+            : t("productsTitle")}
         </h1>
 
         {/* Top Controls */}
@@ -89,7 +131,7 @@ export default function ProductClient() {
               className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500"
             />
             <Input
-              placeholder="Search by Product name"
+              placeholder={t("searchProductPlaceholder")}
               className="h-10 bg-midnight-750 pl-10 text-sm text-gray-300 sm:h-11 sm:text-base"
               value={searchTerm}
               onChange={(event) => {
@@ -122,7 +164,7 @@ export default function ProductClient() {
                     variant="outline"
                     className="h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:h-11 lg:hidden"
                   >
-                    <SlidersHorizontal className="mr-2 h-5 w-5" /> Filters
+                    <SlidersHorizontal className="mr-2 h-5 w-5" /> {t("filters")}
                   </Button>
                 }
               />
@@ -131,7 +173,7 @@ export default function ProductClient() {
                 className="w-[280px] overflow-y-auto border-[#30363d] bg-midnight-700 p-0 sm:w-[320px]"
               >
                 <SheetHeader className="px-4 pt-4">
-                  <SheetTitle className="text-white">Filters</SheetTitle>
+                  <SheetTitle className="text-white">{t("filters")}</SheetTitle>
                 </SheetHeader>
                 <ProductSidebar />
               </SheetContent>
@@ -149,7 +191,7 @@ export default function ProductClient() {
               variant="outline"
               className="hidden h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:inline-flex sm:h-11"
             >
-              <List className="mr-2 h-5 w-5 sm:h-6 sm:w-6" /> List
+              <List className="mr-2 h-5 w-5 sm:h-6 sm:w-6" /> {t("list")}
             </Button>
           </div>
         </div>
@@ -169,7 +211,7 @@ export default function ProductClient() {
               }}
             >
               <span className="whitespace-nowrap text-gray-400">
-                Chosen filters :
+                {t("chosenFilters")}
               </span>
               {searchTerm.trim() && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm">
@@ -184,7 +226,7 @@ export default function ProductClient() {
                 </span>
               )}
               <span className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm">
-                {selectedSortLabel}
+                {t(getSortLabelKey(sortBy))}
                 <IoCloseSharp
                   className="cursor-pointer hover:text-white"
                   onClick={() => {
@@ -198,7 +240,7 @@ export default function ProductClient() {
                   key={filter.id}
                   className="inline-flex items-center gap-1 rounded-full bg-midnight-500 px-2 py-1 text-xs font-medium text-steel-300 sm:text-sm"
                 >
-                  {filter.label}
+                  {translateFilterLabel(filter.label, filter.id)}
                   <IoCloseSharp
                     className="cursor-pointer hover:text-white"
                     onClick={() => {
@@ -226,14 +268,14 @@ export default function ProductClient() {
               }}
               className="flex items-center gap-1 text-xs whitespace-nowrap text-gray-400 hover:text-white sm:text-sm"
             >
-              Clear all <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              {t("clearAll")} <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
             {isOverflowing && (
               <button
                 onClick={() => setShowAllFilters(!showAllFilters)}
                 className="text-xs whitespace-nowrap text-emerald-500 transition-colors hover:text-emerald-100 sm:text-sm"
               >
-                {showAllFilters ? "Show less ▲" : "Show more ▼"}
+                {showAllFilters ? t("showLess") : t("showMore")}
               </button>
             )}
           </div>
@@ -272,8 +314,8 @@ export default function ProductClient() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          previousLabel="Back"
-          nextLabel="Next"
+          previousLabel={t("back")}
+          nextLabel={t("next")}
         />
       </div>
     </div>

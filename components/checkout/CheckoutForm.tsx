@@ -7,6 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   saveCheckoutOrderSnapshot,
   type CheckoutOrderItem,
@@ -29,6 +30,7 @@ export default function CheckoutForm({
   amount: number;
   orderItems: CheckoutOrderItem[];
 }) {
+  const t = useTranslations("checkout");
   const stripe = useStripe();
   const elements = useElements();
 
@@ -68,9 +70,9 @@ export default function CheckoutForm({
 
     // Capture and translate Stripe processing issues
     if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message ?? "An unexpected error occurred.");
+      setMessage(error.message ?? t("unexpectedError"));
     } else {
-      setMessage("An unexpected error occurred.");
+      setMessage(t("unexpectedError"));
     }
 
     setIsLoading(false);
@@ -78,6 +80,19 @@ export default function CheckoutForm({
 
   return (
     <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
+      {/* Stripe Test Mode Info Callout for Recruiters/Testers */}
+      <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-300 flex flex-col gap-y-1">
+        <span className="font-semibold flex items-center gap-x-1">
+          {t("stripeTestPaymentMode")}
+        </span>
+        <p className="text-gray-300">
+          {t("useCard")} <code className="bg-yellow-500/20 px-1.5 py-0.5 rounded text-yellow-200 font-mono font-bold">4242 4242 4242 4242</code>
+        </p>
+        <p className="text-gray-400 text-xs">
+          {t("expiryCvcZip")}
+        </p>
+      </div>
+
       {/* Stripe Payment Element (Loads dynamic input tabs per country/intent settings) */}
       <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
       
@@ -90,10 +105,10 @@ export default function CheckoutForm({
         <span id="button-text">
           {isLoading ? (
             <div className="spinner" id="spinner">
-              Processing...
+              {t("processingDots")}
             </div>
           ) : (
-            `Pay $${amount}`
+            `${t("pay")} $${amount}`
           )}
         </span>
       </Button>

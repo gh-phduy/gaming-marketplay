@@ -2,6 +2,10 @@
 
 import { HelpCircle } from "lucide-react";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface LevelCardProps {
   level: {
     current: "Novice" | "Expert" | "Master" | "Legend";
@@ -13,12 +17,21 @@ interface LevelCardProps {
   };
 }
 
-const levelOrder = ["Novice", "Expert", "Master", "Legend"] as const;
+/* ==========================================================================
+   MAIN COMPONENT: DashboardLevelCard
+   ========================================================================== */
 
+/**
+ * DashboardLevelCard Component
+ *
+ * Renders the circular SVG progress chart for the user's level tier,
+ * detailing cashback reward percentages and next level milestones.
+ */
 export default function DashboardLevelCard({
   level,
   cashback,
 }: LevelCardProps) {
+  const levelOrder = ["Novice", "Expert", "Master", "Legend"] as const;
   const currentIndex = levelOrder.indexOf(level.current);
   const nextLevel =
     currentIndex < levelOrder.length - 1
@@ -30,12 +43,13 @@ export default function DashboardLevelCard({
       id="dashboard-level"
       className="relative overflow-hidden rounded-xl bg-midnight-750 p-5 ring-1 ring-midnight-650"
     >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent" />
+      {/* Subtle background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-forest-500/5 to-transparent" />
 
       <div className="relative flex items-start justify-between">
         <div className="flex items-center gap-4">
-          {/* Level Progress Circle */}
+          
+          {/* Circular SVG Level Progress indicator */}
           <div className="relative flex h-16 w-16 items-center justify-center">
             <svg
               className="h-16 w-16 -rotate-90"
@@ -69,12 +83,12 @@ export default function DashboardLevelCard({
                   x2="1"
                   y2="1"
                 >
-                  <stop offset="0%" stopColor="#f97316" />
-                  <stop offset="100%" stopColor="#ef4444" />
+                  <stop offset="0%" stopColor="#46ca43" />
+                  <stop offset="100%" stopColor="#b8ecb3" />
                 </linearGradient>
               </defs>
             </svg>
-            {/* Level icon in center */}
+            {/* Level progress percentage value */}
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-lg font-bold text-white">
                 {level.progress}%
@@ -82,7 +96,7 @@ export default function DashboardLevelCard({
             </div>
           </div>
 
-          {/* Level Text */}
+          {/* Level indicators text */}
           <div>
             <p className="text-xs text-steel-500">Level</p>
             <div className="mt-0.5 flex items-center gap-2">
@@ -96,7 +110,8 @@ export default function DashboardLevelCard({
                 </>
               )}
             </div>
-            {/* Cashback badges */}
+            
+            {/* Cashback tier badges */}
             <div className="mt-2 flex items-center gap-2">
               <span className="text-xs text-steel-500">Cashback:</span>
               <span className="inline-flex items-center gap-1 rounded-full bg-forest-500/20 px-2 py-0.5 text-xs font-bold text-forest-500">
@@ -110,7 +125,7 @@ export default function DashboardLevelCard({
           </div>
         </div>
 
-        {/* How it works link */}
+        {/* How it works info modal link */}
         <button
           type="button"
           className="group inline-flex items-center gap-1 text-xs text-steel-500 transition hover:text-white"
@@ -122,3 +137,4 @@ export default function DashboardLevelCard({
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProductOverview from "@/components/product/ProductOverview";
@@ -8,23 +9,23 @@ import ScrollToTop from "@/components/shared/ScrollToTop";
 import { supabase } from "@/lib/supabase";
 
 // Dynamic imports for below-the-fold components (lazy loading)
-const ProductDescription = dynamic(
+const ProductDescription = nextDynamic(
   () => import("@/components/product/ProductDescription"),
   {
     loading: () => <Skeleton className="h-[200px] w-full rounded-lg" />,
   },
 );
-const SellerList = dynamic(
+const SellerList = nextDynamic(
   () => import("@/components/product/SellerList"),
   {
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
   },
 );
-const LoadMoreButton = dynamic(
+const LoadMoreButton = nextDynamic(
   () => import("@/components/shared/LoadMoreButton"),
 );
-const Pagination = dynamic(() => import("@/components/shared/Pagination"));
-const AboutProductSection = dynamic(
+const Pagination = nextDynamic(() => import("@/components/shared/Pagination"));
+const AboutProductSection = nextDynamic(
   () => import("@/components/product/ProductContent"),
   {
     loading: () => <Skeleton className="h-[200px] w-full rounded-lg" />,
@@ -91,11 +92,14 @@ async function getProduct(id: string): Promise<ProductApiResponse | null> {
   }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function BuyCheapPage({
   searchParams,
 }: {
   searchParams: Promise<{ id?: string }>;
 }) {
+  const t = await getTranslations("product");
   const { id } = await searchParams;
   if (!id) {
     return (
@@ -104,7 +108,7 @@ export default async function BuyCheapPage({
         className="flex w-full max-w-[1590px] flex-col items-center gap-y-8"
       >
         <div className="rounded-lg bg-red-500/10 p-4 text-red-500">
-          No product ID provided.
+          {t("noProductIdProvided")}
         </div>
       </main>
     );
@@ -123,7 +127,7 @@ export default async function BuyCheapPage({
       {/* Product Header Section */}
       {!productData ? (
         <div className="rounded-lg bg-red-500/10 p-4 text-red-500">
-          Product not found or failed to load. Please try again later.
+          {t("productNotFoundOrFailedToLoad")}
         </div>
       ) : (
         <>
@@ -143,7 +147,6 @@ export default async function BuyCheapPage({
         <SellerList />
       </Suspense>
 
-      <LoadMoreButton />
       <Pagination />
 
       <Suspense fallback={<Skeleton className="h-[200px] w-full rounded-lg" />}>

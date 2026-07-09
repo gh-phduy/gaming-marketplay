@@ -1,8 +1,11 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   Popover,
   PopoverContent,
@@ -10,6 +13,7 @@ import {
 } from "@/components/ui/popover";
 
 export default function CartButton() {
+  const t = useTranslations("cart");
   const [isOpen, setIsOpen] = useState(false);
   const { cartCount, cartItems, incrementItem, decrementItem, removeItem } =
     useCart();
@@ -26,7 +30,7 @@ export default function CartButton() {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
         className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-dm-text-secondary transition-all duration-300 hover:bg-white/[0.06] hover:text-dm-text-primary"
-        aria-label="Shopping cart"
+        aria-label={t("shoppingCartAria")}
       >
         <ShoppingCart size={24} aria-hidden="true" />
         {cartCount > 0 && (
@@ -53,25 +57,25 @@ export default function CartButton() {
               <div className="flex items-center gap-2">
                 <span className="h-[6px] w-[6px] rounded-full bg-[#4ade80] shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
                 <p className="text-[10px] font-bold tracking-[0.18em] text-[#6b7a8d] uppercase">
-                  Cart summary
+                  {t("cartSummary")}
                 </p>
               </div>
               <h3 className="mt-2.5 text-xl leading-none font-bold tracking-tight">
-                Shopping Cart
+                {t("title")}
               </h3>
             </div>
 
             <div className="flex items-center gap-2">
               {cartCount > 0 ? (
                 <span className="rounded-md border border-[#4ade80]/20 bg-[#4ade80]/10 px-2.5 py-1 text-[11px] font-bold text-[#4ade80]">
-                  {cartCount} {cartCount === 1 ? "item" : "items"}
+                  {cartCount} {cartCount === 1 ? t("item") : t("items")}
                 </span>
               ) : null}
               <button
                 type="button"
                 className="flex h-7 w-7 items-center justify-center rounded-md text-[#6b7a8d] transition hover:bg-white/[0.06] hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
                 onClick={() => setIsOpen(false)}
-                aria-label="Close cart popover"
+                aria-label={t("closeCartPopoverAria")}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -81,14 +85,14 @@ export default function CartButton() {
 
         <div className="flex items-center justify-between px-5 pt-1 pb-2">
           <span className="text-[10px] font-bold tracking-[0.14em] text-[#6b7a8d] uppercase">
-            Active order
+            {t("activeOrder")}
           </span>
           <button
             type="button"
             className="text-[12px] font-semibold text-[#58a6ff] transition hover:text-[#8fc5ff] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
             onClick={() => setIsOpen(false)}
           >
-            Continue
+            {t("continue")}
           </button>
         </div>
 
@@ -99,10 +103,10 @@ export default function CartButton() {
                 <ShoppingCart className="h-5 w-5 text-[#6b7a8d]" />
               </span>
               <p className="mt-3 text-sm font-semibold text-white">
-                Your cart is empty
+                {t("empty")}
               </p>
               <p className="mt-1 text-[12px] text-[#6b7a8d]">
-                Added products will appear here.
+                {t("emptyDescription")}
               </p>
             </div>
           ) : (
@@ -139,7 +143,7 @@ export default function CartButton() {
                     <button
                       type="button"
                       className="shrink-0 rounded-md p-0.5 text-[#6b7a8d] transition hover:bg-white/[0.06] hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
-                      aria-label={`Remove ${item.name} from cart`}
+                      aria-label={t("removeItemAria", { name: item.name })}
                       onClick={() => removeItem(item.id)}
                     >
                       <X className="h-4 w-4" />
@@ -155,7 +159,7 @@ export default function CartButton() {
                       <button
                         type="button"
                         className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2a3545] text-[#c4cedc] transition hover:bg-[#35445a] hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
-                        aria-label={`Decrease quantity for ${item.name}`}
+                        aria-label={t("decreaseQuantityAria", { name: item.name })}
                         onClick={() => decrementItem(item.id)}
                       >
                         <Minus className="h-3 w-3" />
@@ -166,7 +170,7 @@ export default function CartButton() {
                       <button
                         type="button"
                         className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2a3545] text-[#c4cedc] transition hover:bg-[#35445a] hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
-                        aria-label={`Increase quantity for ${item.name}`}
+                        aria-label={t("increaseQuantityAria", { name: item.name })}
                         onClick={() => incrementItem(item.id)}
                       >
                         <Plus className="h-3 w-3" />
@@ -182,7 +186,7 @@ export default function CartButton() {
         <div className="space-y-4 border-t border-[#2a3545] bg-[#111923] px-5 py-4">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold tracking-[0.14em] text-[#6b7a8d] uppercase">
-              Total
+              {t("total")}
             </span>
             <span className="text-2xl leading-none font-bold tracking-tight text-white">
               {totalCurrency} {cartTotal.toFixed(2)}
@@ -195,7 +199,7 @@ export default function CartButton() {
               onClick={() => setIsOpen(false)}
               className="flex h-11 items-center justify-center rounded-md bg-[#2a3545] px-3 text-[13px] font-bold text-white transition hover:bg-[#35445a] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
             >
-              View cart
+              {t("viewCart")}
             </Link>
 
             <Link
@@ -203,7 +207,7 @@ export default function CartButton() {
               onClick={() => setIsOpen(false)}
               className="flex h-11 items-center justify-center rounded-md bg-[#3fcf63] px-3 text-[13px] font-bold text-[#07130b] transition hover:bg-[#53df75] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
             >
-              Checkout
+              {t("checkout")}
             </Link>
           </div>
         </div>

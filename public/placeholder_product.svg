@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="100%" height="100%">
+  <!-- Background matching the clean dashboard panel bg -->
+  <rect width="100%" height="100%" fill="#131b26"/>
+  <!-- Subtle border -->
+  <rect x="1" y="1" width="398" height="248" rx="8" fill="none" stroke="#1f293d" stroke-width="2"/>
+  
+  <!-- Centered Logo Icon (Stylized Digital Key & Gamepad Hybrid) -->
+  <g transform="translate(200, 110)" text-anchor="middle">
+    <!-- Outer circle ring -->
+    <circle r="40" fill="#1b2535" stroke="#2c3a52" stroke-width="2" />
+    
+    <!-- Stylized Controller & Key Path inside -->
+    <g transform="translate(-18, -18) scale(1.5)" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 13a4 4 0 0 1-4-4v-1a5 5 0 0 1 5-5h10a5 5 0 0 1 5 5v1a4 4 0 0 1-4 4H6z" />
+      <path d="M6 8h2M7 7v2" />
+      <circle cx="15" cy="8" r="1" fill="#60a5fa" />
+      <circle cx="17" cy="9" r="1" fill="#60a5fa" />
+    </g>
+    
+    <!-- Brand/Type text below -->
+    <text y="68" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#4b5b75" letter-spacing="1.5">DIFMARK DIGITAL</text>
+    <text y="85" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="500" fill="#3b4d68">NO IMAGE UPLOADED</text>
+  </g>
+</svg>

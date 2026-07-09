@@ -10,6 +10,7 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ============================================
    TYPES
@@ -60,6 +61,7 @@ export default function PlatformItem({
   consoleImageDark = DEFAULTS.consoleImageDark,
   consoleImageLight = DEFAULTS.consoleImageLight,
 }: PlatformItemProps) {
+  const t = useTranslations("home");
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = useCallback(() => {
@@ -78,7 +80,7 @@ export default function PlatformItem({
       onMouseLeave={handleMouseLeave}
       onFocus={handleMouseEnter}
       onBlur={handleMouseLeave}
-      aria-label={`Browse ${name} products`}
+      aria-label={t("browseProducts", { name })}
     >
       {/* Hover overlay */}
       <div
@@ -116,7 +118,7 @@ export default function PlatformItem({
         {/* Console image - dark (default) */}
         <Image
           src={consoleImageDark}
-          alt={`${name} console`}
+          alt={t("consoleAlt", { name })}
           fill
           className={`object-contain transition-opacity duration-1000 ${isHovered ? "opacity-10" : "opacity-100"
             }`}

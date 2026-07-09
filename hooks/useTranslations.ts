@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { localeToLanguageCode } from "@/i18n/config";
 
 type Translations = Record<string, any>;
 
+/** Module-level cache shared across all hook instances */
 const translationCache: Record<string, Translations> = {};
 
+/**
+ * Load translations for a locale into the cache.
+ * Returns the cached data (hits cache on subsequent calls).
+ */
 async function loadTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
     return translationCache[locale];
@@ -27,22 +32,62 @@ async function loadTranslations(locale: string): Promise<Translations> {
   }
 }
 
+/**
+ * Public API for SettingsContext to preload a locale before committing state.
+ * This ensures the cache is warm so useTranslations hooks swap synchronously.
+ */
+export async function ensureCached(locale: string): Promise<void> {
+  await loadTranslations(locale);
+}
+
 export function useTranslations(namespace?: string) {
   const { language } = useSettings();
-  const [translations, setTranslations] = useState<Translations>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const localeRef = useRef(localeToLanguageCode[language] || "en");
+
+  // Synchronous initializer: use cache if available
+  const [translations, setTranslations] = useState<Translations>(() => {
+    const locale = localeToLanguageCode[language] || "en";
+    return translationCache[locale] || {};
+  });
+  const [isLoading, setIsLoading] = useState(() => {
+    const locale = localeToLanguageCode[language] || "en";
+    return !translationCache[locale];
+  });
 
   useEffect(() => {
-    setIsLoading(true);
     const locale = localeToLanguageCode[language] || "en";
+    localeRef.current = locale;
 
-    loadTranslations(locale).then((msgs) => {
-      setTranslations(msgs);
+    // Fast path: cache is already warm (preloaded by SettingsContext)
+    if (translationCache[locale]) {
+      setTranslations(translationCache[locale]);
       setIsLoading(false);
+      return;
+    }
+
+    // Slow path: first load only (e.g. initial page render)
+    loadTranslations(locale).then((msgs) => {
+      // Guard against stale responses if language changed again while loading
+      if (localeRef.current === locale) {
+        setTranslations(msgs);
+        setIsLoading(false);
+      }
     });
   }, [language]);
 
-  const t = (key: string, defaultValue?: string) => {
+  const t = (key: string, valuesOrDefault?: Record<string, any> | string, fallback?: string) => {
+    let values: Record<string, any> | undefined = undefined;
+    let defaultValue: string | undefined = undefined;
+
+    if (typeof valuesOrDefault === "string") {
+      defaultValue = valuesOrDefault;
+    } else if (valuesOrDefault) {
+      values = valuesOrDefault;
+      defaultValue = fallback;
+    } else {
+      defaultValue = fallback;
+    }
+
     if (isLoading) return defaultValue || key;
 
     if (!namespace) {
@@ -62,7 +107,15 @@ export function useTranslations(namespace?: string) {
         }
       }
 
-      return value || defaultValue || key;
+      let result = value || defaultValue || key;
+      
+      if (typeof result === "string" && values) {
+        for (const [k, v] of Object.entries(values)) {
+          result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+        }
+      }
+
+      return result;
     } catch (error) {
       return defaultValue || key;
     }

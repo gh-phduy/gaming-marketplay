@@ -18,6 +18,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiPlaystation, SiNintendo } from "react-icons/si";
 import SellerInfoTooltip from "./SellerInfoTooltip";
 import { getSellerProfilePath } from "../user/seller-profile.route";
+import { useCart } from "@/contexts/CartContext";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export interface SellerOffer {
   data: {
@@ -28,6 +30,8 @@ export interface SellerOffer {
     activationRegion: string;
     price: number;
     currency: string;
+    title: string;
+    image_url: string;
   };
   seller: {
     id: string;
@@ -49,6 +53,9 @@ const getPlatformIcon = (platform: string) => {
 };
 
 export default function SellerRow({ offer }: { offer: SellerOffer }) {
+  const { addToCart } = useCart();
+  const t = useTranslations("product");
+
   if (!offer) return null;
 
   const isBanStatus = offer.data.activationRegion
@@ -110,19 +117,18 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
               icon={<IoKey />}
               content={
                 <p>
-                  The seller will send you a{" "}
-                  {offer.data.type?.toLowerCase() || "key"} that you can
-                  activate
+                  {t("theSellerWillSendYouA")}{" "}
+                  {offer.data.type?.toLowerCase() || t("key")} {t("thatYouCanActivate")}
                 </p>
               }
             />
             <SellerInfoTooltip
               icon={getPlatformIcon(offer.data.platform)}
-              content={<p>Platform: {offer.data.platform}</p>}
+              content={<p>{t("platform")} {offer.data.platform}</p>}
             />
             <SellerInfoTooltip
               icon={<RiGlobalLine />}
-              content={<p>Region: {offer.data.activationRegion}</p>}
+              content={<p>{t("region")} {offer.data.activationRegion}</p>}
             />
           </TooltipProvider>
         </div>
@@ -135,7 +141,7 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
         {/* 3. Edition Section */}
         <div className="flex w-[180px] shrink-0 items-center justify-start gap-x-2">
           <FaMedal className="text-gray-400" />
-          <span className="whitespace-nowrap text-steel-500">Edition:</span>
+          <span className="whitespace-nowrap text-steel-500">{t("edition")}</span>
           <span className="truncate font-medium">{offer.data.edition}</span>
         </div>
 
@@ -153,8 +159,8 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
           )}
           <span className="flex-1 text-sm">
             {isBanStatus
-              ? "Can't be activated in your region"
-              : `Can be activated from ${offer.data.activationRegion}`}
+              ? t("cantBeActivatedInYourRegion")
+              : `${t("canBeActivatedFrom")} ${offer.data.activationRegion}`}
           </span>
           <LuInfo
             className="ml-1 shrink-0 cursor-pointer text-steel-500"
@@ -169,7 +175,7 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
 
         {/* 5. Price Section */}
         <div className="flex w-[150px] shrink-0 flex-col items-center justify-center">
-          <span className="text-sm text-steel-500">Total amount:</span>
+          <span className="text-sm text-steel-500">{t("totalAmount")}</span>
           <span className="text-xl font-bold">
             {offer.data.currency} {offer.data.price}
           </span>
@@ -198,7 +204,19 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
             orientation="vertical"
             className="h-[50px] w-[1px] bg-gray-600"
           />
-          <div className="flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-lg bg-midnight-500 transition-colors hover:bg-gray-500">
+          <div
+            onClick={() => {
+              addToCart({
+                id: offer.data.id,
+                name: offer.data.title,
+                platform: offer.data.platform,
+                image: offer.data.image_url,
+                price: offer.data.price,
+                currency: offer.data.currency,
+              });
+            }}
+            className="flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-lg bg-midnight-500 transition-colors hover:bg-gray-500 hover:text-white"
+          >
             <FaCartShopping size={24} />
           </div>
         </div>
@@ -242,7 +260,7 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
             </div>
           </div>
           <div className="shrink-0 text-right">
-            <div className="text-xs text-steel-500">Total</div>
+            <div className="text-xs text-steel-500">{t("total")}</div>
             <div className="text-lg font-bold sm:text-xl">
               {offer.data.currency} {offer.data.price}
             </div>
@@ -274,8 +292,8 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
           )}
           <span>
             {isBanStatus
-              ? "Can't be activated in your region"
-              : `Can be activated from ${offer.data.activationRegion}`}
+              ? t("cantBeActivatedInYourRegion")
+              : `${t("canBeActivatedFrom")} ${offer.data.activationRegion}`}
           </span>
         </div>
 
@@ -283,10 +301,20 @@ export default function SellerRow({ offer }: { offer: SellerOffer }) {
         <div className="flex items-center gap-2">
           <button
             type="button"
+            onClick={() => {
+              addToCart({
+                id: offer.data.id,
+                name: offer.data.title,
+                platform: offer.data.platform,
+                image: offer.data.image_url,
+                price: offer.data.price,
+                currency: offer.data.currency,
+              });
+            }}
             className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-midnight-500 py-2.5 text-sm font-medium text-steel-300 transition-colors hover:bg-gray-500 hover:text-white"
           >
             <FaCartShopping size={16} />
-            <span>Add to cart</span>
+            <span>{t("addToCart")}</span>
           </button>
           <button
             type="button"

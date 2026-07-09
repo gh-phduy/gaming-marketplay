@@ -13,6 +13,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import type { SellerOfferItem } from "../../seller-profile.data";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SellerStoreOfferRowProps {
   offer: SellerOfferItem;
@@ -29,6 +30,7 @@ export default function SellerStoreOfferRow({
   viewMode,
   onAddedToCart,
 }: SellerStoreOfferRowProps) {
+  const t = useTranslations("product");
   const { addToCart } = useCart();
   const productHref = `/buy-cheap?id=${offer.data.id}`;
 
@@ -75,7 +77,7 @@ export default function SellerStoreOfferRow({
           </div>
           <div className="flex items-center justify-between border-t border-midnight-700 pt-4">
             <div>
-              <p className="text-xs text-steel-500">Price:</p>
+              <p className="text-xs text-steel-500">{t("price")}:</p>
               <p className="text-2xl font-bold">
                 {formatPrice(offer.data.currency, offer.data.price)}
               </p>
@@ -130,7 +132,7 @@ export default function SellerStoreOfferRow({
       </div>
 
       <div className="flex items-center justify-between border-t border-midnight-700 px-5 py-4 lg:block lg:border-t-0 lg:border-l lg:py-8 lg:text-center">
-        <p className="text-xs text-steel-500">Price:</p>
+        <p className="text-xs text-steel-500">{t("price")}:</p>
         <p className="text-2xl font-bold lg:mt-2">
           {formatPrice(offer.data.currency, offer.data.price)}
         </p>

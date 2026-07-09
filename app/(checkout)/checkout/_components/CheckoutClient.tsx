@@ -190,21 +190,33 @@ export default function CheckoutClient() {
     fetchProduct();
   }, [productId]);
 
-  // Generate PaymentIntent secrets via backend API
+  // Generate PaymentIntent secrets via Supabase Edge Function
   useEffect(() => {
     if (amount <= 0) {
       setClientSecret("");
       return;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    fetch(`${apiUrl}/api/create-payment-intent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: Math.round(amount * 100) }), // Amount in cents
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
+    async function getStripeSecret() {
+      try {
+        const { data, error } = await supabase.functions.invoke("create-payment-intent", {
+          body: { amount: Math.round(amount * 100) },
+        });
+
+        if (error) {
+          console.error("Failed to invoke create-payment-intent edge function:", error);
+          return;
+        }
+
+        if (data?.clientSecret) {
+          setClientSecret(data.clientSecret);
+        }
+      } catch (err) {
+        console.error("Error calling edge function:", err);
+      }
+    }
+
+    getStripeSecret();
   }, [amount]);
 
   // Loading indicator overlay boundary

@@ -7,6 +7,7 @@ import { TOPUP_GAMES, TOPUP_CATEGORIES_FILTER } from "@/lib/constants/products";
 import { TopUpGameCard } from "./TopUpGameCard";
 import FilterDropdown from "@/components/product/FilterDropdown";
 import { IoSearch } from "react-icons/io5";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ==========================================================================
    HELPER FUNCTIONS
@@ -40,6 +41,9 @@ interface DirectTopUpClientProps {
  * Allows searching by text query and filtering by categories via select options.
  */
 export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
+  const t = useTranslations("product");
+  const tCommon = useTranslations("common");
+
   // Sync the category query parameter with local filters
   const urlCategory = useMemo(
     () => getValidTopUpCategory(category ?? null),
@@ -52,6 +56,21 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
   useEffect(() => {
     setActiveCategory(urlCategory);
   }, [urlCategory]);
+
+  // Translate filter options dynamically
+  const translatedOptions = useMemo(() => {
+    return TOPUP_CATEGORIES_FILTER.map((option) => {
+      let label = option.label;
+      if (option.id === "all") {
+        label = tCommon("allCategories");
+      } else if (option.id === "mobile") {
+        label = t("mobileGames");
+      } else if (option.id === "services") {
+        label = t("services");
+      }
+      return { ...option, label };
+    });
+  }, [t, tCommon]);
 
   // Memoized query and category filter handler
   const filteredGames = useMemo(() => {
@@ -73,10 +92,10 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
       {/* Title Header */}
       <div className="mb-8 text-center">
         <h2 className="text-4xl font-medium tracking-wide text-white uppercase md:text-3xl">
-          Ready to play? Power up your game!
+          {t("readyToPlay")}
         </h2>
         <p className="mt-2 text-base text-gray-400">
-          Instant top-ups for your favorite titles — fast, easy, and secure.
+          {t("instantTopUps")}
         </p>
       </div>
 
@@ -89,7 +108,7 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your product..."
+            placeholder={t("searchProductPlaceholder")}
             className="w-full bg-transparent text-base text-dm-text-primary outline-none placeholder:text-steel-500"
           />
         </div>
@@ -97,7 +116,7 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
         {/* Category switcher */}
         <FilterDropdown
           key={activeCategory}
-          options={TOPUP_CATEGORIES_FILTER}
+          options={translatedOptions}
           defaultValue={activeCategory}
           headerIcon={<LayoutGrid size={16} />}
           width="w-[220px]"
@@ -121,10 +140,10 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <Search size={40} className="mb-4 text-gray-600" />
           <p className="text-base font-medium text-gray-400">
-            No games found for &quot;{query}&quot;
+            {t("noGamesFound", { query })}
           </p>
           <p className="mt-1 text-sm text-gray-600">
-            Try a different search term or category.
+            {t("tryDifferentSearch")}
           </p>
         </div>
       )}

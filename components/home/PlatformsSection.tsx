@@ -1,6 +1,9 @@
+"use client";
+
 import PlatformCard from "./PlatformCard";
 import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
+import { useTranslations } from "@/hooks/useTranslations";
 
 /* ==========================================================================
    PLATFORMS DATA CONSTANTS
@@ -62,6 +65,8 @@ const PLATFORM_ITEMS = [
  * and slides into a carousel slider on mobile/tablets.
  */
 export default function PlatformsSection() {
+  const t = useTranslations("home");
+
   return (
     <section
       className="w-full responsive overflow-visible px-8 800:px-0"
@@ -70,11 +75,11 @@ export default function PlatformsSection() {
       {/* Section Title Header */}
       <SectionHeader
         headingId="platforms-heading"
-        headingText="Platforms"
-        title="PLATFORMS"
+        headingText={t("platformsHeadingText")}
+        title={t("platformsTitle")}
         containerClassName="mb-10"
         titleClassName="-translate-x-[22px]"
-        viewAllAriaLabel="View all platforms"
+        viewAllAriaLabel={t("viewAllPlatforms")}
       />
       
       {/* Desktop Layout Grid (>= 800px) */}

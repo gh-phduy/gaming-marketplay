@@ -16,6 +16,10 @@ import {
   type SellerListingStatus,
 } from "@/components/marketplace/seller-marketplace-store";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 export interface ListingFormState {
   title: string;
   productType: string;
@@ -29,6 +33,10 @@ export interface ListingFormState {
   imageUrl: string;
   description: string;
 }
+
+/* ==========================================================================
+   STATIC CONFIGURATION OPTIONS
+   ========================================================================== */
 
 export const productTypeOptions = [
   "Product key",
@@ -55,13 +63,20 @@ export const deliveryOptions = ["Instant", "Up to 15 min", "Up to 1 hour", "Manu
 export const regionOptions = ["Global", "Europe", "United States", "Vietnam", "Asia"];
 
 export const imageOptions = [
-  { label: "Default game cover", value: "/cyberpunk_2077.jpg" },
+  { label: "Default placeholder", value: "/placeholder_product.svg" },
   { label: "Valorant cover", value: "/topup-valorant.jpg" },
   { label: "Software cover", value: "/product1.png" },
 ];
 
 export type WorkspaceTab = "overview" | "products" | "create" | "inbox";
 
+/* ==========================================================================
+   HELPER CONSTRUCTORS
+   ========================================================================== */
+
+/**
+ * Creates an empty default listing form state pre-populated with localized currency.
+ */
 export function createEmptyListingForm(currencySymbol: string): ListingFormState {
   return {
     title: "",
@@ -78,6 +93,16 @@ export function createEmptyListingForm(currencySymbol: string): ListingFormState
   };
 }
 
+/* ==========================================================================
+   CUSTOM STATE HOOK: useSellerWorkspace
+   ========================================================================== */
+
+/**
+ * useSellerWorkspace State Hook
+ *
+ * Encapsulates listing mutations, Supabase polling query feeds, image upload base64
+ * conversions, validation logic, and real-time chat updates for the seller workspace dashboard.
+ */
 export function useSellerWorkspace(profile: UserDashboardProfile) {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("overview");
   const [listings, setListings] = useState<SellerListing[]>([]);
@@ -90,6 +115,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     createEmptyListingForm(profile.currency.symbol)
   );
 
+  // Sync current list catalog and conversations from marketplace store
   const syncMarketplaceState = async () => {
     try {
       const nextListings = await readSellerListings(profile.id);
@@ -114,11 +140,13 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     }
   };
 
+  // Setup database listener subscriptions
   useEffect(() => {
     syncMarketplaceState();
     return subscribeSellerMarketplace(syncMarketplaceState, profile.id);
   }, [profile.id]);
 
+  // Navigate to inbox if location anchor hash changes
   useEffect(() => {
     const applyHash = () => {
       if (window.location.hash === "#seller-inbox") {
@@ -132,18 +160,21 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     };
   }, []);
 
+  // Mark conversations read when inbox thread opens
   useEffect(() => {
     if (activeTab === "inbox" && activeConversationId) {
       void markSellerConversationRead(activeConversationId, "seller");
     }
   }, [activeConversationId, activeTab]);
 
+  // Handle toast notifications delay limits
   useEffect(() => {
     if (!toastMessage) return;
     const timeoutId = window.setTimeout(() => setToastMessage(null), 2600);
     return () => window.clearTimeout(timeoutId);
   }, [toastMessage]);
 
+  // Aggregate statistics metrics
   const stats = useMemo(() => {
     const publishedListings = listings.filter((listing) => listing.status === "published");
     const totalSales = listings.reduce((total, listing) => total + listing.sales, 0);
@@ -170,6 +201,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     setToastMessage(message);
   };
 
+  // Convert uploaded image file to base64 DataURL representation
   const handleUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
@@ -202,6 +234,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     reader.readAsDataURL(file);
   };
 
+  // Save or publish new listing offer details
   const handleSaveListing = async (status: SellerListingStatus) => {
     const title = form.title.trim();
     const price = Number(form.price);
@@ -252,6 +285,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     }
   };
 
+  // Toggle listing status between published and paused draft states
   const handleChangeStatus = async (listingId: string, status: SellerListingStatus) => {
     try {
       await updateSellerListingStatus(listingId, status, profile.id);
@@ -262,6 +296,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     }
   };
 
+  // Delete product offer from database
   const handleDeleteListing = async (listingId: string) => {
     try {
       await deleteSellerListing(listingId, profile.id);
@@ -272,6 +307,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     }
   };
 
+  // Set active thread ID and mark unreads read
   const handleSelectConversation = async (conversationId: string) => {
     setActiveConversationId(conversationId);
     try {
@@ -281,6 +317,7 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     }
   };
 
+  // Send messaging reply back to buyer
   const handleSendReply = async () => {
     const text = replyText.trim();
     if (!text || !activeConversation) return;
@@ -322,3 +359,4 @@ export function useSellerWorkspace(profile: UserDashboardProfile) {
     handleSendReply,
   };
 }
+

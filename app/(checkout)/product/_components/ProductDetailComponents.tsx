@@ -3,7 +3,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { BsSortDown } from "react-icons/bs";
-import { SORT_OPTIONS, type ProductSortKey } from "./useProductDetail";
+import { type ProductSortKey } from "./useProductDetail";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface ProductSortDropdownProps {
   value: ProductSortKey;
@@ -11,10 +12,22 @@ interface ProductSortDropdownProps {
 }
 
 export function ProductSortDropdown({ value, onChange }: ProductSortDropdownProps) {
+  const t = useTranslations("product");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const translatedOptions = [
+    { label: t("sortNewer"), value: "newer" as const },
+    { label: t("sortOlder"), value: "older" as const },
+    { label: t("sortPopular"), value: "popular" as const },
+    { label: t("sortNameAsc"), value: "name-asc" as const },
+    { label: t("sortNameDesc"), value: "name-desc" as const },
+    { label: t("sortPriceAsc"), value: "price-asc" as const },
+    { label: t("sortPriceDesc"), value: "price-desc" as const },
+  ];
+
   const selectedOption =
-    SORT_OPTIONS.find((option) => option.value === value) ?? SORT_OPTIONS[2];
+    translatedOptions.find((option) => option.value === value) ?? translatedOptions[2];
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -64,7 +77,7 @@ export function ProductSortDropdown({ value, onChange }: ProductSortDropdownProp
           aria-label="Sort products"
           className="absolute top-[calc(100%+6px)] right-0 left-0 overflow-hidden rounded-lg bg-[#303a4a] py-0 text-base text-[#c9d0dc] shadow-[0_22px_44px_rgba(4,8,14,0.36)] ring-1 ring-black/10"
         >
-          {SORT_OPTIONS.map((option) => {
+          {translatedOptions.map((option) => {
             const isSelected = option.value === value;
 
             return (

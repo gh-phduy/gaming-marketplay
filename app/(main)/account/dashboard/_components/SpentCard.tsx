@@ -1,5 +1,9 @@
 "use client";
 
+/* ==========================================================================
+   TYPE DEFINITIONS & INTERFACES
+   ========================================================================== */
+
 interface SpentCardProps {
   spent: {
     amount: number;
@@ -8,6 +12,15 @@ interface SpentCardProps {
   };
 }
 
+/* ==========================================================================
+   MAIN COMPONENT: DashboardSpentCard
+   ========================================================================== */
+
+/**
+ * DashboardSpentCard Component
+ *
+ * Displays the current cumulative spending progress bar up to a maximum threshold.
+ */
 export default function DashboardSpentCard({ spent }: SpentCardProps) {
   const progressPercent = spent.maxAmount > 0
     ? Math.min((spent.amount / spent.maxAmount) * 100, 100)
@@ -34,10 +47,10 @@ export default function DashboardSpentCard({ spent }: SpentCardProps) {
           </span>
         </div>
 
-        {/* Progress bar */}
+        {/* Progress level bar */}
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-midnight-650">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-dm-accent-blue to-blue-400 transition-all duration-700 ease-out"
+            className="h-full rounded-full bg-gradient-to-r from-forest-500 to-forest-100 transition-all duration-700 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -45,3 +58,4 @@ export default function DashboardSpentCard({ spent }: SpentCardProps) {
     </div>
   );
 }
+

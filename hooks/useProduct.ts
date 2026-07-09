@@ -11,8 +11,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 export function useProduct(productId: string) {
   return useQuery<ProductApiResponse>({
     queryKey: ["product", productId],
-    queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/api/products/${productId}`);
+    queryFn: async ({ signal }) => {
+      const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, { signal });
 
       if (!response.ok) {
         throw new Error("Failed to fetch product");
@@ -35,8 +35,8 @@ export function useProduct(productId: string) {
 export function useProducts() {
   return useQuery({
     queryKey: ["products"],
-    queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/api/products`);
+    queryFn: async ({ signal }) => {
+      const response = await fetch(`${API_BASE_URL}/api/products`, { signal });
 
       if (!response.ok) {
         throw new Error("Failed to fetch products");
@@ -48,3 +48,4 @@ export function useProducts() {
     retry: 2,
   });
 }
+

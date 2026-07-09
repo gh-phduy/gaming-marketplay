@@ -3,6 +3,16 @@
 import { ShieldCheck, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
 
+/* ==========================================================================
+   MAIN COMPONENT: DashboardVerificationBanner
+   ========================================================================== */
+
+/**
+ * DashboardVerificationBanner Component
+ *
+ * Renders a dismissible notification block urging the user to proceed
+ * through KYC verification to unlock full seller status tools.
+ */
 export default function DashboardVerificationBanner() {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -11,27 +21,24 @@ export default function DashboardVerificationBanner() {
   return (
     <div
       id="verification-banner"
-      className="group relative flex items-center justify-between overflow-hidden rounded-xl bg-gradient-to-r from-forest-500/15 via-forest-500/10 to-midnight-800 px-5 py-3.5 ring-1 ring-forest-500/20"
+      className="group relative flex flex-col md:flex-row items-start md:items-center justify-between overflow-hidden rounded-xl bg-[#0c1612] border border-[#1b3a27] px-5 py-4 gap-4"
     >
-      {/* Animated glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-forest-500/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
       <div className="relative flex items-center gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-forest-500/20">
-          <ShieldCheck className="h-4 w-4 text-forest-500" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1b3a27]/60 text-[#22c55e]">
+          <ShieldCheck className="h-5 w-5" />
         </div>
-        <p className="text-sm text-steel-300">
+        <p className="text-sm text-gray-300">
           If you want to{" "}
-          <span className="font-semibold text-white">open the seller role</span>
+          <span className="font-bold text-white">open the seller role</span>
           , please go through verification. It will take{" "}
-          <span className="font-semibold text-white">5 minutes</span>.
+          <span className="font-bold text-white">5 minutes</span>.
         </p>
       </div>
 
-      <div className="relative flex items-center gap-3">
+      <div className="relative flex items-center gap-3 shrink-0">
         <button
           type="button"
-          className="group/btn inline-flex items-center gap-2 rounded-lg bg-forest-500 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-forest-500/20 transition-all hover:bg-forest-100/90 hover:shadow-forest-500/30"
+          className="group/btn inline-flex items-center gap-1.5 rounded-lg bg-[#22c55e] hover:bg-[#15803d] px-4 py-2.5 text-xs font-bold text-white transition-all duration-200"
         >
           GO TO VERIFICATION
           <ChevronRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" />
@@ -39,7 +46,7 @@ export default function DashboardVerificationBanner() {
         <button
           type="button"
           onClick={() => setIsVisible(false)}
-          className="rounded-full p-1 text-steel-500 transition hover:bg-midnight-700 hover:text-white"
+          className="rounded-full p-1 text-gray-500 transition hover:bg-midnight-700 hover:text-white"
           aria-label="Dismiss verification banner"
         >
           <X className="h-4 w-4" />
@@ -48,3 +55,4 @@ export default function DashboardVerificationBanner() {
     </div>
   );
 }
+

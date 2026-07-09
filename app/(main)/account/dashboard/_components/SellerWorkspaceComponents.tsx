@@ -16,23 +16,42 @@ import {
   type SellerListingStatus,
 } from "@/components/marketplace/seller-marketplace-store";
 
-export const cyberPanelClass =
-  "rounded-xl border border-lime-300/15 bg-[linear-gradient(135deg,rgba(7,12,14,0.95),rgba(29,37,50,0.9))] shadow-[0_0_32px_rgba(132,255,0,0.08)] ring-1 ring-white/5";
-export const cyberInnerPanelClass =
-  "rounded-lg border border-lime-300/10 bg-black/25 shadow-[inset_0_0_24px_rgba(132,255,0,0.04)] ring-1 ring-white/5";
-export const cyberInputClass =
-  "h-11 w-full rounded-lg border border-lime-300/20 bg-black/35 px-3 text-sm text-white shadow-[inset_0_0_18px_rgba(0,0,0,0.34)] transition outline-none placeholder:text-steel-500 hover:border-lime-300/35 focus:border-lime-300 focus:shadow-[0_0_18px_rgba(163,255,18,0.18)]";
-export const cyberTextareaClass =
-  "min-h-28 w-full resize-none rounded-lg border border-lime-300/20 bg-black/35 px-3 py-3 text-sm leading-6 text-white shadow-[inset_0_0_18px_rgba(0,0,0,0.34)] transition outline-none placeholder:text-steel-500 hover:border-lime-300/35 focus:border-lime-300 focus:shadow-[0_0_18px_rgba(163,255,18,0.18)]";
-export const cyberPrimaryButtonClass =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-[linear-gradient(135deg,#d8ff38,#5bea41_48%,#12d984)] font-bold text-midnight-950 shadow-[0_0_24px_rgba(163,255,18,0.3)] transition hover:shadow-[0_0_34px_rgba(163,255,18,0.48)]";
-export const cyberGhostButtonClass =
-  "inline-flex items-center justify-center gap-2 rounded-lg border border-lime-300/15 bg-black/30 font-bold text-lime-100 shadow-[0_0_18px_rgba(132,255,0,0.08)] transition hover:border-lime-300/35 hover:bg-lime-300/10 hover:text-white";
+/* ==========================================================================
+   STYLE CLASS CONSTANTS (CYBER STYLES)
+   ========================================================================== */
 
+export const cyberPanelClass =
+  "rounded-xl border border-midnight-650/60 bg-midnight-750 shadow-md shadow-black/15 transition-all duration-300 hover:border-midnight-600";
+export const cyberInnerPanelClass =
+  "rounded-lg border border-midnight-700/60 bg-midnight-850 shadow-[inset_0_0_12px_rgba(0,0,0,0.15)]";
+export const cyberInputClass =
+  "h-11 w-full rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 text-sm text-white transition outline-none hover:border-midnight-500 focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e]";
+export const cyberTextareaClass =
+  "min-h-28 w-full resize-none rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 py-3 text-sm leading-6 text-white transition outline-none hover:border-midnight-500 focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e]";
+export const cyberPrimaryButtonClass =
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-[#22c55e] hover:bg-[#15803d] font-bold text-white transition-all duration-200";
+export const cyberGhostButtonClass =
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-midnight-650 bg-midnight-800/80 font-bold text-gray-200 transition-all duration-200 hover:border-midnight-500 hover:bg-midnight-700 hover:text-white";
+
+/* ==========================================================================
+   FORMATTING UTILITIES
+   ========================================================================== */
+
+/**
+ * Formats a numeric value into a standard currency money string.
+ */
 export function formatMoney(currency: string, value: number) {
   return `${currency} ${value.toFixed(2)}`;
 }
 
+/* ==========================================================================
+   COMPONENTS: ProductImage, StatusBadge, MetricTile, ListingRow, ConversationPreview
+   ========================================================================== */
+
+/**
+ * ProductImage Component
+ * Renders next/image bindings or base64 data-url previews safely.
+ */
 export function ProductImage({
   src,
   alt,
@@ -51,9 +70,13 @@ export function ProductImage({
   );
 }
 
+/**
+ * statusClasses Utility
+ * Maps listing statuses to style class combinations.
+ */
 export function statusClasses(status: SellerListingStatus) {
   if (status === "published") {
-    return "border-lime-300/35 bg-lime-300/10 text-lime-300 shadow-[0_0_14px_rgba(163,255,18,0.18)]";
+    return "border-forest-500/35 bg-forest-500/10/10 text-forest-100 shadow-[0_0_14px_rgba(70,202,67,0.18)]";
   }
 
   if (status === "paused") {
@@ -63,6 +86,10 @@ export function statusClasses(status: SellerListingStatus) {
   return "border-cyan-300/20 bg-cyan-300/5 text-cyan-100";
 }
 
+/**
+ * StatusBadge Component
+ * Renders an inline colored status dot.
+ */
 export function StatusBadge({ status }: { status: SellerListingStatus }) {
   return (
     <span
@@ -74,6 +101,10 @@ export function StatusBadge({ status }: { status: SellerListingStatus }) {
   );
 }
 
+/**
+ * MetricTile Component
+ * Renders a key-value metric card inside the dashboard grid.
+ */
 export function MetricTile({
   icon: Icon,
   label,
@@ -89,28 +120,28 @@ export function MetricTile({
 }) {
   const toneClass = {
     green:
-      "text-lime-300 bg-[linear-gradient(135deg,rgba(163,255,18,0.22),rgba(34,197,94,0.08))] ring-lime-300/35 shadow-[0_0_22px_rgba(163,255,18,0.22)]",
-    blue: "text-cyan-200 bg-[linear-gradient(135deg,rgba(34,211,238,0.18),rgba(59,130,246,0.08))] ring-cyan-300/30 shadow-[0_0_22px_rgba(34,211,238,0.16)]",
+      "text-forest-500 bg-forest-500/10 border border-forest-500/20",
+    blue:
+      "text-cyan-400 bg-cyan-500/10 border border-cyan-500/20",
     yellow:
-      "text-yellow-200 bg-[linear-gradient(135deg,rgba(253,224,71,0.18),rgba(132,255,0,0.08))] ring-yellow-300/30 shadow-[0_0_22px_rgba(253,224,71,0.14)]",
+      "text-yellow-400 bg-yellow-500/10 border border-yellow-500/20",
     steel:
-      "text-lime-100 bg-[linear-gradient(135deg,rgba(148,163,184,0.12),rgba(132,255,0,0.06))] ring-lime-300/20",
+      "text-forest-100 bg-forest-500/5 border border-forest-500/10",
   }[tone];
 
   return (
     <div className={`${cyberPanelClass} group relative overflow-hidden p-4`}>
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(190,255,67,0.72),transparent)]" />
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs text-lime-100/60">{label}</p>
-          <p className="mt-2 text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(163,255,18,0.2)]">
+          <p className="text-xs text-forest-100/60">{label}</p>
+          <p className="mt-2 text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">
             {value}
           </p>
         </div>
         <span
-          className={`flex h-10 w-10 items-center justify-center rounded-lg ring-1 ${toneClass}`}
+          className={`flex h-10 w-10 items-center justify-center rounded-lg ${toneClass}`}
         >
-          <Icon className="h-5 w-5 drop-shadow-[0_0_8px_rgba(163,255,18,0.75)]" />
+          <Icon className="h-5 w-5 drop-shadow-[0_0_6px_currentColor]" />
         </span>
       </div>
       <p className="text-steel-400 mt-3 text-xs">{detail}</p>
@@ -118,6 +149,10 @@ export function MetricTile({
   );
 }
 
+/**
+ * ListingRow Component
+ * Renders product overview details (views, stock, platform) and status triggers.
+ */
 export function ListingRow({
   listing,
   onChangeStatus,
@@ -132,10 +167,10 @@ export function ListingRow({
 
   return (
     <div
-      className={`${cyberPanelClass} grid gap-4 p-4 transition hover:border-lime-300/30 hover:shadow-[0_0_36px_rgba(132,255,0,0.12)] lg:grid-cols-[1fr_auto] lg:items-center`}
+      className={`${cyberPanelClass} grid gap-4 p-4 transition hover:border-forest-500/30 hover:shadow-[0_0_36px_rgba(70,202,67,0.12)] lg:grid-cols-[1fr_auto] lg:items-center`}
     >
       <div className="flex min-w-0 gap-4">
-        <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-lime-300/20 bg-black shadow-[0_0_18px_rgba(132,255,0,0.12)]">
+        <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-forest-500/20 bg-black shadow-[0_0_18px_rgba(70,202,67,0.12)]">
           <ProductImage
             src={listing.imageUrl}
             alt={listing.title}
@@ -175,7 +210,7 @@ export function ListingRow({
           className={`${cyberGhostButtonClass} h-9 px-3 text-xs`}
         >
           {nextPrimaryStatus === "published" ? (
-            <CheckCircle2 className="h-4 w-4 text-lime-300 drop-shadow-[0_0_8px_rgba(163,255,18,0.8)]" />
+            <CheckCircle2 className="h-4 w-4 text-forest-100 drop-shadow-[0_0_8px_rgba(70,202,67,0.8)]" />
           ) : (
             <Pause className="h-4 w-4 text-yellow-300" />
           )}
@@ -202,6 +237,10 @@ export function ListingRow({
   );
 }
 
+/**
+ * ConversationPreview Component
+ * Renders buyer avatar rows and shows unread counts.
+ */
 export function ConversationPreview({
   conversation,
   isActive,
@@ -221,11 +260,11 @@ export function ConversationPreview({
       onClick={onSelect}
       className={`flex w-full gap-3 rounded-xl p-3 text-left ring-1 transition ${
         isActive
-          ? "border border-lime-300/25 bg-lime-300/10 shadow-[0_0_26px_rgba(163,255,18,0.14)] ring-lime-300/35"
-          : "border border-lime-300/10 bg-black/25 ring-white/5 hover:border-lime-300/25 hover:bg-lime-300/5"
+          ? "border border-forest-500/25 bg-forest-500/10/10 shadow-[0_0_26px_rgba(70,202,67,0.14)] ring-forest-500/20"
+          : "border border-forest-500/10 bg-black/25 ring-white/5 hover:border-forest-500/25 hover:bg-forest-500/10/5"
       }`}
     >
-      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-lime-300/25 bg-black shadow-[0_0_18px_rgba(163,255,18,0.16)]">
+      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-forest-500/25 bg-black shadow-[0_0_18px_rgba(70,202,67,0.16)]">
         <Image
           src={conversation.buyerAvatar}
           alt={conversation.buyerName}
@@ -243,7 +282,7 @@ export function ConversationPreview({
             {formatSellerStoreTime(conversation.updatedAt)}
           </span>
         </div>
-        <p className="mt-1 truncate text-xs font-medium text-lime-300">
+        <p className="mt-1 truncate text-xs font-medium text-forest-100">
           {conversation.listingTitle} / {conversation.sellerName}
         </p>
         <p className="mt-1 line-clamp-1 text-xs text-steel-500">
@@ -258,3 +297,4 @@ export function ConversationPreview({
     </button>
   );
 }
+

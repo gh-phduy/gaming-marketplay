@@ -37,7 +37,7 @@ const mapSupabaseUser = (supabaseUser: any): User => {
     picture:
       supabaseUser.user_metadata?.avatar_url ||
       supabaseUser.user_metadata?.picture ||
-      "",
+      "/avt-placeholder.jpg",
   };
 };
 

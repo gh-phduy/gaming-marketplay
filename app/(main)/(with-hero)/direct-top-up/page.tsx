@@ -7,6 +7,8 @@
 
 import { DirectTopUpClient } from "@/components/home/directtopup/DirectTopUpClient";
 
+export const dynamic = "force-dynamic";
+
 interface DirectTopUpPageProps {
   searchParams: Promise<{
     category?: string;

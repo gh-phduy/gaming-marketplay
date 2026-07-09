@@ -16,6 +16,9 @@ import SectionHeader from "../shared/SectionHeader";
 import { ImStarFull } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import { useTranslations } from "@/hooks/useTranslations";
+
+import { supabase } from "@/lib/supabase";
 
 /* ==========================================================================
    TYPE DEFINITIONS & INTERFACES
@@ -29,6 +32,44 @@ interface SellerItemProps {
   badge?: string;
   profileName?: string;
 }
+
+const DEFAULT_SELLERS: SellerItemProps[] = [
+  {
+    avatar: "/avt1.png",
+    name: "Gaming_sto...",
+    profileName: "Gaming_store",
+    rating: "4.8",
+    badge: "Legendary",
+  },
+  {
+    avatar: "/avt1.png",
+    name: "Easy-key",
+    profileName: "Easy-key",
+    rating: "5.0",
+    badge: "Legendary",
+  },
+  {
+    avatar: "/avt1.png",
+    name: "Just_Gurus",
+    profileName: "Just_Digital_Gurus",
+    rating: "5.0",
+    badge: "Legendary",
+  },
+  {
+    avatar: "/avt1.png",
+    name: "FowGame",
+    profileName: "FowGame",
+    rating: "5.0",
+    badge: "Legendary",
+  },
+  {
+    avatar: "/avt1.png",
+    name: "BitStore",
+    profileName: "BitStore",
+    rating: "4.9",
+    badge: "Legendary",
+  },
+];
 
 /* ==========================================================================
    SUBCOMPONENT: SellerItem Card
@@ -47,6 +88,8 @@ function SellerItem({
   badge = "Legendary",
   profileName = name,
 }: SellerItemProps) {
+  const t = useTranslations("home");
+
   return (
     <Link
       href={getSellerProfilePath(profileName)}
@@ -66,7 +109,7 @@ function SellerItem({
           {verified ? (
             <span
               className="absolute -right-1 -bottom-1 z-10 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#212937] bg-green-500"
-              aria-label="Verified seller"
+              aria-label={t("verifiedSeller")}
             >
               <svg
                 className="h-2.5 w-2.5 text-white"
@@ -91,7 +134,7 @@ function SellerItem({
           <div
             className="flex items-center gap-x-2"
             role="group"
-            aria-label={`Rating: ${rating} out of 5 stars`}
+            aria-label={`${t("rating")}: ${rating} ${t("outOf5Stars")}`}
           >
             <span className="text-[14px] text-[#888A8D]">{rating}/5</span>
             {Array.from({ length: 5 }, (_, index) => (
@@ -112,7 +155,7 @@ function SellerItem({
           {badge}
         </div>
         <span className="flex items-center gap-x-2 text-[#C0C3C9] transition-colors hover:text-white">
-          <span className="text-[16px]">View</span>
+          <span className="text-[16px]">{t("view")}</span>
           <IoIosArrowForward size={20} aria-hidden="true" />
         </span>
       </div>
@@ -124,75 +167,44 @@ function SellerItem({
    MAIN COMPONENT: PopularSellers Carousel Section
    ========================================================================== */
 
-/**
- * PopularSellers Component
- * Renders a responsive seller slider featuring popular merchant storefronts.
- * Integrates with Embla Carousel via hooks for custom prev/next button controls.
- */
 export default function PopularSellers() {
+  const t = useTranslations("home");
   const [api, setApi] = useState<CarouselApi>();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [sellers, setSellers] = useState<SellerItemProps[]>([]);
 
-  // Mock data representing top performing marketplace sellers
-  const sellers: SellerItemProps[] = [
-    {
-      avatar: "/avt1.png",
-      name: "Gaming_sto...",
-      profileName: "Gaming_store",
-      rating: "4.8",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "Easy-key",
-      profileName: "Easy-key",
-      rating: "5",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "Just_Digital_Gurus",
-      profileName: "Just_Digital_Gurus",
-      rating: "5",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "FowGame",
-      profileName: "FowGame",
-      rating: "5",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "BitStore",
-      profileName: "BitStore",
-      rating: "4.9",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "BitStore",
-      profileName: "BitStore",
-      rating: "4.9",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "BitStore",
-      profileName: "BitStore",
-      rating: "4.9",
-      badge: "Legendary",
-    },
-    {
-      avatar: "/avt1.png",
-      name: "BitStore",
-      profileName: "BitStore",
-      rating: "4.9",
-      badge: "Legendary",
-    },
-  ];
+  useEffect(() => {
+    async function fetchSellers() {
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("is_verified_seller", true)
+          .order("rating", { ascending: false });
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setSellers(
+            data.map((u: any): SellerItemProps => ({
+              avatar: u.avatar_url && u.avatar_url.startsWith("http") ? u.avatar_url : "/avt1.png",
+              name: u.display_name,
+              profileName: u.display_name,
+              rating: u.rating ? Number(u.rating).toFixed(1) : "5.0",
+              badge: u.rating >= 4.9 ? "Legendary" : u.rating >= 4.8 ? "Elite" : "Pro",
+              verified: true,
+            }))
+          );
+        } else {
+          setSellers(DEFAULT_SELLERS);
+        }
+      } catch (e) {
+        console.error("Error fetching popular sellers:", e);
+        setSellers(DEFAULT_SELLERS);
+      }
+    }
+    fetchSellers();
+  }, []);
 
   // Callback handlers for manually driving carousel movements
   const scrollPrev = useCallback(() => {
@@ -232,11 +244,11 @@ export default function PopularSellers() {
       {/* Section Heading & Link to Trusted Sellers directory */}
       <SectionHeader
         headingId="popular-sellers-heading"
-        headingText="Popular Sellers"
-        title="POPULAR SELLERS"
+        headingText={t("popularSellers")}
+        title={t("popularSellersTitle")}
         titleClassName="-translate-x-[22px]"
         viewAllHref="/user/trusted-sellers"
-        viewAllAriaLabel="View all popular sellers"
+        viewAllAriaLabel={t("viewAllPopularSellers")}
       />
 
       <div className="relative">
@@ -290,7 +302,7 @@ export default function PopularSellers() {
           }`}
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          aria-label="Previous sellers"
+          aria-label={t("previousSellers")}
         >
           <MdArrowBackIos
             className="h-4 w-4 translate-x-1"
@@ -306,7 +318,7 @@ export default function PopularSellers() {
           }`}
           onClick={scrollNext}
           disabled={!canScrollNext}
-          aria-label="Next sellers"
+          aria-label={t("nextSellers")}
         >
           <MdArrowForwardIos className="h-4 w-4" aria-hidden="true" />
         </Button>

@@ -6,6 +6,7 @@ import { LuClock3 } from "react-icons/lu";
 import { BsTwitterX } from "react-icons/bs";
 import { FaFacebookF, FaLink } from "react-icons/fa";
 import { SiTelegram, SiVk } from "react-icons/si";
+import { getTranslations } from "next-intl/server";
 import {
   NEWS_ARTICLES,
   getNewsArticleBySlug,
@@ -43,6 +44,7 @@ export async function generateMetadata({
 export default async function NewsArticlePage({
   params,
 }: NewsArticlePageProps) {
+  const t = await getTranslations("product");
   const { slug } = await params;
   const article = getNewsArticleBySlug(slug);
 
@@ -68,14 +70,14 @@ export default async function NewsArticlePage({
             href="/"
             className="transition-colors hover:text-dm-accent-green"
           >
-            Home
+            {t("home")}
           </Link>
           <span className="text-dm-text-disabled">/</span>
           <Link
             href="/news"
             className="transition-colors hover:text-dm-accent-green"
           >
-            News
+            {t("news")}
           </Link>
           <span className="text-dm-text-disabled">/</span>
           <span className="max-w-full text-dm-text-primary">
@@ -179,28 +181,28 @@ export default async function NewsArticlePage({
             id="comments"
             className="mb-14 text-lg font-bold text-dm-text-primary uppercase"
           >
-            Comments
+            {t("comments")}
           </h2>
 
           <textarea
             className="h-36 w-full resize-none rounded-sm bg-midnight-500 p-5 text-dm-text-primary placeholder:text-dm-text-secondary focus:ring-2 focus:ring-dm-accent-green/70 focus:outline-none"
             maxLength={2000}
-            placeholder="Type your Comment here"
+            placeholder={t("typeYourCommentHere")}
           />
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-dm-text-secondary">
-            <span>2000 characters left</span>
+            <span>{t("charactersLeft")}</span>
             <button className="rounded-sm bg-dm-accent-green px-8 py-3 text-sm font-bold text-white uppercase transition-colors hover:bg-dm-accent-green-hover">
-              Add Comment
+              {t("addComment")}
             </button>
           </div>
 
           <div className="my-16 text-center">
             <p className="font-bold text-dm-text-primary uppercase">
-              No comments found
+              {t("noCommentsFound")}
             </p>
             <p className="mt-4 text-dm-text-secondary">
-              Fill out the form above to leave a comment
+              {t("fillOutTheFormAboveToLeaveAComment")}
             </p>
           </div>
         </section>
@@ -213,7 +215,7 @@ export default async function NewsArticlePage({
             id="this-month"
             className="mb-10 text-lg font-bold text-dm-text-primary uppercase"
           >
-            This Month
+            {t("thisMonth")}
           </h2>
 
           <div className="grid gap-8 800:grid-cols-2 1200:grid-cols-4">
@@ -253,7 +255,7 @@ export default async function NewsArticlePage({
                     href={getNewsArticleHref(related.slug)}
                     className="rounded-sm bg-dm-accent-green px-9 py-2 text-sm font-medium text-white uppercase transition-colors hover:bg-dm-accent-green-hover"
                   >
-                    Read
+                    {t("read")}
                   </Link>
                 </div>
               </article>

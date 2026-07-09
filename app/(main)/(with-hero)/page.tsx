@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Home Page
  *
@@ -19,13 +21,16 @@ import GamesSection from "@/components/shared/GamesSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import PlatformsSection from "@/components/home/PlatformsSection";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
+import { useTranslations } from "@/hooks/useTranslations";
+
 export default function HomePage() {
+  const t = useTranslations("home");
   return (
     <>
       <HomeScrollRestoration />
       <main
         id="main-content"
-        className="mt-8 flex w-full flex-col items-center gap-y-16"
+        className="mt-8 flex w-full flex-col items-center gap-y-16 pb-8"
       >
         {/* Popular Games Section */}
         <PopularGamesSection />
@@ -49,19 +54,19 @@ export default function HomePage() {
         <CategoryCarousel />
 
         {/* New on Difmark */}
-        <GamesSection title="NEW ON DIFMARK" />
+        <GamesSection title={t("newOnDifmark")} sectionType="new" />
 
         {/* Promo Banner */}
         <PromoBanner />
 
         {/* Weekly Chart */}
-        <GamesSection title="WEEKLY CHART" />
+        <GamesSection title={t("weeklyChart")} sectionType="weekly" />
 
         {/* Flash Sale Section */}
         <FlashSaleSection />
 
         {/* Under $100 */}
-        <GamesSection title="UNDER $100" />
+        <GamesSection title={t("under100")} sectionType="under" />
 
         {/* Platforms Section */}
         <PlatformsSection />

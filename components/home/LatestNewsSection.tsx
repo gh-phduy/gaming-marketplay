@@ -1,9 +1,14 @@
+"use client";
+
 import NewsCard from "./NewsCard";
 import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
-import { LATEST_NEWS, getNewsArticleHref } from "@/lib/constants";
+import { getNewsArticleHref, LATEST_NEWS } from "@/lib/constants";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function LatestNewsSection() {
+  const t = useTranslations("home");
+
   const newsCards = LATEST_NEWS.map((article) => (
     <NewsCard
       key={article.slug}
@@ -23,10 +28,10 @@ export default function LatestNewsSection() {
     >
       <SectionHeader
         headingId="latest-news-heading"
-        headingText="Latest News"
-        title="LATEST NEWS"
+        headingText={t("latestNews")}
+        title={t("latestNewsTitle")}
         viewAllHref="/news"
-        viewAllAriaLabel="View all latest news"
+        viewAllAriaLabel={t("viewAllLatestNews")}
       />
       <div className="hidden justify-between 800:flex">
         {newsCards[0]}

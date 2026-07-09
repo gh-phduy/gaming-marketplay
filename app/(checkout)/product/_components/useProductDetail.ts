@@ -169,11 +169,17 @@ const mapDbProductToClientProduct = (row: any): Product => {
   };
 };
 
-const fetchListingProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase
+const fetchListingProducts = async ({ signal }: { signal?: AbortSignal } = {}): Promise<Product[]> => {
+  let query = supabase
     .from("products")
     .select("*")
     .eq("status", "published");
+
+  if (signal) {
+    query = query.abortSignal(signal);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching products from Supabase:", error);

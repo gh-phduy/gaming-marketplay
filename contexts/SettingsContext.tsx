@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, useCallback, ReactNode } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { localeToLanguageCode } from "@/i18n/config";
 
 interface SettingsContextType {
   language: string;
@@ -14,11 +15,35 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,
 );
 
+/**
+ * Preload a translation file into the module-level cache used by useTranslations.
+ * By the time React re-renders after setLanguage, the cache is already warm
+ * so every useTranslations hook can swap synchronously in a single frame.
+ */
+async function preloadTranslations(locale: string): Promise<void> {
+  // Access the same cache object used by useTranslations
+  const { ensureCached } = await import("@/hooks/useTranslations");
+  await ensureCached(locale);
+}
+
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useLocalStorage<string>("app-language", "EN");
+  const [language, setLanguageRaw] = useLocalStorage<string>("app-language", "EN");
   const [currency, setCurrency] = useLocalStorage<string>(
     "app-currency",
     "USD",
+  );
+
+  const setLanguage = useCallback(
+    (lang: string) => {
+      const locale = localeToLanguageCode[lang] || "en";
+
+      // Preload the translation file, then commit the language change.
+      // If the file is already cached this resolves instantly (micro-task).
+      preloadTranslations(locale).then(() => {
+        setLanguageRaw(lang);
+      });
+    },
+    [setLanguageRaw],
   );
 
   return (

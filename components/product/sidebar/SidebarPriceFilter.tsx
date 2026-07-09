@@ -1,9 +1,8 @@
-"use client";
-
 import { useProductFilter } from "@/contexts/ProductFilterContext";
 import PriceChartSlider from "./price-filter/PriceChartSlider";
 import PriceInputs from "./price-filter/PriceInputs";
 import PriceRangeList from "./price-filter/PriceRangeRadioList";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const SLIDER_MAX = 1450;
 
@@ -15,6 +14,7 @@ const PRICE_RANGES = [
 ];
 
 export default function SidebarPriceFilter() {
+  const t = useTranslations("product");
   const { priceRange, setPriceRange } = useProductFilter();
 
   const handlePriceChange = (min: number, max: number) => {
@@ -23,7 +23,7 @@ export default function SidebarPriceFilter() {
 
   return (
     <div className="w-full space-y-5">
-      <h3 className="text-xl font-bold text-white">Price</h3>
+      <h3 className="text-xl font-bold text-white">{t("price")}</h3>
 
       <PriceChartSlider
         minPrice={priceRange.min}

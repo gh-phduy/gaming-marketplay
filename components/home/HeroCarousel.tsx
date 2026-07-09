@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   HERO_GRID_COLUMNS_WITH_SIDE_BANNER,
-  HERO_TAB_CONTENT,
 } from "./hero-carousel/config";
 import { HeroCategoryTiles } from "./hero-carousel/HeroCategoryTiles";
 import { HeroSideBanners } from "./hero-carousel/HeroSideBanners";
@@ -30,7 +32,7 @@ interface HeroCarouselProps {
  * smoothly when switching between tabs with different content layouts.
  */
 export function HeroCarousel({ activeTab }: HeroCarouselProps) {
-  const tabContent = HERO_TAB_CONTENT[activeTab];
+  const t = useTranslations("home");
   
   // Grid layout columns configurations
   const gridColumnsClass = `grid-cols-1 ${HERO_GRID_COLUMNS_WITH_SIDE_BANNER}`;
@@ -62,10 +64,14 @@ export function HeroCarousel({ activeTab }: HeroCarouselProps) {
           {/* Heading Text Header */}
           <div className="mb-6 px-4 text-center">
             <h1 className="mb-3 text-3xl font-bold tracking-wide text-white uppercase md:text-4xl">
-              {tabContent.title}
+              {activeTab === "digital"
+                ? t("thousandsOfDigitalProducts")
+                : t("topUpGamesAndServicesInstantly")}
             </h1>
             <p className="mx-auto max-w-3xl text-sm text-gray-300 md:text-base">
-              {tabContent.description}
+              {activeTab === "digital"
+                ? t("discoverAVastSelection")
+                : t("instantlyTopUpYourFavorite")}
             </p>
           </div>
 
