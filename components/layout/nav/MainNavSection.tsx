@@ -265,18 +265,20 @@ export default function MainNavSection() {
           />
         </div>
       </div>
-      {user ? (
-        <div className="flex items-center gap-3 990:hidden">
-          <NotificationButton accountId={user.id} />
-          <ChatInboxButton accountId={user.id} />
-          <CartButton />
-        </div>
-      ) : (
-        <div className="flex items-center gap-3 990:hidden">
-          <CartButton />
-        </div>
-      )}
-      <SignInButton />
+      <div className="flex items-center gap-3 800:gap-5">
+        {user ? (
+          <div className="flex items-center gap-1.5 sm:gap-3 990:hidden">
+            <NotificationButton accountId={user.id} />
+            <ChatInboxButton accountId={user.id} />
+            <CartButton />
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 sm:gap-3 990:hidden">
+            <CartButton />
+          </div>
+        )}
+        <SignInButton />
+      </div>
     </>
   );
 }
