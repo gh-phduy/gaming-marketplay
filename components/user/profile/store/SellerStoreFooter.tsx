@@ -48,7 +48,7 @@ export default function SellerStoreFooter({
         nextLabel={tProduct("next")}
       />
 
-      <div className="flex justify-center lg:justify-end">
+      <div className="hidden justify-end lg:flex">
         <Select
           value={String(pageSize)}
           onValueChange={(value) => {

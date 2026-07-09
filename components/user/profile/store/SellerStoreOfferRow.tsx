@@ -98,10 +98,10 @@ export default function SellerStoreOfferRow({
   }
 
   return (
-    <article className="grid overflow-hidden rounded-md bg-midnight-800 shadow-lg shadow-black/10 lg:grid-cols-[204px_minmax(0,1fr)_178px_64px]">
+    <article className="flex flex-col overflow-hidden rounded-md bg-midnight-800 shadow-lg shadow-black/10 sm:flex-row lg:grid lg:grid-cols-[204px_minmax(0,1fr)_178px_64px]">
       <Link
         href={productHref}
-        className="relative h-[124px] w-full overflow-hidden lg:h-[110px]"
+        className="relative h-[180px] w-full shrink-0 sm:h-auto sm:w-[200px] lg:w-full"
       >
         <Image
           src={offer.data.images?.[0] || "/cyberpunk_2077.jpg"}
@@ -115,38 +115,40 @@ export default function SellerStoreOfferRow({
         </span>
       </Link>
 
-      <div className="flex min-w-0 flex-col justify-center px-5 py-4">
-        <Link
-          href={productHref}
-          className="line-clamp-1 text-lg font-bold transition hover:text-forest-100"
-        >
-          {offer.data.name}
-        </Link>
-        <div className="mt-8 flex flex-wrap items-center gap-5 text-steel-500 lg:mt-7">
-          <KeyRound className="h-5 w-5" />
-          <ShieldCheck className="h-5 w-5" />
-          <Gamepad2 className="h-5 w-5" />
-          <Monitor className="h-5 w-5" />
-          <span className="text-sm">{offer.data.platform}</span>
+      <div className="flex flex-1 flex-col lg:contents">
+        <div className="flex min-w-0 flex-1 flex-col justify-center px-4 py-4 lg:px-5 lg:py-4">
+          <Link
+            href={productHref}
+            className="line-clamp-2 text-base font-bold transition hover:text-forest-100 lg:line-clamp-1 lg:text-lg"
+          >
+            {offer.data.name}
+          </Link>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-steel-500 lg:mt-7 lg:gap-5">
+            <KeyRound className="h-4 w-4 lg:h-5 lg:w-5" />
+            <ShieldCheck className="h-4 w-4 lg:h-5 lg:w-5" />
+            <Gamepad2 className="h-4 w-4 lg:h-5 lg:w-5" />
+            <Monitor className="h-4 w-4 lg:h-5 lg:w-5" />
+            <span className="text-xs lg:text-sm">{offer.data.platform}</span>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center justify-between border-t border-midnight-700 px-5 py-4 lg:block lg:border-t-0 lg:border-l lg:py-8 lg:text-center">
-        <p className="text-xs text-steel-500">{t("price")}:</p>
-        <p className="text-2xl font-bold lg:mt-2">
-          {formatPrice(offer.data.currency, offer.data.price)}
-        </p>
-      </div>
+        <div className="flex items-center justify-between border-t border-midnight-700 px-4 py-3 sm:flex-col sm:justify-center sm:border-t-0 sm:border-l sm:px-5 lg:block lg:border-l-0 lg:py-8 lg:text-center">
+          <p className="text-xs text-steel-500">{t("price")}:</p>
+          <p className="text-xl font-bold sm:mt-1 lg:mt-2 lg:text-2xl">
+            {formatPrice(offer.data.currency, offer.data.price)}
+          </p>
+        </div>
 
-      <Button
-        type="button"
-        variant="ghost"
-        onClick={handleAddToCart}
-        className="h-14 rounded-none border-t border-midnight-700 bg-midnight-700 text-white hover:bg-midnight-650 lg:h-full lg:border-t-0 lg:border-l"
-        aria-label={`Add ${offer.data.name} to cart`}
-      >
-        <ShoppingCart className="h-5 w-5" />
-      </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={handleAddToCart}
+          className="h-12 w-full rounded-none border-t border-midnight-700 bg-midnight-700 text-white hover:bg-midnight-650 sm:h-full sm:w-16 sm:border-t-0 sm:border-l lg:h-full lg:w-full lg:border-t-0"
+          aria-label={`Add ${offer.data.name} to cart`}
+        >
+          <ShoppingCart className="h-5 w-5" />
+        </Button>
+      </div>
     </article>
   );
 }
