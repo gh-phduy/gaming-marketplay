@@ -228,6 +228,7 @@ export default function CheckoutClient() {
     );
   }
 
+  return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 pt-8 lg:flex-row lg:items-start">
       
       {/* ==========================================
