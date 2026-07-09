@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useCart } from "@/contexts/CartContext";
@@ -151,6 +151,8 @@ export function useSuccessCheckout() {
     }
   };
 
+  const syncAttemptedRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (isAuthLoading) return;
 
@@ -174,7 +176,8 @@ export function useSuccessCheckout() {
       : PROCESSED_PAYMENT_INTENT_KEY;
     const processedPaymentIntent = localStorage.getItem(processedPaymentIntentKey);
 
-    if (processedPaymentIntent !== paymentIntent) {
+    if (processedPaymentIntent !== paymentIntent && syncAttemptedRef.current !== paymentIntent) {
+      syncAttemptedRef.current = paymentIntent;
       if (snapshot && user) {
         void saveOrderToDb(snapshot, user);
       } else if (!user) {

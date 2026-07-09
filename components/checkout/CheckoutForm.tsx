@@ -60,6 +60,14 @@ export default function CheckoutForm({
       createdAt: new Date().toISOString(),
     });
 
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setMessage(submitError.message ?? t("unexpectedError"));
+      setIsLoading(false);
+      return;
+    }
+
     // Request payment validation and redirection
     const { error } = await stripe.confirmPayment({
       elements,
