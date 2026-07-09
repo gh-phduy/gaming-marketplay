@@ -32,32 +32,6 @@ export function PaymentFilters() {
           className="h-10 rounded-md border-[#30363d] bg-midnight-750 pl-10 text-gray-300 placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-[#58a6ff]"
         />
       </div>
-
-      {/* Country selection dropdown menu */}
-      <Select defaultValue="vn">
-        <SelectTrigger className="min-w-[180px]">
-          <SelectValue placeholder="Select country" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="vn">
-              <span className="flex items-center gap-2">
-                <span className="text-xl">🇻🇳</span> Viet Nam
-              </span>
-            </SelectItem>
-            <SelectItem value="us">
-              <span className="flex items-center gap-2">
-                <span className="text-xl">🇺🇸</span> USA
-              </span>
-            </SelectItem>
-            <SelectItem value="gb">
-              <span className="flex items-center gap-2">
-                <span className="text-xl">🇬🇧</span> UK
-              </span>
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
     </div>
   );
 }

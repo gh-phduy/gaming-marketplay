@@ -81,8 +81,8 @@ export default function NavBar() {
         <div
           className={`800:px-4, flex h-10 w-full items-center justify-between gap-x-6 py-10 770:justify-center ${isProductPage ? "px-12" : "responsive-nav px-8"}`}
         >
-          {/* Logo - Always visible */}
-          <Link href={ROUTES.HOME} className="shrink-0">
+          {/* Logo - Hide on mobile during checkout to save space */}
+          <Link href={ROUTES.HOME} className={`shrink-0 ${isCheckoutPage ? "hidden md:block" : ""}`}>
             <Image
               src="/Difmark-logo.png"
               alt="Difmark - Digital Game Marketplace"

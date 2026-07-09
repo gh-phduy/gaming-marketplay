@@ -228,13 +228,27 @@ export default function CheckoutClient() {
     );
   }
 
-  return (
-    <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-6 pt-8 lg:grid-cols-3">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 pt-8 lg:flex-row lg:items-start">
       
       {/* ==========================================
-         LEFT COLUMN - Payment Selection & Provider Lists
+         RIGHT COLUMN (Mobile: Top, Desktop: Right)
          ========================================== */}
-      <div className="space-y-4 lg:col-span-2">
+      <div className="order-1 flex w-full flex-col gap-6 lg:order-2 lg:w-[32%]">
+        {/* Product details and Cart summary */}
+        <CheckoutOrderSummary
+          productData={productData}
+          orderItems={orderItems}
+          isDirectTopUpCheckout={isDirectTopUpCheckout}
+        />
+
+        {/* Checkout Billing Total details */}
+        <CheckoutTotalCard amount={amount} />
+      </div>
+
+      {/* ==========================================
+         LEFT COLUMN (Mobile: Bottom, Desktop: Left)
+         ========================================== */}
+      <div className="order-2 w-full space-y-4 lg:order-1 lg:w-[68%]">
         {/* Search bar and Country selections */}
         <PaymentFilters />
 
@@ -263,21 +277,6 @@ export default function CheckoutClient() {
             </Elements>
           )}
         </div>
-      </div>
-
-      {/* ==========================================
-         RIGHT COLUMN - Order Summary Cards
-         ========================================== */}
-      <div className="space-y-6 lg:col-span-1">
-        {/* Checkout Billing Total details */}
-        <CheckoutTotalCard amount={amount} />
-
-        {/* Product details and Cart summary */}
-        <CheckoutOrderSummary
-          productData={productData}
-          orderItems={orderItems}
-          isDirectTopUpCheckout={isDirectTopUpCheckout}
-        />
       </div>
     </div>
   );
