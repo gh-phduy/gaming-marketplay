@@ -36,8 +36,8 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
   return (
     <div
       className={cn(
-        "group relative block overflow-hidden rounded-2xl bg-[#1a1a1f]",
-        "h-[375px] w-[375px] shrink-0 cursor-pointer",
+        "group relative block overflow-hidden rounded-xl sm:rounded-2xl bg-[#1a1a1f]",
+        "w-full aspect-[4/5] sm:aspect-square shrink-0 cursor-pointer shadow-lg",
         className,
       )}
     >
@@ -47,7 +47,7 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
       >
         {/* Game Banner Image & Failure Fallback */}
         {!imgError ? (
-          <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
+          <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-110">
             <Image
               src={game.coverImage}
               alt={game.name}
@@ -61,12 +61,14 @@ export function TopUpGameCard({ game, className }: TopUpGameCardProps) {
           <div className="absolute inset-0 bg-slate-900" />
         )}
 
-        {/* Hover Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        {/* Gradient Overlay for Text Visibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Title Name Label (Slide-in hover transition) */}
-        <div className="absolute right-0 bottom-0 left-0 flex translate-y-full justify-center bg-midnight-800/60 p-5 backdrop-blur-xs transition-transform duration-300 ease-out group-hover:translate-y-0">
-          <span className="text-lg font-semibold text-white">{game.name}</span>
+        {/* Title Name Label (Always visible for mobile UX) */}
+        <div className="absolute right-0 bottom-0 left-0 flex flex-col justify-end p-3 sm:p-5">
+          <span className="line-clamp-2 text-center text-[13px] leading-tight font-bold text-white sm:text-lg">
+            {game.name}
+          </span>
         </div>
       </Link>
     </div>
