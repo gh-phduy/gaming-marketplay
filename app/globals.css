@@ -4,9 +4,9 @@
 
 @theme {
   /* Forest Colors */
-  --color-forest-100: #b8ecb3;
-  --color-forest-500: #46ca43;
-  --color-forest-900: #34583d;
+  --color-forest-100: #d0f0d6;
+  --color-forest-500: #62d676;
+  --color-forest-900: #1b3a27;
 
   /* Steel Colors */
   --color-steel-50: #f6f6f6;
@@ -217,8 +217,8 @@
     --state-focus: 210 100% 50%;
 
     /* Accents & Rating */
-    --accent-green: 119 52% 53%;
-    --accent-green-hover: 119 52% 45%;
+    --accent-green: 130 60% 61%;
+    --accent-green-hover: 130 60% 50%;
     --accent-yellow: 52 95% 73%;
     --accent-blue: 210 100% 50%;
     --accent-red: 0 84% 60%;

@@ -75,7 +75,7 @@ export function WorkspaceInbox({
             {/* Conversation Header recipient stats */}
             <div className="flex items-center justify-between gap-3 border-b border-forest-500/15 bg-black/20 px-4 py-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-forest-500/25 bg-black shadow-[0_0_18px_rgba(70,202,67,0.16)]">
+                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-forest-500/25 bg-black shadow-[0_0_18px_rgba(98,214,118,0.16)]">
                   <Image
                     src={activeConversation.buyerAvatar}
                     alt={activeConversation.buyerName}
@@ -100,7 +100,7 @@ export function WorkspaceInbox({
             </div>
 
             {/* Messages body scrolling segment */}
-            <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 [scrollbar-color:#a3ff12_transparent] [scrollbar-width:thin]">
+            <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 [scrollbar-color:#62d676_transparent] [scrollbar-width:thin]">
               {activeConversation.messages.map((message: any) => {
                 const isSeller = message.senderRole === "seller";
 
@@ -112,7 +112,7 @@ export function WorkspaceInbox({
                     <div
                       className={`max-w-[82%] rounded-2xl px-4 py-3 ${
                         isSeller
-                          ? "rounded-br-md bg-[linear-gradient(135deg,#d8ff38,#31e96e)] text-midnight-950 shadow-[0_0_20px_rgba(70,202,67,0.24)]"
+                          ? "rounded-br-md bg-[linear-gradient(135deg,#d0f0d6,#62d676)] text-midnight-950 shadow-[0_0_20px_rgba(98,214,118,0.24)]"
                           : "rounded-bl-md border border-cyan-300/10 bg-black/35 text-white"
                       }`}
                     >
@@ -159,7 +159,7 @@ export function WorkspaceInbox({
         ) : (
           /* Empty Chat state banner */
           <div className="flex flex-1 flex-col items-center justify-center text-center text-steel-500">
-            <Inbox className="h-12 w-12 text-forest-100/70 drop-shadow-[0_0_12px_rgba(70,202,67,0.45)]" />
+            <Inbox className="h-12 w-12 text-forest-100/70 drop-shadow-[0_0_12px_rgba(98,214,118,0.45)]" />
             <p className="mt-3 text-sm font-bold text-white">
               Select a conversation
             </p>

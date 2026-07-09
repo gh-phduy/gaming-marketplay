@@ -90,9 +90,9 @@ export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
             return (
               <div
                 key={order.id}
-                className="group flex items-center justify-between rounded-lg bg-midnight-750/50 px-4 py-3 ring-1 ring-midnight-650 transition-all hover:bg-midnight-750 hover:ring-midnight-600"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 rounded-lg bg-midnight-750/50 px-4 py-3 ring-1 ring-midnight-650 transition-all duration-300 hover:bg-midnight-750 hover:shadow-md hover:ring-forest-500/30"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   {/* Status Indicator Icon wrap */}
                   <div
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${status.bgColor}`}
@@ -112,7 +112,7 @@ export default function DashboardRecentOrders({ orders }: RecentOrdersProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto pl-11 sm:pl-0">
                   {/* Hidden on mobile responsive text */}
                   <span
                     className={`hidden rounded-full px-2 py-0.5 text-xs font-medium sm:inline-flex ${status.bgColor} ${status.color}`}

@@ -90,7 +90,7 @@ export default function DashboardSecurityCard({
               cy="28"
               r="24"
               fill="none"
-              stroke={securityScore >= 75 ? "#46ca43" : "#f97316"}
+              stroke={securityScore >= 75 ? "#62d676" : "#f97316"}
               strokeWidth="3"
               strokeLinecap="round"
               strokeDasharray={`${(securityScore / 100) * 150.8} 150.8`}

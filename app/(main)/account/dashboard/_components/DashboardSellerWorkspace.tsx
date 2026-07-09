@@ -101,7 +101,7 @@ export default function DashboardSellerWorkspace({
                 <p className="text-xs font-bold tracking-[0.16em] text-forest-500/80 uppercase">
                   {t("sellerRole")}
                 </p>
-                <h2 className="bg-[linear-gradient(90deg,#ffffff,#d8ff38_46%,#21f58c)] bg-clip-text text-xl font-bold text-transparent drop-shadow-[0_0_14px_rgba(70,202,67,0.18)]">
+                <h2 className="bg-[linear-gradient(90deg,#ffffff,#d0f0d6_46%,#62d676)] bg-clip-text text-xl font-bold text-transparent drop-shadow-[0_0_14px_rgba(98,214,118,0.18)]">
                   {t("sellerWorkspace")}
                 </h2>
               </div>
@@ -109,7 +109,7 @@ export default function DashboardSellerWorkspace({
           </div>
 
           {/* Navigation tab links */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
             {workspaceTabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -127,16 +127,16 @@ export default function DashboardSellerWorkspace({
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg px-4 text-xs font-bold transition duration-200 ${
+                  className={`inline-flex h-10 w-full sm:w-auto sm:h-9 items-center justify-center gap-2 rounded-lg px-3 sm:px-4 text-[11px] sm:text-xs font-bold transition duration-200 ${
                     isActive
-                      ? "border border-forest-500/80 bg-transparent text-forest-500 shadow-[0_0_12px_rgba(70,202,67,0.18)]"
+                      ? "border border-forest-500/80 bg-transparent text-forest-500 shadow-[0_0_12px_rgba(98,214,118,0.18)]"
                       : "text-white hover:text-forest-100"
                   }`}
                 >
                   <Icon
                     className={`h-4 w-4 ${
                       isActive
-                        ? "text-forest-500 drop-shadow-[0_0_6px_rgba(70,202,67,0.8)]"
+                        ? "text-forest-500 drop-shadow-[0_0_6px_rgba(98,214,118,0.8)]"
                         : "text-gray-400"
                     }`}
                   />
@@ -152,7 +152,7 @@ export default function DashboardSellerWorkspace({
       <div className="relative z-10 mx-6 mb-6 mt-6 rounded-xl border border-midnight-700/40 bg-midnight-900/30 p-5 overflow-hidden">
         <div className="relative z-10 space-y-5">
           {/* Core metric status blocks */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
             <MetricTile
               icon={Store}
               label={t("activeListings")}
@@ -230,8 +230,8 @@ export default function DashboardSellerWorkspace({
 
       {/* Floating success notice toast notifications */}
       {toastMessage ? (
-        <div className="fixed right-4 bottom-6 left-4 z-[80] mx-auto flex max-w-[520px] items-center gap-3 rounded-lg border border-forest-500/25 bg-[linear-gradient(135deg,rgba(7,12,14,0.96),rgba(29,37,50,0.94))] px-4 py-3 text-sm text-white shadow-[0_0_34px_rgba(70,202,67,0.18)] sm:left-1/2 sm:-translate-x-1/2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(135deg,#d8ff38,#31e96e)] text-midnight-950 shadow-[0_0_18px_rgba(70,202,67,0.38)]">
+        <div className="fixed right-4 bottom-6 left-4 z-[80] mx-auto flex max-w-[520px] items-center gap-3 rounded-lg border border-forest-500/25 bg-[linear-gradient(135deg,rgba(7,12,14,0.96),rgba(29,37,50,0.94))] px-4 py-3 text-sm text-white shadow-[0_0_34px_rgba(98,214,118,0.18)] sm:left-1/2 sm:-translate-x-1/2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(135deg,#d0f0d6,#62d676)] text-midnight-950 shadow-[0_0_18px_rgba(98,214,118,0.38)]">
             <CheckCircle2 className="h-4 w-4" />
           </span>
           {toastMessage}

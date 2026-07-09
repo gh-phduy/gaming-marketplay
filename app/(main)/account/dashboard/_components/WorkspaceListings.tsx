@@ -67,8 +67,8 @@ export function WorkspaceListings({
 
       {/* Empty State warning */}
       {listings.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-forest-500/20 bg-black/20 py-12 text-center shadow-[inset_0_0_28px_rgba(70,202,67,0.05)]">
-          <Store className="mx-auto h-10 w-10 text-forest-100/70 drop-shadow-[0_0_12px_rgba(70,202,67,0.45)]" />
+        <div className="rounded-xl border border-dashed border-forest-500/20 bg-black/20 py-12 text-center shadow-[inset_0_0_28px_rgba(98,214,118,0.05)]">
+          <Store className="mx-auto h-10 w-10 text-forest-100/70 drop-shadow-[0_0_12px_rgba(98,214,118,0.45)]" />
           <p className="mt-3 text-sm font-bold text-white">
             No products yet
           </p>

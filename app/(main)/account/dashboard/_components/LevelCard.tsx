@@ -1,6 +1,6 @@
 "use client";
 
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Coins } from "lucide-react";
 
 /* ==========================================================================
    TYPE DEFINITIONS & INTERFACES
@@ -83,8 +83,8 @@ export default function DashboardLevelCard({
                   x2="1"
                   y2="1"
                 >
-                  <stop offset="0%" stopColor="#46ca43" />
-                  <stop offset="100%" stopColor="#b8ecb3" />
+                  <stop offset="0%" stopColor="#62d676" />
+                  <stop offset="100%" stopColor="#d0f0d6" />
                 </linearGradient>
               </defs>
             </svg>
@@ -112,14 +112,15 @@ export default function DashboardLevelCard({
             </div>
             
             {/* Cashback tier badges */}
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2">
               <span className="text-xs text-steel-500">Cashback:</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-forest-500/20 px-2 py-0.5 text-xs font-bold text-forest-500">
-                🔄 {cashback.currentPercent}%
+              <span className="inline-flex items-center gap-1 rounded-md bg-forest-500/20 px-2 py-0.5 text-xs font-bold text-forest-500">
+                <Coins className="h-3.5 w-3.5" />
+                {cashback.currentPercent}%
               </span>
-              <span className="text-steel-500">·</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-midnight-650 px-2 py-0.5 text-xs font-medium text-steel-500">
-                🔄 {cashback.maxPercent}%
+              <span className="text-steel-600">·</span>
+              <span className="inline-flex items-center gap-1 rounded-md bg-midnight-650 px-2 py-0.5 text-xs font-medium text-steel-400">
+                Max {cashback.maxPercent}%
               </span>
             </div>
           </div>

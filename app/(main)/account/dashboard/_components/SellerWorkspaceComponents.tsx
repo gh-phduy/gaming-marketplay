@@ -25,11 +25,11 @@ export const cyberPanelClass =
 export const cyberInnerPanelClass =
   "rounded-lg border border-midnight-700/60 bg-midnight-850 shadow-[inset_0_0_12px_rgba(0,0,0,0.15)]";
 export const cyberInputClass =
-  "h-11 w-full rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 text-sm text-white transition outline-none hover:border-midnight-500 focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e]";
+  "h-11 w-full rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 text-sm text-white transition outline-none hover:border-midnight-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500";
 export const cyberTextareaClass =
-  "min-h-28 w-full resize-none rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 py-3 text-sm leading-6 text-white transition outline-none hover:border-midnight-500 focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e]";
+  "min-h-28 w-full resize-none rounded-lg border border-midnight-650 bg-midnight-900/60 px-3 py-3 text-sm leading-6 text-white transition outline-none hover:border-midnight-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500";
 export const cyberPrimaryButtonClass =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-[#22c55e] hover:bg-[#15803d] font-bold text-white transition-all duration-200";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-accent-green hover:bg-accent-green-hover font-bold text-white transition-all duration-200";
 export const cyberGhostButtonClass =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-midnight-650 bg-midnight-800/80 font-bold text-gray-200 transition-all duration-200 hover:border-midnight-500 hover:bg-midnight-700 hover:text-white";
 
@@ -76,7 +76,7 @@ export function ProductImage({
  */
 export function statusClasses(status: SellerListingStatus) {
   if (status === "published") {
-    return "border-forest-500/35 bg-forest-500/10/10 text-forest-100 shadow-[0_0_14px_rgba(70,202,67,0.18)]";
+    return "border-forest-500/35 bg-forest-500/10/10 text-forest-100 shadow-[0_0_14px_rgba(98,214,118,0.18)]";
   }
 
   if (status === "paused") {
@@ -167,10 +167,10 @@ export function ListingRow({
 
   return (
     <div
-      className={`${cyberPanelClass} grid gap-4 p-4 transition hover:border-forest-500/30 hover:shadow-[0_0_36px_rgba(70,202,67,0.12)] lg:grid-cols-[1fr_auto] lg:items-center`}
+      className={`${cyberPanelClass} grid gap-4 p-4 transition hover:border-forest-500/30 hover:shadow-[0_0_36px_rgba(98,214,118,0.12)] lg:grid-cols-[1fr_auto] lg:items-center`}
     >
       <div className="flex min-w-0 gap-4">
-        <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-forest-500/20 bg-black shadow-[0_0_18px_rgba(70,202,67,0.12)]">
+        <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-forest-500/20 bg-black shadow-[0_0_18px_rgba(98,214,118,0.12)]">
           <ProductImage
             src={listing.imageUrl}
             alt={listing.title}
@@ -210,7 +210,7 @@ export function ListingRow({
           className={`${cyberGhostButtonClass} h-9 px-3 text-xs`}
         >
           {nextPrimaryStatus === "published" ? (
-            <CheckCircle2 className="h-4 w-4 text-forest-100 drop-shadow-[0_0_8px_rgba(70,202,67,0.8)]" />
+            <CheckCircle2 className="h-4 w-4 text-forest-100 drop-shadow-[0_0_8px_rgba(98,214,118,0.8)]" />
           ) : (
             <Pause className="h-4 w-4 text-yellow-300" />
           )}
@@ -260,11 +260,11 @@ export function ConversationPreview({
       onClick={onSelect}
       className={`flex w-full gap-3 rounded-xl p-3 text-left ring-1 transition ${
         isActive
-          ? "border border-forest-500/25 bg-forest-500/10/10 shadow-[0_0_26px_rgba(70,202,67,0.14)] ring-forest-500/20"
+          ? "border border-forest-500/25 bg-forest-500/10/10 shadow-[0_0_26px_rgba(98,214,118,0.14)] ring-forest-500/20"
           : "border border-forest-500/10 bg-black/25 ring-white/5 hover:border-forest-500/25 hover:bg-forest-500/10/5"
       }`}
     >
-      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-forest-500/25 bg-black shadow-[0_0_18px_rgba(70,202,67,0.16)]">
+      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-forest-500/25 bg-black shadow-[0_0_18px_rgba(98,214,118,0.16)]">
         <Image
           src={conversation.buyerAvatar}
           alt={conversation.buyerName}

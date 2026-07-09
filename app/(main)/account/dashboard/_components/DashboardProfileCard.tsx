@@ -61,65 +61,65 @@ export function DashboardProfileCard({
         
         {/* Left Column: User avatar and localization details */}
         <div className="flex flex-1 flex-col gap-5">
-          <div className="flex items-start gap-5">
+          <div className="flex items-center sm:items-start gap-4 sm:gap-5">
             {/* Avatar thumbnail container */}
-            <div className="group relative h-[112px] w-[112px] shrink-0 cursor-pointer">
+            <div className="group relative h-[88px] w-[88px] sm:h-[112px] sm:w-[112px] shrink-0 cursor-pointer">
               <div className="relative h-full w-full overflow-hidden rounded-full bg-midnight-700 ring-[3px] ring-midnight-650 transition-all group-hover:ring-forest-500/50">
                 <Image
                   src={accountProfile.avatarUrl}
                   alt={accountProfile.username}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  sizes="112px"
+                  sizes="(max-width: 640px) 88px, 112px"
                 />
               </div>
               {/* Verified badge icon */}
               {accountProfile.isVerified && (
-                <span className="absolute right-1 bottom-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-midnight-800 bg-forest-500 shadow-lg shadow-black/20">
-                  <Check className="h-4 w-4 stroke-[3] text-white" />
+                <span className="absolute right-0 bottom-0 sm:right-1 sm:bottom-1 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border-2 border-midnight-800 bg-forest-500 shadow-lg shadow-black/20">
+                  <Check className="h-3 w-3 sm:h-4 sm:w-4 stroke-[3] text-white" />
                 </span>
               )}
             </div>
 
             {/* Username & membership timestamp */}
-            <div className="min-w-0 pt-2">
-              <h1 className="text-xl font-bold tracking-tight">
+            <div className="min-w-0 pt-1 sm:pt-2">
+              <h1 className="truncate text-lg sm:text-xl font-bold tracking-tight">
                 {accountProfile.username}
               </h1>
-              <p className="mt-0.5 text-sm text-steel-400">
+              <p className="mt-0.5 text-xs sm:text-sm text-steel-400">
                 Member since {accountProfile.memberSince}
               </p>
             </div>
           </div>
 
           {/* Localized parameters: Location, Language, Currency */}
-          <div className="space-y-2.5 pl-1 text-sm text-steel-300">
+          <div className="space-y-2.5 pl-0 sm:pl-1 text-xs sm:text-sm text-steel-300">
             <div className="flex items-center gap-3">
-              <span className="w-[72px] text-steel-500">Location:</span>
+              <span className="w-[64px] sm:w-[72px] text-steel-500">Location:</span>
               <div className="flex items-center gap-2">
                 <ProfileFlag code={accountProfile.location.flagCode} />
-                <span className="text-gray-400 font-semibold uppercase">{accountProfile.location.flagCode}</span>
-                <span className="font-semibold text-sky-400">
+                <span className="hidden sm:inline text-gray-400 font-semibold uppercase">{accountProfile.location.flagCode}</span>
+                <span className="font-semibold text-sky-400 truncate max-w-[120px] sm:max-w-none">
                   {accountProfile.location.name}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="w-[72px] text-steel-500">Language:</span>
+              <span className="w-[64px] sm:w-[72px] text-steel-500">Language:</span>
               <div className="flex items-center gap-2">
                 <ProfileFlag code={accountProfile.language.flagCode} />
-                <span className="text-gray-400 font-semibold uppercase">{accountProfile.language.flagCode}</span>
-                <span className="font-semibold text-sky-400">
+                <span className="hidden sm:inline text-gray-400 font-semibold uppercase">{accountProfile.language.flagCode}</span>
+                <span className="font-semibold text-sky-400 truncate max-w-[120px] sm:max-w-none">
                   {accountProfile.language.name}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="w-[72px] text-steel-500">Currency:</span>
+              <span className="w-[64px] sm:w-[72px] text-steel-500">Currency:</span>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-forest-500">{accountProfile.currency.symbol}</span>
-                <span className="font-semibold text-gray-400 uppercase">{accountProfile.currency.code}</span>
-                <span className="font-semibold text-sky-400">
+                <span className="hidden sm:inline font-semibold text-gray-400 uppercase">{accountProfile.currency.code}</span>
+                <span className="font-semibold text-sky-400 truncate max-w-[120px] sm:max-w-none">
                   {accountProfile.currency.name}
                 </span>
               </div>
@@ -129,11 +129,11 @@ export function DashboardProfileCard({
           {/* Link to public seller page */}
           <Link
             href={getSellerProfilePath(accountProfile.username)}
-            className="group mt-1 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-forest-500 transition hover:text-forest-100"
+            className="group mt-1 inline-flex w-fit items-center gap-1.5 text-xs sm:text-sm font-medium text-forest-500 transition hover:text-forest-100"
           >
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             Public profile
-            <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 

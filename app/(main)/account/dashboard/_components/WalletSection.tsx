@@ -70,8 +70,8 @@ export default function DashboardWalletSection({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         
         {/* Available Balance card */}
-        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all hover:ring-forest-500/30">
-          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-forest-500/10 hover:ring-forest-500/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           <div className="relative">
             <p className="text-xs text-steel-500">{t("availableBalance")}</p>
             <p className="mt-2 text-2xl font-bold text-white">
@@ -88,8 +88,8 @@ export default function DashboardWalletSection({
         </div>
 
         {/* Pending Balance card */}
-        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all hover:ring-forest-500/30">
-          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-forest-500/10 hover:ring-forest-500/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           <div className="relative">
             <p className="text-xs text-steel-500">{t("pendingBalance")}</p>
             <p className="mt-2 text-2xl font-bold text-white">
@@ -107,8 +107,8 @@ export default function DashboardWalletSection({
         </div>
 
         {/* Bonus Balance card */}
-        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all hover:ring-forest-500/30">
-          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="group relative overflow-hidden rounded-xl bg-midnight-800 p-5 ring-1 ring-midnight-650 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-forest-500/10 hover:ring-forest-500/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-forest-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           <div className="relative">
             <p className="text-xs text-steel-500">{t("bonusBalance")}</p>
             <p className="mt-2 text-2xl font-bold text-white">
