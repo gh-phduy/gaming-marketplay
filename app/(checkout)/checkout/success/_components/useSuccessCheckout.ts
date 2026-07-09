@@ -113,10 +113,18 @@ export function useSuccessCheckout() {
         .insert(orderRows);
 
       if (orderError) {
-        console.error("Error writing order to Supabase:", orderError);
-        setDbError(`Failed to save transaction: ${orderError.message}`);
-        setIsSyncing(false);
-        return;
+        // If it's a unique constraint violation, the order was already saved (e.g. from a strict-mode double execution)
+        if (
+          orderError.code === "23505" ||
+          orderError.message?.includes("duplicate key value violates unique constraint")
+        ) {
+          console.log("Order already exists in database. Treating as success.");
+        } else {
+          console.error("Error writing order to Supabase:", orderError);
+          setDbError(`Failed to save transaction: ${orderError.message}`);
+          setIsSyncing(false);
+          return;
+        }
       }
 
       console.log("Successfully recorded order in database");
