@@ -100,9 +100,9 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
       </div>
 
       {/* Search Input & Category Dropdown Bar */}
-      <div className="mb-8 flex w-full max-w-[1070px] items-center rounded-lg bg-midnight-700 p-1">
+      <div className="mb-8 flex w-full max-w-[1070px] flex-col sm:flex-row items-center gap-2 rounded-lg bg-midnight-700 p-1 sm:gap-0">
         {/* Search input field */}
-        <div className="flex h-[44px] flex-1 items-center gap-3 rounded-lg bg-midnight-700 px-4">
+        <div className="flex h-[44px] w-full flex-1 items-center gap-3 rounded-lg bg-midnight-700 px-4 sm:w-auto">
           <IoSearch size={24} className="shrink-0 text-steel-500" />
           <input
             type="text"
@@ -114,23 +114,22 @@ export function DirectTopUpClient({ category }: DirectTopUpClientProps) {
         </div>
 
         {/* Category switcher */}
-        <FilterDropdown
-          key={activeCategory}
-          options={translatedOptions}
-          defaultValue={activeCategory}
-          headerIcon={<LayoutGrid size={16} />}
-          width="w-[220px]"
-          onChange={setActiveCategory}
-        />
+        <div className="w-full sm:w-auto">
+          <FilterDropdown
+            key={activeCategory}
+            options={translatedOptions}
+            defaultValue={activeCategory}
+            headerIcon={<LayoutGrid size={16} />}
+            width="w-full sm:w-[220px]"
+            onChange={setActiveCategory}
+          />
+        </div>
       </div>
 
       {/* Filtered Games Grid / No-results Panel */}
       {filteredGames.length > 0 ? (
         <div className="flex w-full justify-center">
-          <div
-            className="grid gap-4"
-            style={{ gridTemplateColumns: "repeat(4, 375px)" }}
-          >
+          <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {filteredGames.map((game) => (
               <TopUpGameCard key={game.id} game={game} />
             ))}

@@ -75,7 +75,7 @@ export function LanguageCurrencySelector({
         </PopoverTrigger>
         
         <PopoverContent
-          className="w-[280px] border-white/10 bg-[#1c243a] p-3 text-white"
+          className="max-h-[300px] w-[280px] overflow-y-auto border-white/10 bg-[#1c243a] p-3 text-white"
           side="bottom"
           align="start"
         >
@@ -117,7 +117,7 @@ export function LanguageCurrencySelector({
         </PopoverTrigger>
         
         <PopoverContent
-          className="w-[280px] border-white/10 bg-[#1c243a] p-3 text-white"
+          className="max-h-[300px] w-[280px] overflow-y-auto border-white/10 bg-[#1c243a] p-3 text-white"
           side="bottom"
           align="end"
         >
