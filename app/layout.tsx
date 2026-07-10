@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="flex min-h-screen flex-col bg-midnight-850 text-dm-text-primary antialiased">
+      <body className="flex min-h-screen flex-col overflow-x-hidden bg-midnight-850 text-dm-text-primary antialiased">
         <CartProvider>
           {/* Skip to main content link for accessibility */}
           <a href="#main-content" className="skip-link">
