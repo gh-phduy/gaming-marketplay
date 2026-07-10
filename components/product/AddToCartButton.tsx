@@ -7,7 +7,7 @@
 
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { BsPersonFillCheck, BsBasket3Fill } from "react-icons/bs";
 import { useTranslations } from "@/hooks/useTranslations";
@@ -68,14 +68,37 @@ export default function AddToCartCard({
 }: AddToCartCardProps) {
   const t = useTranslations("product");
   const [isHovered, setIsHovered] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
+  const isHoveredRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = useCallback(() => {
-    setIsHovered(true);
-    videoRef.current?.play();
+    // Only proceed if the device has a real mouse (prevents touch/tap from triggering hover)
+    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!hasMouse) return;
+
+    isHoveredRef.current = true;
+    
+    if (!videoSrc) {
+      // Trigger video load
+      setVideoSrc(previewVideo);
+    } else if (videoRef.current && videoRef.current.readyState >= 3) {
+      // If already loaded, play immediately
+      setIsHovered(true);
+      videoRef.current.play().catch(() => {});
+    }
+  }, [videoSrc, previewVideo]);
+
+  const handleCanPlay = useCallback(() => {
+    // Only play and animate if the mouse is still hovering
+    if (isHoveredRef.current && videoRef.current) {
+      setIsHovered(true);
+      videoRef.current.play().catch(() => {});
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    isHoveredRef.current = false;
     setIsHovered(false);
     if (videoRef.current) {
       videoRef.current.pause();
@@ -121,10 +144,12 @@ export default function AddToCartCard({
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
               isHovered ? "opacity-100" : "opacity-0"
             }`}
-            src={previewVideo}
+            src={videoSrc}
             muted
             loop
             playsInline
+            preload="none"
+            onCanPlay={handleCanPlay}
             aria-hidden="true"
           />
 

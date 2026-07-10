@@ -72,8 +72,10 @@ export default function UpcomingGameItem({
   const t = useTranslations("home");
   // State
   const [isHovered, setIsHovered] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
 
   // Refs
+  const isHoveredRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -133,12 +135,30 @@ export default function UpcomingGameItem({
 
   // Event handlers
   const handleMouseEnter = useCallback(() => {
-    setIsHovered(true);
-    videoRef.current?.play();
-    timelineRef.current?.play();
+    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!hasMouse) return;
+
+    isHoveredRef.current = true;
+
+    if (!videoSrc) {
+      setVideoSrc(previewVideo);
+    } else if (videoRef.current && videoRef.current.readyState >= 3) {
+      setIsHovered(true);
+      videoRef.current.play().catch(() => {});
+      timelineRef.current?.play();
+    }
+  }, [videoSrc, previewVideo]);
+
+  const handleCanPlay = useCallback(() => {
+    if (isHoveredRef.current && videoRef.current) {
+      setIsHovered(true);
+      videoRef.current.play().catch(() => {});
+      timelineRef.current?.play();
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    isHoveredRef.current = false;
     setIsHovered(false);
     if (videoRef.current) {
       videoRef.current.pause();
@@ -189,10 +209,12 @@ export default function UpcomingGameItem({
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover opacity-0"
-            src={previewVideo}
+            src={videoSrc}
             muted
             loop
             playsInline
+            preload="none"
+            onCanPlay={handleCanPlay}
             aria-hidden="true"
           />
 

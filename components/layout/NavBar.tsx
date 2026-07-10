@@ -79,7 +79,7 @@ export default function NavBar() {
         className={`flex w-full translate-y-0 justify-center gap-x-3 bg-brand/80 shadow-2xl backdrop-blur-xl transition-all duration-700 ease-out`}
       >
         <div
-          className={`800:px-4, flex h-10 w-full items-center justify-between gap-x-6 py-10 770:justify-center ${isProductPage ? "px-12" : "responsive-nav px-8"}`}
+          className={`flex h-16 w-full items-center justify-between gap-x-4 px-4 770:justify-center 800:px-8 800:gap-x-6 ${isProductPage ? "md:px-12" : "responsive-nav"}`}
         >
           {/* Logo - Hide on mobile during checkout to save space */}
           <Link href={ROUTES.HOME} className={`shrink-0 ${isCheckoutPage ? "hidden md:block" : ""}`}>
