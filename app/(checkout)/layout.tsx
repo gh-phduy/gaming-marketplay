@@ -13,7 +13,7 @@ export default function CheckoutLayout({
         <Suspense fallback={<div className="h-16 w-full bg-transparent" />}>
           <NavBar />
         </Suspense>
-        <div className="flex flex-1 flex-col items-center pt-20">
+        <div className="flex flex-1 flex-col items-center pt-16 w-full overflow-x-hidden">
           {children}
         </div>
         {/* No Footer here as per implementation plan for checkout */}

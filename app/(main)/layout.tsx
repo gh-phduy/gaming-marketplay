@@ -12,7 +12,7 @@ export default function MainLayout({
     <>
       <AppProviders>
         <NavBar />
-        <div className="flex flex-1 flex-col items-center pt-20">
+        <div className="flex flex-1 flex-col items-center pt-16 w-full overflow-x-hidden">
           {children}
         </div>
         <FloatingChatWidget />
