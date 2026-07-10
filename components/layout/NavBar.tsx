@@ -56,14 +56,16 @@ export default function NavBar() {
           className={`flex h-16 w-full items-center justify-between gap-x-4 px-4 770:justify-center 800:px-8 800:gap-x-6 ${isProductPage ? "md:px-12" : "responsive-nav"}`}
         >
           {/* Logo - Hide on mobile during checkout to save space */}
-          <Link href={ROUTES.HOME} className={`shrink-0 ${isCheckoutPage ? "hidden md:block" : ""}`}>
+          <Link
+            href={ROUTES.HOME}
+            className={`relative block h-[30px] w-[130px] shrink-0 ${isCheckoutPage ? "hidden md:block" : ""}`}
+          >
             <Image
               src="/Difmark-logo.png"
               alt="Difmark - Digital Game Marketplace"
-              width={130}
-              height={30}
+              fill
               priority
-              className="h-[30px] w-[130px]"
+              className="object-contain"
             />
           </Link>
 
