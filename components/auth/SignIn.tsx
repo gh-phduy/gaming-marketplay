@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Check, X, User } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { PiSignInBold as SignInIcon } from "react-icons/pi";
 
 import {
   Dialog,
@@ -99,7 +100,7 @@ export default function SignIn() {
           onClick={() => setIsOpen(true)}
           className="flex cursor-pointer items-center gap-x-2 border-none bg-transparent px-2 py-4 text-dm-text-secondary outline-hidden transition-colors duration-500 hover:text-dm-text-primary"
         >
-          <User size={24} aria-hidden="true" />
+          <SignInIcon size={24} aria-hidden="true" />
           <span className="hidden 770:block">{t("signIn", "SIGN IN").toUpperCase()}</span>
         </DialogTrigger>
 
