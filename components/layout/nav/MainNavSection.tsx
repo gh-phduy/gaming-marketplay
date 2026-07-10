@@ -10,6 +10,7 @@ import SearchButton from "./SearchButton";
 import ChatInboxButton from "./ChatInboxButton";
 import { Separator } from "@base-ui/react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 const CategoriesDropdown = dynamic(() => import("./CategoriesDropdown"));
 const CartButton = dynamic(() => import("./CartButton"));
@@ -17,14 +18,12 @@ const NotificationButton = dynamic(() => import("./NotificationButton"));
 const SignInButton = dynamic(() => import("./SignInButton"));
 
 interface ListingProduct {
-  id: number;
+  id: string;
   title: string;
   price: number;
   image: string;
   platform: string | string[];
 }
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function MainNavSection() {
   const router = useRouter();
@@ -35,28 +34,61 @@ export default function MainNavSection() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [hasLoadedProducts, setHasLoadedProducts] = useState(false);
   const [products, setProducts] = useState<ListingProduct[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const loadListingProducts = async () => {
-    if (hasLoadedProducts) return;
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/listing-products`);
-      if (!response.ok) {
-        setProducts([]);
-        setHasLoadedProducts(true);
-        return;
-      }
-
-      const data = await response.json();
-      setProducts(Array.isArray(data.products) ? data.products : []);
-    } catch {
+  useEffect(() => {
+    const trimmed = searchValue.trim();
+    if (!trimmed) {
       setProducts([]);
-    } finally {
-      setHasLoadedProducts(true);
+      setIsSearching(false);
+      return;
     }
-  };
+
+    setIsSearching(true);
+    let active = true;
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select("id, title, price, image_url, platform")
+          .eq("status", "published")
+          .ilike("title", `%${trimmed}%`)
+          .limit(20);
+
+        if (!active) return;
+
+        if (error) {
+          console.error("Error searching products from Supabase:", error);
+          setProducts([]);
+          return;
+        }
+
+        const mapped = (data || []).map((row: any) => ({
+          id: row.id,
+          title: row.title,
+          price: Number(row.price),
+          image: row.image_url || "/cyberpunk_2077.jpg",
+          platform: row.platform || "PC",
+        }));
+
+        setProducts(mapped);
+      } catch (err) {
+        console.error("Failed to search products:", err);
+        if (active) setProducts([]);
+      } finally {
+        if (active) {
+          setIsSearching(false);
+        }
+      }
+    }, 300);
+
+    return () => {
+      active = false;
+      clearTimeout(delayDebounce);
+    };
+  }, [searchValue]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,7 +137,6 @@ export default function MainNavSection() {
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
-    void loadListingProducts();
   };
 
   const handleSearchBlur = () => {
@@ -119,17 +150,7 @@ export default function MainNavSection() {
   };
 
   const handleSearchSubmit = () => {
-    if (!hasLoadedProducts) {
-      void loadListingProducts();
-    }
-
     if (!normalizedQuery) return;
-
-    const firstMatch = suggestedProducts[0];
-    if (firstMatch) {
-      handleSelectProduct(firstMatch);
-      return;
-    }
 
     router.push(`/product?name=${encodeURIComponent(searchValue.trim())}`);
     setIsSearchFocused(false);
@@ -170,48 +191,70 @@ export default function MainNavSection() {
             <SearchButton onClick={handleSearchSubmit} />
 
             {shouldShowSuggestions && (
-              <div className="absolute top-[calc(100%+8px)] right-0 left-0 z-[80] overflow-hidden rounded-xl border border-[#3b4758] bg-[#1d2634]/95 shadow-2xl backdrop-blur-sm">
-                <div className="max-h-[500px] space-y-2 overflow-y-auto p-2">
-                  {suggestedProducts.length > 0 ? (
+              <div className="absolute top-[calc(100%+8px)] right-0 left-0 z-[80] overflow-hidden rounded-xl border border-[#2a3547] bg-[#151c28] shadow-2xl backdrop-blur-sm">
+                <div className="max-h-[440px] space-y-2 overflow-y-auto p-2 custom-scrollbar">
+                  {isSearching ? (
+                    <div className="space-y-2">
+                      {[...Array(3)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex w-full items-stretch overflow-hidden rounded-lg bg-[#1e2633] border border-[#2a3547]/10 h-[72px]"
+                        >
+                          <div className="h-full w-[128px] shrink-0 animate-pulse bg-slate-700/50" />
+                          <div className="flex-1 flex items-center justify-between px-3.5">
+                            <div className="space-y-2 flex-1 min-w-0 pr-4">
+                              <div className="h-2 w-16 animate-pulse rounded bg-slate-700/50" />
+                              <div className="h-4 w-40 animate-pulse rounded bg-slate-700/50" />
+                              <div className="h-2 w-24 animate-pulse rounded bg-slate-700/50" />
+                            </div>
+                            <div className="h-full w-[116px] shrink-0 flex flex-col items-center justify-center gap-1.5 bg-[#252e3e]/50 px-3">
+                              <div className="h-2.5 w-8 animate-pulse rounded bg-slate-700/50" />
+                              <div className="h-5 w-16 animate-pulse rounded bg-slate-700/50" />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : suggestedProducts.length > 0 ? (
                     suggestedProducts.map((product) => (
                       <button
                         key={product.id}
                         type="button"
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={() => handleSelectProduct(product)}
-                        className="flex w-full overflow-hidden rounded-lg bg-[#3b4658] text-left transition-colors hover:bg-[#465266]"
+                        className="group flex w-full items-stretch overflow-hidden rounded-lg bg-[#1e2633] border border-[#2a3547]/30 text-left transition-colors hover:bg-[#283244]"
                       >
-                        <div className="relative h-[88px] w-[180px] shrink-0">
+                        <div className="relative h-[72px] w-[128px] shrink-0 overflow-hidden">
                           <Image
                             src={product.image}
                             alt={product.title}
                             fill
-                            sizes="180px"
+                            sizes="128px"
                             className="object-cover"
                           />
                         </div>
 
                         <div className="flex min-w-0 flex-1 items-center justify-between">
-                          <div className="min-w-0 px-4 py-2">
-                            <p className="text-sm text-gray-300">
+                          <div className="min-w-0 px-3.5 py-1">
+                            <p className="text-[10px] font-semibold tracking-wider text-gray-400 uppercase">
                               Offers available
                             </p>
-                            <p className="truncate text-3xl leading-tight font-semibold text-white">
+                            <p className="truncate text-base font-bold text-white mt-0.5">
                               {product.title}
                             </p>
-                            <p className="truncate text-sm text-gray-300">
+                            <p className="truncate text-xs text-gray-400 mt-0.5 lowercase">
                               {Array.isArray(product.platform)
                                 ? product.platform.join(" / ")
                                 : product.platform}
                             </p>
                           </div>
 
-                          <div className="flex h-full w-[132px] shrink-0 flex-col items-center justify-center gap-1 bg-[#465166] px-3">
-                            <div className="flex items-center gap-1 text-sm text-gray-300">
+                          <div className="flex h-full w-[116px] shrink-0 flex-col items-center justify-center bg-[#252e3e] px-3 transition-colors group-hover:bg-[#303e54]">
+                            <div className="flex items-center gap-1 text-[10px] text-gray-400">
                               <Tag className="h-3 w-3" />
                               <span>from</span>
                             </div>
-                            <p className="text-4xl leading-none font-semibold text-white">
+                            <p className="text-lg font-bold text-white mt-0.5">
                               $ {product.price.toFixed(2)}
                             </p>
                           </div>
@@ -219,19 +262,19 @@ export default function MainNavSection() {
                       </button>
                     ))
                   ) : (
-                    <div className="rounded-lg bg-[#3b4658] px-4 py-6 text-center text-sm text-gray-300">
+                    <div className="rounded-lg bg-[#1e2633] border border-[#2a3547]/30 px-4 py-6 text-center text-sm text-gray-400">
                       No results found for "{searchValue.trim()}"
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center justify-center gap-6 border-t border-[#3b4758] bg-[#1f2a3a] px-4 py-3 text-sm">
+                <div className="flex items-center justify-center gap-6 border-t border-[#2a3547] bg-[#111622] px-4 py-2.5 text-xs">
                   <span className="text-gray-400">
                     Results found : {filteredProducts.length}
                   </span>
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 font-semibold text-gray-100 hover:text-white"
+                    className="inline-flex items-center gap-1 font-semibold text-gray-200 hover:text-white"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => {
                       router.push(
@@ -241,7 +284,7 @@ export default function MainNavSection() {
                     }}
                   >
                     View All
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>

@@ -144,7 +144,7 @@ export default async function BuyCheapPage({
       </Suspense>
 
       <Suspense fallback={<Skeleton className="h-[300px] w-full rounded-lg" />}>
-        <SellerList />
+        <SellerList sellerId={productData?.seller?.id} />
       </Suspense>
 
       <Pagination />

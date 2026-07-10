@@ -4,9 +4,9 @@ import { SellerOffer } from "./SellerRow";
 import SellerListClient from "./SellerListClient";
 import { getTranslations } from "next-intl/server";
 
-async function getSellers(): Promise<SellerOffer[] | null> {
+async function getSellers(sellerId?: string): Promise<SellerOffer[] | null> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("products")
       .select(`
         *,
@@ -19,6 +19,12 @@ async function getSellers(): Promise<SellerOffer[] | null> {
         )
       `)
       .eq("status", "published");
+
+    if (sellerId) {
+      query = query.eq("seller_id", sellerId);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Error fetching sellers from Supabase:", error);
@@ -52,8 +58,12 @@ async function getSellers(): Promise<SellerOffer[] | null> {
   }
 }
 
-export default async function SellerList() {
-  const products = await getSellers();
+interface SellerListProps {
+  sellerId?: string;
+}
+
+export default async function SellerList({ sellerId }: SellerListProps) {
+  const products = await getSellers(sellerId);
   const t = await getTranslations("product");
 
   if (products === null) {
@@ -69,3 +79,4 @@ export default async function SellerList() {
 
   return <SellerListClient initialOffers={products} />;
 }
+

@@ -364,7 +364,7 @@ export function useProductDetail() {
         case "name-asc":
           return left.product.title.localeCompare(right.product.title);
         case "name-desc":
-          return right.product.title.localeCompare(right.product.title);
+          return right.product.title.localeCompare(left.product.title);
         case "price-asc":
           return left.product.price - right.product.price;
         case "price-desc":
