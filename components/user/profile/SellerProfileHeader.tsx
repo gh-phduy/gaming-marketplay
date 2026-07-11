@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import {
   BadgeCheck,
   Banknote,

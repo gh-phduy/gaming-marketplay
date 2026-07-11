@@ -11,7 +11,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 // Social Icons
 import { BiLogoFacebook } from "react-icons/bi";

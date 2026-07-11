@@ -10,7 +10,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { BsPersonFillCheck, BsBasket3Fill } from "react-icons/bs";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

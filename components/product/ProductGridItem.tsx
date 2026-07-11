@@ -7,7 +7,7 @@ import { HiComputerDesktop } from "react-icons/hi2";
 import { SiNintendoswitch } from "react-icons/si";
 import { FaPlaystation } from "react-icons/fa";
 import { BsXbox } from "react-icons/bs";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

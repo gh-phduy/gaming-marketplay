@@ -9,7 +9,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 const selectTriggerClassName =
   "h-11 w-full rounded-md border border-midnight-700 bg-midnight-800 px-4 text-base text-white shadow-none transition-colors hover:bg-midnight-750 focus-visible:border-forest-500 focus-visible:ring-2 focus-visible:ring-forest-500/20 data-[popup-open]:border-midnight-650 data-[popup-open]:bg-midnight-700 [&>svg:last-child]:ml-auto [&>svg:last-child]:text-white";

@@ -7,7 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import {
   saveCheckoutOrderSnapshot,
   type CheckoutOrderItem,

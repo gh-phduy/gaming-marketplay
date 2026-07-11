@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface Product {
   id: number;

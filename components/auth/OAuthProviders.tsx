@@ -4,7 +4,7 @@ import { MdEmail } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import SocialButton from "./SocialButton";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface OAuthProvidersProps {
   onEmailClick: () => void;
@@ -37,7 +37,7 @@ export default function OAuthProviders({ onEmailClick, onShowToast }: OAuthProvi
   // Handles clicks on currently unavailable third-party login providers
   const handleUnavailableClick = () => {
     onShowToast(
-      t("providerUnavailable", "Currently only Email and Google login methods are active."),
+      t("providerUnavailable"),
       "warning"
     );
   };

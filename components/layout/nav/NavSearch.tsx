@@ -1,4 +1,4 @@
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface NavSearchProps {
   value: string;
@@ -39,8 +39,8 @@ export default function NavSearch({
           className="pointer-events-none absolute top-1/2 left-4 flex -translate-y-1/2 items-center gap-x-1"
           aria-hidden="true"
         >
-          {t("searchBy", "Search by")}
-          <span className="font-bold">{t("product", "Product")}</span>
+          {t("searchBy")}
+          <span className="font-bold">{t("product")}</span>
         </div>
       )}
     </div>

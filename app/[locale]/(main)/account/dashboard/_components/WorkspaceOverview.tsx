@@ -11,7 +11,7 @@ import {
   ConversationPreview,
 } from "./SellerWorkspaceComponents";
 import type { WorkspaceTab } from "./useSellerWorkspace";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ==========================================================================
    TYPE DEFINITIONS & INTERFACES

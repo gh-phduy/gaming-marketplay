@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { MessageSquareReply, Star, ThumbsDown, ThumbsUp } from "lucide-react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import type { SellerProfile, SellerReview } from "../seller-profile.data";
 
 interface SellerReviewsPanelProps {

@@ -7,7 +7,7 @@
 "use client";
 
 import { CategoryCard } from "../shared/CategoryCard";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    MAIN COMPONENT

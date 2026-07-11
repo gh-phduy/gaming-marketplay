@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LuClock3 } from "react-icons/lu";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

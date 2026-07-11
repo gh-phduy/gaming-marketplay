@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface TextImageProps {
   text: string;
@@ -23,17 +23,19 @@ export function CanvasTextImage({
   let displayText = text;
   const upperText = text.toUpperCase();
   if (upperText === "POPULAR GAMES") {
-    displayText = t("popularGames", text);
+    displayText = t("popularGames");
   } else if (upperText === "POPULAR SELLERS") {
-    displayText = t("popularSellers", text);
+    displayText = t("popularSellers");
   } else if (upperText === "UPCOMING GAMES") {
-    displayText = t("upcomingGames", text);
+    displayText = t("upcomingGames");
   } else if (upperText === "NEW ON DIFMARK") {
-    displayText = t("newOnDifmark", text);
+    displayText = t("newOnDifmark");
   } else if (upperText === "WEEKLY CHART") {
-    displayText = t("weeklyChart", text);
+    displayText = t("weeklyChart");
+  } else if (upperText === "BEST NEW GAMES") {
+    displayText = t("bestNewGames");
   } else if (upperText.includes("UNDER")) {
-    displayText = t("under100", text);
+    displayText = t("under100");
   }
 
   React.useEffect(() => {

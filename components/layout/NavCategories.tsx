@@ -25,7 +25,7 @@ import {
   MdComputer,
   MdInventory2,
 } from "react-icons/md";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

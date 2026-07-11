@@ -5,7 +5,7 @@ import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
 import PopularGameCard from "./PopularGameCard";
 import PopularGameCardSkeleton from "./PopularGameCardSkeleton";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 import { supabase } from "@/lib/supabase";
 

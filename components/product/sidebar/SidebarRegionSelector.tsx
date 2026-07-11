@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export default function SidebarRegionSelector() {
   const t = useTranslations("product");

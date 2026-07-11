@@ -16,7 +16,7 @@ import SectionHeader from "../shared/SectionHeader";
 import { ImStarFull } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 import { supabase } from "@/lib/supabase";
 

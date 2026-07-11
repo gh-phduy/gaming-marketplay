@@ -8,4 +8,3 @@ export { useDebounce } from "./useDebounce";
 export { useLocalStorage } from "./useLocalStorage";
 export { useMediaQuery, useBreakpoint } from "./useMediaQuery";
 export { useProduct } from "./useProduct";
-export { useTranslations } from "./useTranslations";

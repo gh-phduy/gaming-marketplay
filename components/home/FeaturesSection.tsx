@@ -11,7 +11,7 @@ import Image from "next/image";
 import { HiShieldCheck } from "react-icons/hi";
 import { FaCreditCard } from "react-icons/fa";
 import { IoPerson } from "react-icons/io5";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    CONSTANTS

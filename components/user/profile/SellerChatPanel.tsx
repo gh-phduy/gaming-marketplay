@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 import type { SellerProfile } from "../seller-profile.data";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerChatPanelProps {
   profile: SellerProfile;

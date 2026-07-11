@@ -19,7 +19,7 @@ import OAuthProviders from "./OAuthProviders";
 import EmailLoginForm from "./EmailLoginForm";
 import EmailSignUpForm from "./EmailSignUpForm";
 
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 type AuthView = "providers" | "email-login" | "email-signup";
 
@@ -106,7 +106,7 @@ export default function SignIn() {
           className="flex cursor-pointer items-center gap-x-2 border-none bg-transparent px-2 py-4 text-dm-text-secondary outline-hidden transition-colors duration-500 hover:text-dm-text-primary"
         >
           <SignInIcon size={24} aria-hidden="true" />
-          <span className="hidden 770:block">{t("signIn", "SIGN IN").toUpperCase()}</span>
+          <span className="hidden 770:block">{t("signIn").toUpperCase()}</span>
         </DialogTrigger>
 
         {/* Modal Dialog Content Panel */}

@@ -8,7 +8,7 @@ import { ProductApiResponse } from "@/types/api-product";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface ProductOverviewProps {
   data: ProductApiResponse;

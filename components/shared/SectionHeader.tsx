@@ -39,10 +39,10 @@ export default function SectionHeader({
 
       <Link
         href={viewAllHref}
-        className="flex items-center justify-center gap-x-3 text-[#C0C3C9] transition-colors hover:text-white"
+        className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-[#C0C3C9] transition-colors hover:text-white"
         aria-label={viewAllAriaLabel || `View all ${headingText.toLowerCase()}`}
       >
-        <span className="mr-2">{actionText}</span>
+        <span>{actionText}</span>
         <IoIosArrowForward aria-hidden="true" />
       </Link>
     </div>

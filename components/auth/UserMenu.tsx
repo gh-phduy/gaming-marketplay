@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Check, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserMenuHeader } from "./userMenu/UserMenuHeader";
 import { UserMenuContent } from "./userMenu/UserMenuContent";

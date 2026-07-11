@@ -17,6 +17,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   useSuccessCheckout,
   formatCurrency,
@@ -41,9 +42,101 @@ export default function SuccessClient() {
 
   if (status === null) {
     return (
-      <div className="flex h-[60vh] w-full items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-[#62d676]" />
-      </div>
+      <main className="relative mx-auto w-full max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
+        <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-[#1f2937] shadow-[0_24px_70px_rgba(0,0,0,0.28)]">
+          <div className="border-b border-white/[0.06] bg-[linear-gradient(135deg,rgba(98,214,118,0.16),rgba(31,41,55,0.3)_42%,rgba(51,65,85,0.38))] px-6 py-8 sm:px-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex min-w-0 gap-5">
+                <Skeleton className="h-16 w-16 shrink-0 rounded-lg bg-[#62d676]/20" />
+                <div className="min-w-0 flex flex-col justify-center space-y-2">
+                  <Skeleton className="h-4 w-32 bg-white/20" />
+                  <Skeleton className="h-8 w-64 bg-white/20" />
+                  <Skeleton className="mt-1 h-4 w-80 hidden bg-white/10 sm:block" />
+                </div>
+              </div>
+              <div className="space-y-2 rounded-lg border border-white/[0.06] bg-[#151c26]/70 p-4 lg:min-w-[260px]">
+                <Skeleton className="h-4 w-24 bg-white/20" />
+                <Skeleton className="h-8 w-32 bg-white/20" />
+                <Skeleton className="h-4 w-20 bg-white/10" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between gap-4">
+                <Skeleton className="h-7 w-40 bg-white/20" />
+                <Skeleton className="h-6 w-24 rounded-full bg-[#62d676]/20" />
+              </div>
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 rounded-lg border border-white/[0.05] bg-[#151c26]/80 p-3"
+                  >
+                    <Skeleton className="h-24 w-36 shrink-0 rounded-md bg-[#0f1722]/50" />
+                    <div className="flex min-w-0 flex-1 flex-col justify-center space-y-2">
+                      <Skeleton className="h-5 w-48 bg-white/20" />
+                      <Skeleton className="h-4 w-24 bg-white/10" />
+                      <div className="mt-2 flex gap-3">
+                        <Skeleton className="h-7 w-24 bg-white/10" />
+                        <Skeleton className="h-6 w-16 bg-white/20" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <aside className="space-y-4">
+              <div className="space-y-4 rounded-lg border border-white/[0.06] bg-[#151c26]/80 p-5">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-5 w-5 bg-[#62d676]/20" />
+                  <Skeleton className="h-6 w-32 bg-white/20" />
+                </div>
+                <div className="space-y-4 pt-1">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24 bg-white/10" />
+                    <Skeleton className="h-10 w-full rounded-md bg-[#222c3b]" />
+                  </div>
+                  <div className="flex justify-between border-t border-white/[0.06] pt-4">
+                    <Skeleton className="h-4 w-16 bg-white/10" />
+                    <Skeleton className="h-4 w-20 bg-[#62d676]/20" />
+                  </div>
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-16 bg-white/10" />
+                    <Skeleton className="h-4 w-16 bg-white/20" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 rounded-lg border border-white/[0.06] bg-[#151c26]/80 p-5">
+                <div className="flex gap-3">
+                  <Skeleton className="h-5 w-5 rounded-full bg-[#62d676]/20" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-32 bg-white/20" />
+                    <Skeleton className="h-4 w-full bg-white/10" />
+                    <Skeleton className="h-4 w-2/3 bg-white/10" />
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Skeleton className="h-5 w-5 rounded-full bg-[#62d676]/20" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-32 bg-white/20" />
+                    <Skeleton className="h-4 w-full bg-white/10" />
+                    <Skeleton className="h-4 w-2/3 bg-white/10" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-3">
+                <Skeleton className="h-12 w-full rounded-md bg-[#62d676]/20" />
+                <Skeleton className="h-12 w-full rounded-md bg-white/10" />
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
     );
   }
 

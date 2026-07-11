@@ -5,7 +5,7 @@ import ProductCarousel from "../product/ProductCarousel";
 import { CanvasTextImage } from "../shared/TextImageCanvas";
 import UpcomingGameCard from "./UpcomingGameCard";
 import UpcomingGameCardSkeleton from "./UpcomingGameCardSkeleton";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 

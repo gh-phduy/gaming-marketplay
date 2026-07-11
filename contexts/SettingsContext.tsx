@@ -11,20 +11,7 @@ interface SettingsContextType {
   setCurrency: (curr: string) => void;
 }
 
-const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined,
-);
-
-/**
- * Preload a translation file into the module-level cache used by useTranslations.
- * By the time React re-renders after setLanguage, the cache is already warm
- * so every useTranslations hook can swap synchronously in a single frame.
- */
-async function preloadTranslations(locale: string): Promise<void> {
-  // Access the same cache object used by useTranslations
-  const { ensureCached } = await import("@/hooks/useTranslations");
-  await ensureCached(locale);
-}
+const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageRaw] = useLocalStorage<string>("app-language", "EN");
@@ -35,13 +22,21 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = useCallback(
     (lang: string) => {
-      const locale = localeToLanguageCode[lang] || "en";
-
-      // Preload the translation file, then commit the language change.
-      // If the file is already cached this resolves instantly (micro-task).
-      preloadTranslations(locale).then(() => {
-        setLanguageRaw(lang);
-      });
+      setLanguageRaw(lang);
+      // We will rely on window.location or Link components for locale routing,
+      // but if a user changes the language in settings, we should refresh to apply middleware.
+      // For a proper next-intl implementation, this should ideally use the localized useRouter.
+      if (typeof window !== "undefined") {
+        const locale = localeToLanguageCode[lang] || "en";
+        const currentPath = window.location.pathname;
+        const currentLocaleMatch = currentPath.match(/^\/([a-z]{2})(?:\/|$)/);
+        if (currentLocaleMatch) {
+           const newPath = currentPath.replace(`/${currentLocaleMatch[1]}`, `/${locale}`);
+           window.location.href = newPath + window.location.search;
+        } else {
+           window.location.href = `/${locale}${currentPath}${window.location.search}`;
+        }
+      }
     },
     [setLanguageRaw],
   );

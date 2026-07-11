@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/routing";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ROUTES } from "@/lib/constants";

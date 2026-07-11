@@ -14,7 +14,7 @@ import {
 import { MdPerson, MdInfo } from "react-icons/md";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { useState } from "react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { OptimizedAvatar } from "@/components/shared/OptimizedAvatar";
 import { Badge } from "@/components/ui/badge";

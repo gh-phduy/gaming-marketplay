@@ -12,7 +12,7 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import CountdownTimer from "../shared/CountdownTimer";
 
 /* ============================================

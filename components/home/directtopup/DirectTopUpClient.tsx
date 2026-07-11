@@ -7,7 +7,7 @@ import { TOPUP_GAMES, TOPUP_CATEGORIES_FILTER } from "@/lib/constants/products";
 import { TopUpGameCard } from "./TopUpGameCard";
 import FilterDropdown from "@/components/product/FilterDropdown";
 import { IoSearch } from "react-icons/io5";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ==========================================================================
    HELPER FUNCTIONS

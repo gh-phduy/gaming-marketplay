@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Pagination from "@/components/shared/Pagination";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerStoreFooterProps {
   totalProducts: number;

@@ -3,7 +3,7 @@
 import { Lock, Star, Users, UserRoundCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerProfileTabsProps {
   activeTab: "store" | "reviews" | "followers" | "following";

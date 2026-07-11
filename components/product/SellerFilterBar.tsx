@@ -7,7 +7,7 @@ import { FaMedal } from "react-icons/fa6";
 import { RiGlobalLine } from "react-icons/ri";
 import { MdSort } from "react-icons/md";
 
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export default function SellerFilterBar() {
   const t = useTranslations("product");

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { MessageCircle, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { playNotificationSound } from "@/lib/utils/audio";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface ChatInboxButtonProps {
   accountId?: string | null;

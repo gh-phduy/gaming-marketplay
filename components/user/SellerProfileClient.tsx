@@ -10,7 +10,7 @@ import SellerReviewsPanel from "./profile/SellerReviewsPanel";
 import SellerFollowersPanel from "./profile/SellerFollowersPanel";
 import SellerFollowingPanel from "./profile/SellerFollowingPanel";
 import SellerChatPanel from "./profile/SellerChatPanel";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerProfileClientProps {
   profile: SellerProfile;

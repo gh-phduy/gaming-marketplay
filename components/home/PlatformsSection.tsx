@@ -3,7 +3,7 @@
 import PlatformCard from "./PlatformCard";
 import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ==========================================================================
    PLATFORMS DATA CONSTANTS

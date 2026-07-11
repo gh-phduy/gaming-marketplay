@@ -11,7 +11,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { IoMdDesktop } from "react-icons/io";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

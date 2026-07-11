@@ -13,7 +13,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import type { SellerOfferItem } from "../../seller-profile.data";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerStoreOfferRowProps {
   offer: SellerOfferItem;

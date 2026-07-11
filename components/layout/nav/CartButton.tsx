@@ -7,7 +7,7 @@ import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 import {
   Popover,
   PopoverContent,

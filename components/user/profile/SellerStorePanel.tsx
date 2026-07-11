@@ -5,7 +5,7 @@ import type { SellerProfile } from "../seller-profile.data";
 import SellerStoreFilters from "./store/SellerStoreFilters";
 import SellerStoreOfferRow from "./store/SellerStoreOfferRow";
 import SellerStoreFooter from "./store/SellerStoreFooter";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerStorePanelProps {
   profile: SellerProfile;

@@ -2,7 +2,7 @@ import { useProductFilter } from "@/contexts/ProductFilterContext";
 import PriceChartSlider from "./price-filter/PriceChartSlider";
 import PriceInputs from "./price-filter/PriceInputs";
 import PriceRangeList from "./price-filter/PriceRangeRadioList";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 const SLIDER_MAX = 1450;
 

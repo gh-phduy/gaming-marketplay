@@ -4,7 +4,7 @@ import NewsCard from "./NewsCard";
 import ProductCarousel from "../product/ProductCarousel";
 import SectionHeader from "../shared/SectionHeader";
 import { getNewsArticleHref, LATEST_NEWS } from "@/lib/constants";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export default function LatestNewsSection() {
   const t = useTranslations("home");

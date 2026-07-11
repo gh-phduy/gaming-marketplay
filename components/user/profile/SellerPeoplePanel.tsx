@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Star, UserCheck, UserPlus, Users } from "lucide-react";
 import type { SellerFollower } from "../seller-profile.data";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface SellerPeoplePanelProps {
   title: string;

@@ -26,7 +26,7 @@ import Pagination from "@/components/shared/Pagination";
 import LoadMoreButton from "@/components/shared/LoadMoreButton";
 import { useProductDetail, FILTERS_COLLAPSED_HEIGHT } from "./useProductDetail";
 import { ProductSortDropdown } from "./ProductDetailComponents";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export default function ProductClient() {
   const t = useTranslations("product");

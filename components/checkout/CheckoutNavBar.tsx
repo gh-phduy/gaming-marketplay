@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { CreditCard, ShoppingCart, CheckCircle2, XCircle } from "lucide-react";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ==========================================================================
    MAIN COMPONENT: CheckoutNavBar

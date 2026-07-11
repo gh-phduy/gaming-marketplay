@@ -4,7 +4,7 @@ import { useState } from "react";
 import SellerFilterBar from "./SellerFilterBar";
 import SellerRow, { SellerOffer } from "./SellerRow";
 import { TbReload } from "react-icons/tb";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /**
  * Props for the SellerListClient component.

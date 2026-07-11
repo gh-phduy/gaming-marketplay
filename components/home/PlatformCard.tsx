@@ -10,7 +10,7 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES

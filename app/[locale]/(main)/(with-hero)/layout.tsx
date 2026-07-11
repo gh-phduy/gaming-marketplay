@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/routing";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import type { HeroTab } from "@/components/home/hero-carousel/types";
 

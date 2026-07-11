@@ -8,7 +8,7 @@ import {
 import { AiOutlineAppstore } from "react-icons/ai";
 import { BiSolidDownArrow } from "react-icons/bi";
 import NavCategories from "../NavCategories";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface CategoriesDropdownProps {
   isOpen: boolean;

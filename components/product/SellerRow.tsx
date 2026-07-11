@@ -19,7 +19,7 @@ import { SiPlaystation, SiNintendo } from "react-icons/si";
 import SellerInfoTooltip from "./SellerInfoTooltip";
 import { getSellerProfilePath } from "../user/seller-profile.route";
 import { useCart } from "@/contexts/CartContext";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export interface SellerOffer {
   data: {

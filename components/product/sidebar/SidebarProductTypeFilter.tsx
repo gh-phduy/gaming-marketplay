@@ -9,7 +9,7 @@ import {
   REGION_FILTER_ITEMS,
   type FilterSubItem,
 } from "./filter-data";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 type SidebarFilterSection = {
   id: string;

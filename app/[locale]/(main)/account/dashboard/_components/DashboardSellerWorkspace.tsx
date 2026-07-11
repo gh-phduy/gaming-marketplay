@@ -21,7 +21,7 @@ import {
   formatMoney,
   MetricTile,
 } from "./SellerWorkspaceComponents";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 // Import modular workspace tab presentational subcomponents
 import { WorkspaceOverview } from "./WorkspaceOverview";

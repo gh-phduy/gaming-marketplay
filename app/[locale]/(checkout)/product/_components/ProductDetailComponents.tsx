@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { BsSortDown } from "react-icons/bs";
 import { type ProductSortKey } from "./useProductDetail";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 interface ProductSortDropdownProps {
   value: ProductSortKey;

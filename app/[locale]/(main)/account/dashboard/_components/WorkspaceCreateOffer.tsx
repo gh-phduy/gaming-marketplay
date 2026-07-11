@@ -18,7 +18,7 @@ import {
   imageOptions,
   type ListingFormState,
 } from "./useSellerWorkspace";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 /* ==========================================================================
    TYPE DEFINITIONS & INTERFACES

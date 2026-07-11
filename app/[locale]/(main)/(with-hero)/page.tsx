@@ -21,7 +21,7 @@ import GamesSection from "@/components/shared/GamesSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import PlatformsSection from "@/components/home/PlatformsSection";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 export default function HomePage() {
   const t = useTranslations("home");

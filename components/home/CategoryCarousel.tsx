@@ -12,7 +12,7 @@
 
 import ProductCarousel from "../product/ProductCarousel";
 import { CategoryCard, CategoryCardData } from "../shared/CategoryCard";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "next-intl";
 
 
 /* ============================================
