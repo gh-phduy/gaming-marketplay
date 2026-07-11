@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import {
   AlertCircle,
   ArrowRight,
@@ -260,9 +260,9 @@ export default function SuccessClient() {
                       <Image
                         src={item.image}
                         alt={item.name}
-                        fill
-                        sizes="144px"
-                        className="object-cover"
+                        width={144}
+                        height={96}
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col justify-center">

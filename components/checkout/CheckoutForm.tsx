@@ -7,7 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   saveCheckoutOrderSnapshot,
   type CheckoutOrderItem,
@@ -31,6 +31,7 @@ export default function CheckoutForm({
   orderItems: CheckoutOrderItem[];
 }) {
   const t = useTranslations("checkout");
+  const locale = useLocale();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -73,7 +74,7 @@ export default function CheckoutForm({
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/checkout/success`,
+          return_url: `${window.location.origin}/${locale}/checkout/success`,
         },
         redirect: "if_required",
       });
@@ -90,7 +91,7 @@ export default function CheckoutForm({
         // Fallback for when redirect: "if_required" resolves directly
         // Manually navigate the user to the success page with required params
         const status = paymentIntent.status === "succeeded" ? "succeeded" : paymentIntent.status;
-        window.location.href = `/checkout/success?payment_intent=${paymentIntent.id}&redirect_status=${status}`;
+        window.location.href = `/${locale}/checkout/success?payment_intent=${paymentIntent.id}&redirect_status=${status}`;
       }
     } catch (err: any) {
       console.error("Payment submission crashed:", err);

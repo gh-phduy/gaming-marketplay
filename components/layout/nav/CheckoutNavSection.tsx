@@ -8,7 +8,7 @@ export default function CheckoutNavSection() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const redirectStatus = searchParams.get("redirect_status");
-  const isSuccessPage = pathname?.startsWith("/checkout/success");
+  const isSuccessPage = pathname?.includes("/checkout/success");
   const isCompleted = isSuccessPage && redirectStatus === "succeeded";
   const isFailed = isSuccessPage && redirectStatus !== "succeeded";
   const isAfterCheckout = isCompleted || isFailed;

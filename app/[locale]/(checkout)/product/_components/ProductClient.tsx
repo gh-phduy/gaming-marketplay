@@ -23,7 +23,6 @@ import { FaChevronRight } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import Pagination from "@/components/shared/Pagination";
-import LoadMoreButton from "@/components/shared/LoadMoreButton";
 import { useProductDetail, FILTERS_COLLAPSED_HEIGHT } from "./useProductDetail";
 import { ProductSortDropdown } from "./ProductDetailComponents";
 import { useTranslations } from "next-intl";
@@ -100,30 +99,33 @@ export default function ProductClient() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="w-full min-w-0 space-y-6 bg-midnight-850 px-3 py-4 sm:space-y-8 sm:px-5 sm:py-6 md:px-6 lg:px-8 xl:px-10">
-        {/* Breadcrumb */}
-        <div className="mb-2 flex items-center gap-2 text-sm text-steel-500 sm:mb-4 sm:text-base">
-          <IoMdHome size={18} />
-          <FaChevronRight size={12} />
-          <span className="font-medium">{t("gameKeys")}</span>
-          {translatedPlatformLabel && (
-            <>
-              <FaChevronRight size={12} />
-              <span className="font-medium text-steel-300">
-                {translatedPlatformLabel}
-              </span>
-            </>
-          )}
+      <div className="w-full min-w-0 flex flex-col gap-6 bg-midnight-850 px-3 py-4 sm:gap-8 sm:px-5 sm:py-6 md:px-6 lg:px-8 xl:px-10">
+        {/* Header Group (Breadcrumb + Title) */}
+        <div className="flex flex-col gap-1.5 sm:gap-2">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm text-steel-500 sm:text-base">
+            <IoMdHome size={18} />
+            <FaChevronRight size={12} />
+            <span className="font-medium">{t("gameKeys")}</span>
+            {translatedPlatformLabel && (
+              <>
+                <FaChevronRight size={12} />
+                <span className="font-medium text-steel-300">
+                  {translatedPlatformLabel}
+                </span>
+              </>
+            )}
+          </div>
+
+          <h1 className="text-2xl font-bold sm:text-3xl">
+            {translatedPlatformLabel
+              ? `${translatedPlatformLabel} ${t("gameKeys").toLowerCase()}`
+              : t("productsTitle")}
+          </h1>
         </div>
 
-        <h1 className="mb-4 text-2xl font-bold sm:mb-6 sm:text-3xl">
-          {translatedPlatformLabel
-            ? `${translatedPlatformLabel} ${t("gameKeys").toLowerCase()}`
-            : t("productsTitle")}
-        </h1>
-
         {/* Top Controls */}
-        <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:gap-4 md:flex-row">
+        <div className="relative z-20 flex flex-col gap-3 sm:gap-4 md:flex-row">
           {/* Search */}
           <div className="relative flex-1">
             <IoSearch
@@ -197,7 +199,7 @@ export default function ProductClient() {
         </div>
 
         {/* Filters Tag List */}
-        <div className="mb-4 flex gap-3 text-sm sm:mb-6 sm:gap-4 sm:text-base">
+        <div className="relative z-10 flex gap-3 text-sm sm:gap-4 sm:text-base">
           <div className="min-w-0 flex-1">
             <div
               ref={filtersRef}
@@ -292,31 +294,65 @@ export default function ProductClient() {
                 />
               ))}
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-                {paginatedProducts.map((product) => (
-                  <ProductGridItem
-                    key={product.id}
-                    id={product.id}
-                    title={product.title}
-                    price={product.price}
-                    image={product.image}
-                    platform={product.platform}
-                  />
-                ))}
+          ) : paginatedProducts.length === 0 ? (
+            <div className="relative w-full max-w-md mx-auto my-8 overflow-hidden rounded-xl border border-[#30363d] bg-[#171f2a] p-6 md:p-8 text-left shadow-xl before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-forest-500 before:rounded-l-xl">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-forest-500 uppercase">
+                  <span className="h-1.5 w-1.5 rounded-full bg-forest-500 animate-pulse" />
+                  {t("productsTitle")}
+                </div>
+                <div className="rounded-md border border-forest-500/20 bg-forest-900/10 px-2.5 py-0.5 text-xs font-medium text-forest-500">
+                  0
+                </div>
               </div>
-            </>
+
+              {/* Title */}
+              <h3 className="text-base font-bold text-white mb-6 leading-relaxed">
+                {t("noProductsMatchFilters")}
+              </h3>
+
+              {/* Action Button */}
+              <div className="flex items-center justify-end">
+                <Button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSortBy("popular");
+                    setShowAllFilters(false);
+                    resetProductFilters();
+                    setCurrentPage(1);
+                  }}
+                  className="px-6 py-2 bg-forest-500 hover:bg-[#7cf290] active:bg-[#4bc25e] text-midnight-950 font-bold text-sm transition-all duration-200 rounded-lg border-none outline-none shadow-md"
+                >
+                  {t("clearAll")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+              {paginatedProducts.map((product) => (
+                <ProductGridItem
+                  key={product.id}
+                  id={product.id}
+                  title={product.title}
+                  price={product.price}
+                  image={product.image}
+                  platform={product.platform}
+                />
+              ))}
+            </div>
           )}
         </div>
-        <LoadMoreButton />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          previousLabel={t("back")}
-          nextLabel={t("next")}
-        />
+
+        {paginatedProducts.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            previousLabel={t("back")}
+            nextLabel={t("next")}
+          />
+        )}
       </div>
     </div>
   );
