@@ -7,7 +7,7 @@ import SidebarProductTypeFilter from "./sidebar/SidebarProductTypeFilter";
 
 export default function ProductSidebar() {
   return (
-    <div className="flex w-full shrink-0 flex-col items-center space-y-5 bg-midnight-700 p-4 lg:w-[270px]">
+    <div className="flex w-full shrink-0 flex-col items-center space-y-5 bg-midnight-700 p-4 lg:w-[270px] h-full">
       <SidebarRegionSelector />
 
       <Separator

@@ -52,13 +52,13 @@ export function ProductSortDropdown({ value, onChange }: ProductSortDropdownProp
   }, []);
 
   return (
-    <div ref={dropdownRef} className="relative z-40">
+    <div ref={dropdownRef} className="relative z-40 w-full flex-1 sm:w-auto sm:flex-initial">
       <button
         type="button"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
-        className="flex h-10 w-[210px] items-center justify-between rounded-lg bg-[#202936] px-4 text-left text-sm text-white transition hover:bg-[#303a4a] focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:outline-none sm:h-11 sm:w-[295px] sm:text-base"
+        className="flex h-10 w-full items-center justify-between rounded-lg bg-[#202936] px-4 text-left text-sm text-white transition hover:bg-[#303a4a] focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:outline-none sm:h-11 sm:w-[295px] sm:text-base"
       >
         <span className="flex min-w-0 items-center gap-3">
           <BsSortDown className="size-5 shrink-0 text-white" aria-hidden />
