@@ -93,7 +93,7 @@ export default function ProductClient() {
   }, [primarySelectedPlatform, selectedPlatformFilters, tNav]);
 
   return (
-    <div className="flex min-h-screen w-full bg-[#0d1117] font-sans text-white">
+    <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[#0d1117] font-sans text-white">
       {/* Desktop Sidebar — hidden below lg */}
       <aside className="hidden lg:block">
         <ProductSidebar />
@@ -285,7 +285,7 @@ export default function ProductClient() {
         </div>
 
         {/* Product Grid */}
-        <div className="flex-1">
+        <div className="w-full">
           {isLoading ? (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
               {[...Array(8)].map((_, i) => (
