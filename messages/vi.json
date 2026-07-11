@@ -210,6 +210,8 @@
     "services": "Dịch vụ",
     "noGamesFound": "Không tìm thấy trò chơi nào cho \"{query}\"",
     "tryDifferentSearch": "Hãy thử một cụm từ hoặc danh mục tìm kiếm khác.",
+    "noProductsFound": "KHÔNG TÌM THẤY SẢN PHẨM",
+    "noProductsFoundDesc": "Sản phẩm bạn đang tìm kiếm không tồn tại. Vui lòng thử lại với bộ lọc khác.",
     "sortNewer": "Mới hơn trước",
     "sortOlder": "Cũ hơn trước",
     "sortPopular": "Phổ biến nhất",

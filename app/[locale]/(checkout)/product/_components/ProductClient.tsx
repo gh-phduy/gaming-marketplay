@@ -5,6 +5,7 @@ import {
   List,
   SlidersHorizontal,
   X,
+  Ban,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -157,14 +158,14 @@ export default function ProductClient() {
           </div>
 
           {/* Sort / View / Filter toggle */}
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 lg:w-auto">
             {/* Mobile filter toggle */}
             <Sheet>
               <SheetTrigger
                 render={
                   <Button
                     variant="outline"
-                    className="h-10 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:h-11 lg:hidden"
+                    className="h-10 w-full flex-1 border-[#30363d] bg-midnight-700 px-3 text-steel-300 sm:h-11 sm:w-auto sm:flex-initial lg:hidden"
                   >
                     <SlidersHorizontal className="mr-2 h-5 w-5" /> {t("filters")}
                   </Button>
@@ -295,38 +296,14 @@ export default function ProductClient() {
               ))}
             </div>
           ) : paginatedProducts.length === 0 ? (
-            <div className="relative w-full max-w-md mx-auto my-8 overflow-hidden rounded-xl border border-[#30363d] bg-[#171f2a] p-6 md:p-8 text-left shadow-xl before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-forest-500 before:rounded-l-xl">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-forest-500 uppercase">
-                  <span className="h-1.5 w-1.5 rounded-full bg-forest-500 animate-pulse" />
-                  {t("productsTitle")}
-                </div>
-                <div className="rounded-md border border-forest-500/20 bg-forest-900/10 px-2.5 py-0.5 text-xs font-medium text-forest-500">
-                  0
-                </div>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-base font-bold text-white mb-6 leading-relaxed">
-                {t("noProductsMatchFilters")}
+            <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-[#30363d] bg-[#151c26]/50 px-6 py-24 text-center min-h-[400px]">
+              <Ban className="h-16 w-16 text-slate-500/80 mb-5 stroke-[1.2]" />
+              <h3 className="text-lg font-bold uppercase tracking-wider text-white mb-2">
+                {t.has("noProductsFound") ? t("noProductsFound") : "NO PRODUCTS FOUND"}
               </h3>
-
-              {/* Action Button */}
-              <div className="flex items-center justify-end">
-                <Button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSortBy("popular");
-                    setShowAllFilters(false);
-                    resetProductFilters();
-                    setCurrentPage(1);
-                  }}
-                  className="px-6 py-2 bg-forest-500 hover:bg-[#7cf290] active:bg-[#4bc25e] text-midnight-950 font-bold text-sm transition-all duration-200 rounded-lg border-none outline-none shadow-md"
-                >
-                  {t("clearAll")}
-                </Button>
-              </div>
+              <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
+                {t.has("noProductsFoundDesc") ? t("noProductsFoundDesc") : "The product you were looking for was not found. Try refining your request."}
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">

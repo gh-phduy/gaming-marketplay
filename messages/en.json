@@ -210,6 +210,8 @@
     "services": "Services",
     "noGamesFound": "No games found for \"{query}\"",
     "tryDifferentSearch": "Try a different search term or category.",
+    "noProductsFound": "NO PRODUCTS FOUND",
+    "noProductsFoundDesc": "The product you were looking for was not found. Try refining your request.",
     "sortNewer": "Newer first",
     "sortOlder": "Older first",
     "sortPopular": "Most popular",
