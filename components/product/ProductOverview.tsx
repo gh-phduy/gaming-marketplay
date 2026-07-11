@@ -35,10 +35,14 @@ export default function ProductOverview({ data }: ProductOverviewProps) {
   }, [addToCart, data?.data]);
 
   const handleCheckout = useCallback(() => {
+    if (!user) {
+      window.dispatchEvent(new CustomEvent("difmark:open-login"));
+      return;
+    }
     if (data?.data.id) {
       router.push(`/checkout?id=${data.data.id}`);
     }
-  }, [data?.data.id, router]);
+  }, [data?.data.id, router, user]);
 
   const handleChat = useCallback(async () => {
     if (!user) {

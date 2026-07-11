@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "@/hooks/useTranslations";
 import {
   Popover,
@@ -17,6 +19,8 @@ export default function CartButton() {
   const [isOpen, setIsOpen] = useState(false);
   const { cartCount, cartItems, incrementItem, decrementItem, removeItem } =
     useCart();
+  const { user } = useAuth();
+  const router = useRouter();
 
   const cartTotal = useMemo(
     () =>
@@ -202,13 +206,20 @@ export default function CartButton() {
               {t("viewCart")}
             </Link>
 
-            <Link
-              href="/checkout"
-              onClick={() => setIsOpen(false)}
-              className="flex h-11 items-center justify-center rounded-md bg-[#3fcf63] px-3 text-[13px] font-bold text-[#07130b] transition hover:bg-[#53df75] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                if (!user) {
+                  window.dispatchEvent(new CustomEvent("difmark:open-login"));
+                } else {
+                  router.push("/checkout");
+                }
+              }}
+              className="flex h-11 w-full items-center justify-center rounded-md bg-[#3fcf63] px-3 text-[13px] font-bold text-[#07130b] transition hover:bg-[#53df75] focus-visible:ring-2 focus-visible:ring-[#4ade80]/70 focus-visible:outline-none"
             >
               {t("checkout")}
-            </Link>
+            </button>
           </div>
         </div>
       </PopoverContent>

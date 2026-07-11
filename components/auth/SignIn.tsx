@@ -39,6 +39,11 @@ export default function SignIn() {
 
   useEffect(() => {
     setMounted(true);
+    const handleOpenLogin = () => setIsOpen(true);
+    window.addEventListener("difmark:open-login", handleOpenLogin);
+    return () => {
+      window.removeEventListener("difmark:open-login", handleOpenLogin);
+    };
   }, []);
 
   // Displays the toast message for 4 seconds then auto-hides

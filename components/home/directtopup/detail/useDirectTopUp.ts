@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   saveCheckoutOrderSnapshot,
   type CheckoutOrderSnapshot,
@@ -10,6 +11,7 @@ import type { TopUpGameDetail, TopUpPackage } from "./topup-detail-data";
 
 export function useDirectTopUp(game: TopUpGameDetail) {
   const router = useRouter();
+  const { user } = useAuth();
   const [selectedPackageId, setSelectedPackageId] = useState(
     game.packages[0].id
   );
@@ -19,6 +21,10 @@ export function useDirectTopUp(game: TopUpGameDetail) {
     game.packages[0];
 
   const handleCheckout = () => {
+    if (!user) {
+      window.dispatchEvent(new CustomEvent("difmark:open-login"));
+      return;
+    }
     const snapshot: CheckoutOrderSnapshot = {
       items: [
         {

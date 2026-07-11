@@ -65,13 +65,13 @@ export function HeroCarousel({ activeTab }: HeroCarouselProps) {
           <div className="mb-6 px-4 text-center">
             <h1 className="mb-3 text-3xl font-bold tracking-wide text-white uppercase md:text-4xl">
               {activeTab === "digital"
-                ? t("thousandsOfDigitalProducts")
-                : t("topUpGamesAndServicesInstantly")}
+                ? t("thousandsOfDigitalProducts", "THOUSANDS OF DIGITAL PRODUCTS")
+                : t("topUpGamesAndServicesInstantly", "TOP UP GAMES AND SERVICES INSTANTLY")}
             </h1>
             <p className="mx-auto max-w-3xl text-sm text-gray-300 md:text-base">
               {activeTab === "digital"
-                ? t("discoverAVastSelection")
-                : t("instantlyTopUpYourFavorite")}
+                ? t("discoverAVastSelection", "Discover a vast selection of digital goods for every need — from the latest PC and console games to gift cards, software, subscriptions, and more.")
+                : t("instantlyTopUpYourFavorite", "Instantly top up your favorite games and digital services — from in-game currencies to account balances. Fast, secure, and code-free.")}
             </p>
           </div>
 
