@@ -96,8 +96,7 @@ export default function SuccessClient() {
             <div className="flex-1">
               <h3 className="text-base font-bold text-white">Payment succeeded, but system sync failed</h3>
               <p className="mt-1 text-sm text-gray-300">
-                Your payment was processed successfully by Stripe, but we couldn't record the transaction in our database due to: <br/>
-                <span className="font-mono text-red-400 text-xs block mt-2 bg-black/35 p-2 rounded">{dbError}</span>
+                Your payment was processed successfully by Stripe, but we couldn't record the transaction in our database.
               </p>
               <div className="mt-4 flex gap-3">
                 <Button
