@@ -81,8 +81,8 @@ export default function UpcomingGamesSection() {
         {/* Title Skeleton */}
         <div className="h-[24px] w-[220px] bg-midnight-800 animate-pulse rounded -translate-x-[22px]" />
         
-        {/* Grid Skeleton */}
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 990:grid-cols-3 1920:grid-cols-4 gap-4">
+        {/* Grid Skeleton (Desktop >= 800px) */}
+        <div className="mt-10 hidden 800:grid grid-cols-1 990:grid-cols-3 1920:grid-cols-4 gap-4">
           {[...Array(4)].map((_, colIdx) => {
             let visibilityClass = "";
             if (colIdx === 1 || colIdx === 2) {
@@ -97,6 +97,16 @@ export default function UpcomingGamesSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* Carousel Skeleton (Mobile/Tablet < 800px) */}
+        <div className="mt-10 flex gap-4 overflow-hidden 800:hidden px-4">
+          <div className="min-w-[252px] opacity-50">
+            <UpcomingGameCardSkeleton />
+          </div>
+          <div className="min-w-[252px] opacity-30">
+            <UpcomingGameCardSkeleton />
+          </div>
         </div>
       </section>
     );

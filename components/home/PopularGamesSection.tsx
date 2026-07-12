@@ -71,13 +71,23 @@ export default function PopularGamesSection() {
           <div className="h-6 w-16 animate-pulse rounded bg-midnight-750" />
         </div>
 
-        {/* Grid Skeleton */}
-        <div className="mt-10 grid grid-cols-1 gap-4 800:grid-cols-3 990:grid-cols-3 1920:grid-cols-4 sm:grid-cols-2">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className={i === 3 ? "hidden 1920:block" : ""}>
+        {/* Grid Skeleton (Desktop >= 800px) */}
+        <div className="mt-10 hidden grid-cols-1 gap-4 800:grid 990:grid-cols-3 1920:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i}>
               <PopularGameCardSkeleton />
             </div>
           ))}
+        </div>
+
+        {/* Carousel Skeleton (Mobile/Tablet < 800px) */}
+        <div className="mt-10 flex gap-4 overflow-hidden 800:hidden px-4">
+          <div className="min-w-[252px] opacity-50">
+            <PopularGameCardSkeleton />
+          </div>
+          <div className="min-w-[252px] opacity-30">
+            <PopularGameCardSkeleton />
+          </div>
         </div>
       </section>
     );
