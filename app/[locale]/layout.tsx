@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { CartProvider } from "@/contexts/CartContext";
+import { Analytics } from "@vercel/analytics/react";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default async function RootLayout(props: Readonly<{
             </a>
 
             {children}
+            <Analytics />
           </CartProvider>
         </NextIntlClientProvider>
       </body>
