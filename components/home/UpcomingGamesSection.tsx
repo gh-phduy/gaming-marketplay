@@ -8,6 +8,7 @@ import UpcomingGameCardSkeleton from "./UpcomingGameCardSkeleton";
 import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 async function getUpcomingGames() {
   try {
@@ -58,15 +59,20 @@ export default function UpcomingGamesSection() {
     return (
       <div className={visibilityClass}>
         {colGames.map((game) => (
-          <UpcomingGameCard
+          <Link
             key={game.id}
-            title={game.title}
-            price={`${game.currency}${Number(game.price).toFixed(2)}`}
-            coverImage={game.image_url}
-            previewVideo={game.video_url || undefined}
-            platform={game.platform as any}
-            releaseDate="28 Aug 2026"
-          />
+            href={`/buy-cheap?id=${game.id}`}
+            className="block cursor-pointer"
+          >
+            <UpcomingGameCard
+              title={game.title}
+              price={`${game.currency}${Number(game.price).toFixed(2)}`}
+              coverImage={game.image_url}
+              previewVideo={game.video_url || undefined}
+              platform={game.platform as any}
+              releaseDate="28 Aug 2026"
+            />
+          </Link>
         ))}
       </div>
     );
@@ -120,15 +126,20 @@ export default function UpcomingGamesSection() {
       <div className="block 800:hidden" >
         <ProductCarousel>
           {games.map((game) => (
-            <UpcomingGameCard
+            <Link
               key={game.id}
-              title={game.title}
-              price={`${game.currency}${Number(game.price).toFixed(2)}`}
-              coverImage={game.image_url}
-              previewVideo={game.video_url || undefined}
-              platform={game.platform as any}
-              releaseDate="28 Aug 2026"
-            />
+              href={`/buy-cheap?id=${game.id}`}
+              className="block cursor-pointer"
+            >
+              <UpcomingGameCard
+                title={game.title}
+                price={`${game.currency}${Number(game.price).toFixed(2)}`}
+                coverImage={game.image_url}
+                previewVideo={game.video_url || undefined}
+                platform={game.platform as any}
+                releaseDate="28 Aug 2026"
+              />
+            </Link>
           ))}
         </ProductCarousel>
       </div>
