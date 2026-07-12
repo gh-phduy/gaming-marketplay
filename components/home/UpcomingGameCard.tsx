@@ -9,6 +9,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { IoMdDesktop } from "react-icons/io";
 import { useTranslations } from "next-intl";
@@ -18,6 +19,7 @@ import { useTranslations } from "next-intl";
    ============================================ */
 
 interface UpcomingGameItemProps {
+  id?: string;
   /** Game title */
   title?: string;
   /** Game price */
@@ -63,6 +65,7 @@ const ANIMATION = {
  * Game card for upcoming releases with release date badge
  */
 export default function UpcomingGameItem({
+  id = "1",
   title = DEFAULTS.title,
   price = DEFAULTS.price,
   releaseDate = DEFAULTS.releaseDate,
@@ -133,6 +136,13 @@ export default function UpcomingGameItem({
     };
   }, []);
 
+  // Autoplay video when src is set and still hovered
+  useEffect(() => {
+    if (videoSrc && isHoveredRef.current && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [videoSrc]);
+
   // Event handlers
   const handleMouseEnter = useCallback(() => {
     const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -142,10 +152,12 @@ export default function UpcomingGameItem({
 
     if (!videoSrc) {
       setVideoSrc(previewVideo);
-    } else if (videoRef.current && videoRef.current.readyState >= 3) {
-      setIsHovered(true);
+    } else if (videoRef.current) {
       videoRef.current.play().catch(() => {});
-      timelineRef.current?.play();
+      if (videoRef.current.readyState >= 3) {
+        setIsHovered(true);
+        timelineRef.current?.play();
+      }
     }
   }, [videoSrc, previewVideo]);
 
@@ -172,16 +184,17 @@ export default function UpcomingGameItem({
       className="relative w-[252px] 800:w-full h-[300px] mx-auto select-none"
       role="listitem"
     >
-      <div
-        ref={containerRef}
-        className="w-full cursor-pointer absolute top-1/2 group -translate-y-1/2 left-1/2 -translate-x-1/2 h-[275px] rounded-lg overflow-hidden bg-surface-base flex flex-col"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        tabIndex={0}
-        onFocus={handleMouseEnter}
-        onBlur={handleMouseLeave}
-        aria-label={`${title} - ${t("releaseLabel")} ${releaseDate} - ${price}`}
-      >
+      <Link href={`/buy-cheap?id=${id}`} className="block h-full w-full">
+        <div
+          ref={containerRef}
+          className="w-full cursor-pointer absolute top-1/2 group -translate-y-1/2 left-1/2 -translate-x-1/2 h-[275px] rounded-lg overflow-hidden bg-surface-base flex flex-col"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          tabIndex={0}
+          onFocus={handleMouseEnter}
+          onBlur={handleMouseLeave}
+          aria-label={`${title} - ${t("releaseLabel")} ${releaseDate} - ${price}`}
+        >
         {/* Media Container */}
         <div className="relative flex-1">
           {/* Release Date Badge */}
@@ -237,6 +250,7 @@ export default function UpcomingGameItem({
           </h3>
         </div>
       </div>
-    </article>
+    </Link>
+  </article>
   );
 }

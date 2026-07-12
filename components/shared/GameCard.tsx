@@ -9,6 +9,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { BsPersonFillCheck, BsBasket3Fill } from "react-icons/bs";
 
@@ -17,6 +18,7 @@ import { BsPersonFillCheck, BsBasket3Fill } from "react-icons/bs";
    ============================================ */
 
 interface GameItemProps {
+  id?: string;
   /** Game title */
   title?: string;
   /** Game price */
@@ -69,6 +71,7 @@ const ANIMATION = {
  * Game card with hover video preview, add to cart animation, and GSAP effects
  */
 export default function GameItem({
+  id = "1",
   title = DEFAULTS.title,
   price = DEFAULTS.price,
   coverImage = DEFAULTS.coverImage,
@@ -156,6 +159,13 @@ export default function GameItem({
     };
   }, []);
 
+  // Autoplay video when src is set and still hovered
+  useEffect(() => {
+    if (videoSrc && isHoveredRef.current && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [videoSrc]);
+
   // Event handlers
   const handleMouseEnter = useCallback(() => {
     const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -165,10 +175,12 @@ export default function GameItem({
 
     if (!videoSrc) {
       setVideoSrc(previewVideo);
-    } else if (videoRef.current && videoRef.current.readyState >= 3) {
-      setIsHovered(true);
+    } else if (videoRef.current) {
       videoRef.current.play().catch(() => {});
-      timelineRef.current?.play();
+      if (videoRef.current.readyState >= 3) {
+        setIsHovered(true);
+        timelineRef.current?.play();
+      }
     }
   }, [videoSrc, previewVideo]);
 
@@ -190,7 +202,9 @@ export default function GameItem({
     timelineRef.current?.reverse();
   }, []);
 
-  const handleAddToCart = useCallback(() => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     onAddToCart?.();
   }, [onAddToCart]);
 
@@ -199,16 +213,17 @@ export default function GameItem({
       className="relative w-[252px] 800:w-full h-[300px] mx-auto select-none"
       role="listitem"
     >
-      <div
-        ref={containerRef}
-        className="w-full cursor-pointer absolute top-1/2 group -translate-y-1/2 left-1/2 -translate-x-1/2 h-[275px] rounded-lg overflow-hidden bg-surface-base flex flex-col"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        tabIndex={0}
-        onFocus={handleMouseEnter}
-        onBlur={handleMouseLeave}
-        aria-label={`${title} - ${price}`}
-      >
+      <Link href={`/buy-cheap?id=${id}`} className="block h-full w-full">
+        <div
+          ref={containerRef}
+          className="w-full cursor-pointer absolute top-1/2 group -translate-y-1/2 left-1/2 -translate-x-1/2 h-[275px] rounded-lg overflow-hidden bg-surface-base flex flex-col"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          tabIndex={0}
+          onFocus={handleMouseEnter}
+          onBlur={handleMouseLeave}
+          aria-label={`${title} - ${price}`}
+        >
         {/* Media Container */}
         <div className="relative flex-1">
           {/* Cover Image */}
@@ -301,7 +316,8 @@ export default function GameItem({
             {price}
           </span>
         </div>
-      </div>
+        </div>
+      </Link>
     </article>
   );
 }

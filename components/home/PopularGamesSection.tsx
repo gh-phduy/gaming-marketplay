@@ -63,16 +63,16 @@ export default function PopularGamesSection() {
         aria-labelledby="popular-games-heading"
       >
         {/* Section Header Skeleton */}
-        <div className="flex justify-between items-end border-b border-midnight-700 pb-4">
+        <div className="flex items-end justify-between border-b border-midnight-700 pb-4">
           <div className="space-y-2">
-            <div className="h-4 w-24 bg-midnight-750 rounded animate-pulse" />
-            <div className="h-8 w-48 bg-midnight-700 rounded animate-pulse" />
+            <div className="h-4 w-24 animate-pulse rounded bg-midnight-750" />
+            <div className="h-8 w-48 animate-pulse rounded bg-midnight-700" />
           </div>
-          <div className="h-6 w-16 bg-midnight-750 rounded animate-pulse" />
+          <div className="h-6 w-16 animate-pulse rounded bg-midnight-750" />
         </div>
 
         {/* Grid Skeleton */}
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 800:grid-cols-3 990:grid-cols-3 1920:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-4 800:grid-cols-3 990:grid-cols-3 1920:grid-cols-4 sm:grid-cols-2">
           {[...Array(4)].map((_, i) => (
             <div key={i} className={i === 3 ? "hidden 1920:block" : ""}>
               <PopularGameCardSkeleton />
@@ -98,7 +98,7 @@ export default function PopularGamesSection() {
         viewAllHref="/product"
         viewAllAriaLabel={t("viewAllPopularGames")}
       />
-      
+
       {/* Grid Layout (Desktop >= 800px) */}
       <div
         className="mt-10 hidden grid-cols-1 gap-4 800:grid 990:grid-cols-3 1920:grid-cols-4"
@@ -117,7 +117,7 @@ export default function PopularGamesSection() {
           />
         ))}
       </div>
-      
+
       {/* Carousel Slider Layout (Mobile/Tablet < 800px) */}
       <div className="block 800:hidden">
         <ProductCarousel>
@@ -137,4 +137,3 @@ export default function PopularGamesSection() {
     </section>
   );
 }
-

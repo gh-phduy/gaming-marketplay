@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import SectionHeader from "../shared/SectionHeader";
 
 async function getUpcomingGames() {
   try {
@@ -59,20 +60,16 @@ export default function UpcomingGamesSection() {
     return (
       <div className={visibilityClass}>
         {colGames.map((game) => (
-          <Link
+          <UpcomingGameCard
             key={game.id}
-            href={`/buy-cheap?id=${game.id}`}
-            className="block cursor-pointer"
-          >
-            <UpcomingGameCard
-              title={game.title}
-              price={`${game.currency}${Number(game.price).toFixed(2)}`}
-              coverImage={game.image_url}
-              previewVideo={game.video_url || undefined}
-              platform={game.platform as any}
-              releaseDate="28 Aug 2026"
-            />
-          </Link>
+            id={game.id}
+            title={game.title}
+            price={`${game.currency}${Number(game.price).toFixed(2)}`}
+            coverImage={game.image_url}
+            previewVideo={game.video_url || undefined}
+            platform={game.platform as any}
+            releaseDate="28 Aug 2026"
+          />
         ))}
       </div>
     );
@@ -107,15 +104,14 @@ export default function UpcomingGamesSection() {
 
   return (
     <section className="w-full 800:px-0 px-8 responsive" aria-labelledby="upcoming-games-heading">
-      <h2 id="upcoming-games-heading" className="sr-only">
-        {t("upcomingGamesHeading")}
-      </h2>
-      <CanvasTextImage
-        className="-translate-x-[22px]"
-        text={t("upcomingGamesTitle")}
-        imageUrl="/text-img.svg"
-        size="24px"
-        aria-hidden="true"
+      <SectionHeader
+        headingId="upcoming-games-heading"
+        headingText={t("upcomingGamesHeading")}
+        title={t("upcomingGamesTitle")}
+        titleClassName="-translate-x-[22px]"
+        actionText={t("viewAll")}
+        viewAllHref="/product"
+        viewAllAriaLabel={t("viewAllUpcomingGames") || "View all upcoming games"}
       />
       <div className="mt-10 hidden 800:grid grid-cols-1 990:grid-cols-3 1920:grid-cols-4 gap-4" role="list" aria-label={t("upcomingGamesAria")}>
         {renderColumn(0)}
@@ -126,20 +122,16 @@ export default function UpcomingGamesSection() {
       <div className="block 800:hidden" >
         <ProductCarousel>
           {games.map((game) => (
-            <Link
+            <UpcomingGameCard
               key={game.id}
-              href={`/buy-cheap?id=${game.id}`}
-              className="block cursor-pointer"
-            >
-              <UpcomingGameCard
-                title={game.title}
-                price={`${game.currency}${Number(game.price).toFixed(2)}`}
-                coverImage={game.image_url}
-                previewVideo={game.video_url || undefined}
-                platform={game.platform as any}
-                releaseDate="28 Aug 2026"
-              />
-            </Link>
+              id={game.id}
+              title={game.title}
+              price={`${game.currency}${Number(game.price).toFixed(2)}`}
+              coverImage={game.image_url}
+              previewVideo={game.video_url || undefined}
+              platform={game.platform as any}
+              releaseDate="28 Aug 2026"
+            />
           ))}
         </ProductCarousel>
       </div>

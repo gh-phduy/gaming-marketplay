@@ -138,19 +138,30 @@ export default function PopularGameItem({
     };
   }, []);
 
+  // Autoplay video when src is set and still hovered
+  useEffect(() => {
+    if (videoSrc && isHoveredRef.current && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [videoSrc]);
+
   // Event handlers
   const handleMouseEnter = useCallback(() => {
-    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const hasMouse = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
     if (!hasMouse) return;
 
     isHoveredRef.current = true;
 
     if (!videoSrc) {
       setVideoSrc(previewVideo);
-    } else if (videoRef.current && videoRef.current.readyState >= 3) {
-      setIsHovered(true);
+    } else if (videoRef.current) {
       videoRef.current.play().catch(() => {});
-      timelineRef.current?.play();
+      if (videoRef.current.readyState >= 3) {
+        setIsHovered(true);
+        timelineRef.current?.play();
+      }
     }
   }, [videoSrc, previewVideo]);
 

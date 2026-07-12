@@ -8,6 +8,8 @@ import { CanvasTextImage } from "./TextImageCanvas";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import SectionHeader from "./SectionHeader";
+import { useTranslations } from "next-intl";
 
 /* ============================================
    TYPES
@@ -89,6 +91,7 @@ async function getGamesBySection(sectionType: string) {
    =========================================== */
 
 export default function Games({ title, sectionType }: GamesProps) {
+  const t = useTranslations("home");
   const [games, setGames] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -116,21 +119,17 @@ export default function Games({ title, sectionType }: GamesProps) {
     return (
       <GameColumn className={visibilityClass}>
         {colGames.map((game) => (
-          <Link
+          <GameCard
             key={game.id}
-            href={`/buy-cheap?id=${game.id}`}
-            className="block cursor-pointer"
-          >
-            <GameCard
-              title={game.title}
-              price={`${game.currency}${Number(game.price).toFixed(2)}`}
-              coverImage={game.image_url}
-              previewVideo={game.video_url || undefined}
-              sellerName={game.seller?.display_name || "Unknown Seller"}
-              sellerAvatar={game.seller?.avatar_url || "/avt1.png"}
-              sellerRank={game.seller?.rating >= 4.9 ? "🦄 Legendary" : "⭐ Verified"}
-            />
-          </Link>
+            id={game.id}
+            title={game.title}
+            price={`${game.currency}${Number(game.price).toFixed(2)}`}
+            coverImage={game.image_url}
+            previewVideo={game.video_url || undefined}
+            sellerName={game.seller?.display_name || "Unknown Seller"}
+            sellerAvatar={game.seller?.avatar_url || "/avt1.png"}
+            sellerRank={game.seller?.rating >= 4.9 ? "🦄 Legendary" : "⭐ Verified"}
+          />
         ))}
       </GameColumn>
     );
@@ -168,18 +167,20 @@ export default function Games({ title, sectionType }: GamesProps) {
       className="w-full 800:px-0 px-8 responsive"
       aria-labelledby={`games-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
     >
-      {/* Section Title */}
-      <h2
-        id={`games-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
-        className="sr-only"
-      >
-        {title}
-      </h2>
-      <CanvasTextImage
-        className="-translate-x-[22px]"
-        text={title}
-        imageUrl="/text-img.svg"
-        size="24px"
+      <SectionHeader
+        headingId={`games-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
+        headingText={title}
+        title={title}
+        titleClassName="-translate-x-[22px]"
+        actionText={t("viewAll")}
+        viewAllHref={
+          sectionType === "new"
+            ? "/product?sort=newer"
+            : sectionType === "weekly"
+            ? "/product?sort=popular"
+            : "/product"
+        }
+        viewAllAriaLabel={`View all ${title.toLowerCase()}`}
       />
 
       {/* Desktop Grid */}
@@ -198,21 +199,17 @@ export default function Games({ title, sectionType }: GamesProps) {
       <div className="block 800:hidden">
         <ProductCarousel>
           {games.map((game) => (
-            <Link
+            <GameCard
               key={game.id}
-              href={`/buy-cheap?id=${game.id}`}
-              className="block cursor-pointer"
-            >
-              <GameCard
-                title={game.title}
-                price={`${game.currency}${Number(game.price).toFixed(2)}`}
-                coverImage={game.image_url}
-                previewVideo={game.video_url || undefined}
-                sellerName={game.seller?.display_name || "Unknown Seller"}
-                sellerAvatar={game.seller?.avatar_url || "/avt1.png"}
-                sellerRank={game.seller?.rating >= 4.9 ? "🦄 Legendary" : "⭐ Verified"}
-              />
-            </Link>
+              id={game.id}
+              title={game.title}
+              price={`${game.currency}${Number(game.price).toFixed(2)}`}
+              coverImage={game.image_url}
+              previewVideo={game.video_url || undefined}
+              sellerName={game.seller?.display_name || "Unknown Seller"}
+              sellerAvatar={game.seller?.avatar_url || "/avt1.png"}
+              sellerRank={game.seller?.rating >= 4.9 ? "🦄 Legendary" : "⭐ Verified"}
+            />
           ))}
         </ProductCarousel>
       </div>
