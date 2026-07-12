@@ -74,6 +74,18 @@ export default function PopularGameItem({
   // State
   const [isHovered, setIsHovered] = useState(false);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      const isTouch = !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      const isSmallScreen = window.innerWidth <= 800;
+      setIsMobile(isTouch || isSmallScreen);
+    };
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
 
   // Refs
   const isHoveredRef = useRef(false);
@@ -222,17 +234,19 @@ export default function PopularGameItem({
             </div>
 
             {/* Preview Video */}
-            <video
-              ref={videoRef}
-              className="absolute inset-0 h-full w-full object-cover opacity-0"
-              src={videoSrc}
-              muted
-              loop
-              playsInline
-              preload="none"
-              onCanPlay={handleCanPlay}
-              aria-hidden="true"
-            />
+            {!isMobile && (
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-cover opacity-0"
+                src={videoSrc}
+                muted
+                loop
+                playsInline
+                preload="none"
+                onCanPlay={handleCanPlay}
+                aria-hidden="true"
+              />
+            )}
 
             {/* Platform & Price Overlay */}
             <div className="absolute bottom-0 w-full">
