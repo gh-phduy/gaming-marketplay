@@ -6,9 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function ProductGallerySkeleton() {
   return (
-    <div className="flex w-[780px] flex-col gap-4">
+    <div className="flex w-full lg:max-w-[780px] flex-col gap-4">
       {/* Main Image Skeleton */}
-      <Skeleton className="h-[450px] w-full rounded-xl" />
+      <Skeleton className="aspect-video w-full rounded-xl" />
 
       {/* Thumbnails Skeleton */}
     </div>

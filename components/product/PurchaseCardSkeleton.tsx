@@ -8,8 +8,8 @@ import { Separator } from "@/components/ui/separator";
  */
 export function PurchaseCardSkeleton() {
   return (
-    <Card className="w-[780px] border-none bg-[#2a3441]/80 backdrop-blur-md">
-      <CardContent className="flex flex-col gap-6 p-6">
+    <Card className="w-full border-none bg-[#2a3441]/80 backdrop-blur-md lg:max-w-[780px]">
+      <CardContent className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6">
         {/* Seller Info Section */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">

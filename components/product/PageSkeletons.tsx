@@ -9,7 +9,7 @@ export const TitleSkeleton = memo(() => (
 TitleSkeleton.displayName = "TitleSkeleton";
 
 export const ProductSectionSkeleton = memo(() => (
-  <div className="flex w-full justify-between gap-8">
+  <div className="flex w-full flex-col gap-5 lg:flex-row lg:gap-6">
     {/* Gallery Skeleton - Detailed */}
     <ProductGallerySkeleton />
     {/* PurchaseCard Skeleton - Detailed */}
