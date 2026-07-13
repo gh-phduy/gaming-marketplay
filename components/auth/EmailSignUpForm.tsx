@@ -68,6 +68,7 @@ export default function EmailSignUpForm({
   } = useForm<SignupFields>({
     resolver: zodResolver(signupSchema),
     defaultValues: { username: "", email: "", password: "", confirmPassword: "" },
+    mode: "onChange",
   });
 
   // Action executed upon form submission
@@ -120,7 +121,7 @@ export default function EmailSignUpForm({
       {/* Return button back to the login view */}
       <button
         onClick={onBack}
-        className="mb-8 flex w-fit items-center gap-2 text-sm text-dm-text-secondary transition-colors hover:text-white"
+        className="mb-8 flex w-fit cursor-pointer items-center gap-2 text-sm text-dm-text-secondary transition-colors hover:text-white"
       >
         <IoArrowBack size={16} />
         <span>Back</span>
@@ -135,7 +136,7 @@ export default function EmailSignUpForm({
       </div>
 
       {/* Main Email Registration Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {/* API response error alert */}
         {apiError && (
           <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -144,9 +145,15 @@ export default function EmailSignUpForm({
         )}
 
         {/* Username input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <FaRegUser size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.username 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <FaRegUser size={18} className={`shrink-0 ${errors.username ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type="text"
               placeholder="Username"
@@ -155,14 +162,20 @@ export default function EmailSignUpForm({
             />
           </div>
           {errors.username && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.username.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.username.message}</p>
           )}
         </div>
 
         {/* Email input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <TfiEmail size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.email 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <TfiEmail size={18} className={`shrink-0 ${errors.email ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type="email"
               placeholder="Your email"
@@ -171,14 +184,20 @@ export default function EmailSignUpForm({
             />
           </div>
           {errors.email && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.email.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <GoShieldLock size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.password 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <GoShieldLock size={18} className={`shrink-0 ${errors.password ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Your password (min. 6 characters)"
@@ -189,7 +208,7 @@ export default function EmailSignUpForm({
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="shrink-0 text-dm-text-secondary transition-colors hover:text-white"
+              className={`shrink-0 cursor-pointer transition-colors hover:text-white ${errors.password ? "text-red-400" : "text-dm-text-secondary"}`}
             >
               {showPassword ? (
                 <MdOutlineVisibility size={18} />
@@ -199,14 +218,20 @@ export default function EmailSignUpForm({
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.password.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.password.message}</p>
           )}
         </div>
 
         {/* Password confirmation input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <GoShieldLock size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.confirmPassword 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <GoShieldLock size={18} className={`shrink-0 ${errors.confirmPassword ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type={showConfirm ? "text" : "password"}
               placeholder="Confirm password"
@@ -217,7 +242,7 @@ export default function EmailSignUpForm({
             <button
               type="button"
               onClick={() => setShowConfirm((v) => !v)}
-              className="shrink-0 text-dm-text-secondary transition-colors hover:text-white"
+              className={`shrink-0 cursor-pointer transition-colors hover:text-white ${errors.confirmPassword ? "text-red-400" : "text-dm-text-secondary"}`}
             >
               {showConfirm ? (
                 <MdOutlineVisibility size={18} />
@@ -227,7 +252,7 @@ export default function EmailSignUpForm({
             </button>
           </div>
           {errors.confirmPassword && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.confirmPassword.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.confirmPassword.message}</p>
           )}
         </div>
 
@@ -240,7 +265,7 @@ export default function EmailSignUpForm({
         Already have an account?{" "}
         <button
           onClick={onLoginClick}
-          className="font-semibold text-[#46ca43] transition-colors hover:text-[#5de85a]"
+          className="cursor-pointer font-semibold text-[#46ca43] transition-colors hover:text-[#5de85a]"
         >
           Log In
         </button>

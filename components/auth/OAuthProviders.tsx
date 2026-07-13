@@ -55,7 +55,7 @@ export default function OAuthProviders({ onEmailClick, onShowToast }: OAuthProvi
       {/* Main Google sign-in button */}
       <Button
         variant="default"
-        className="mb-8 flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-white text-base font-bold text-black transition-all hover:bg-gray-200"
+        className="mb-8 flex h-14 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-white text-base font-bold text-black transition-all hover:bg-gray-200"
         onClick={handleGoogleSignIn}
       >
         <FcGoogle className="h-6 w-6" />
@@ -70,7 +70,7 @@ export default function OAuthProviders({ onEmailClick, onShowToast }: OAuthProvi
         {/* Toggle email login form view */}
         <Button
           variant="outline"
-          className="group flex h-12 w-full items-center justify-center gap-3 rounded-lg border-none bg-[#1F2533] font-medium text-dm-text-secondary transition-all duration-300 hover:bg-[#2A3140] hover:text-white"
+          className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-lg border-none bg-[#1F2533] font-medium text-dm-text-secondary transition-all duration-300 hover:bg-[#2A3140] hover:text-white"
           onClick={onEmailClick}
         >
           <MdEmail

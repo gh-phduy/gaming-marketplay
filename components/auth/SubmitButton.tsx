@@ -12,7 +12,7 @@ export default function SubmitButton({ loading, label }: SubmitButtonProps) {
     <button
       type="submit"
       disabled={loading}
-      className="mt-2 flex h-[54px] w-full items-center justify-center rounded-xl bg-[#8a98ad] text-sm font-bold tracking-widest text-white transition-all duration-200 hover:bg-[#9aabbc] disabled:cursor-not-allowed disabled:opacity-60"
+      className="mt-2 flex h-[54px] w-full cursor-pointer items-center justify-center rounded-xl bg-[#8a98ad] text-sm font-bold tracking-widest text-white transition-all duration-200 hover:bg-[#9aabbc] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? (
         <span className="flex items-center gap-2">

@@ -119,7 +119,7 @@ export default function SignIn() {
             Login to your account and join the world of games together
           </DialogDescription>
 
-          <div className="grid min-h-[550px] grid-cols-1 md:grid-cols-2">
+          <div className="grid h-[100dvh] grid-cols-1 md:h-auto md:min-h-[680px] md:grid-cols-2">
             {/* Left Column: Cover Hero Art */}
             <div className="relative hidden h-full w-full overflow-hidden md:block">
               <Image
@@ -151,36 +151,42 @@ export default function SignIn() {
               
               {/* VIEW 1: Providers list (OAuth, Email navigation option) */}
               <div
-                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                className="absolute inset-0 overflow-y-auto p-8 pt-16 md:p-12"
                 style={slide("providers")}
               >
-                <OAuthProviders onEmailClick={() => goTo("email-login")} onShowToast={showToast} />
+                <div className="flex min-h-full flex-col justify-center">
+                  <OAuthProviders onEmailClick={() => goTo("email-login")} onShowToast={showToast} />
+                </div>
               </div>
 
-              {/* VIEW 2: Email Login Form (using conditional keys to reset values on modal toggle) */}
+              {/* VIEW 2: Email Login Form */}
               <div
-                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                className="absolute inset-0 overflow-y-auto p-8 pt-16 md:p-12"
                 style={slide("email-login")}
               >
-                <EmailLoginForm
-                  key={isOpen ? "login-open" : "login-closed"}
-                  onBack={() => goTo("providers")}
-                  onSignUpClick={() => goTo("email-signup")}
-                  onSuccess={handleSuccess}
-                />
+                <div className="flex min-h-full flex-col justify-center">
+                  <EmailLoginForm
+                    key={isOpen ? "login-open" : "login-closed"}
+                    onBack={() => goTo("providers")}
+                    onSignUpClick={() => goTo("email-signup")}
+                    onSuccess={handleSuccess}
+                  />
+                </div>
               </div>
 
-              {/* VIEW 3: Email Sign Up Form (using conditional keys to reset values on modal toggle) */}
+              {/* VIEW 3: Email Sign Up Form */}
               <div
-                className="absolute inset-0 flex flex-col justify-center p-8 md:p-12"
+                className="absolute inset-0 overflow-y-auto p-8 pt-16 md:p-12"
                 style={slide("email-signup")}
               >
-                <EmailSignUpForm
-                  key={isOpen ? "signup-open" : "signup-closed"}
-                  onBack={() => goTo("email-login")}
-                  onLoginClick={() => goTo("email-login")}
-                  onSuccess={handleSuccess}
-                />
+                <div className="flex min-h-full flex-col justify-center">
+                  <EmailSignUpForm
+                    key={isOpen ? "signup-open" : "signup-closed"}
+                    onBack={() => goTo("email-login")}
+                    onLoginClick={() => goTo("email-login")}
+                    onSuccess={handleSuccess}
+                  />
+                </div>
               </div>
 
             </div>
@@ -207,7 +213,7 @@ export default function SignIn() {
           </span>
           <button
             type="button"
-            className="text-gray-400 hover:text-white transition-colors"
+            className="cursor-pointer text-gray-400 transition-colors hover:text-white"
             onClick={() => setToast(null)}
             aria-label="Dismiss notification"
           >

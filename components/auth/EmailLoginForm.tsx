@@ -9,19 +9,7 @@ import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { supabase } from "@/lib/supabase";
 import { parseError } from "./auth-utils";
 import SubmitButton from "./SubmitButton";
-
-// Define the validation schema for Email Login using Zod
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email address"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFields = z.infer<typeof loginSchema>;
+import { loginSchema, type LoginFormData } from "@/lib/schemas/auth.schema";
 
 interface EmailLoginFormProps {
   onBack: () => void;
@@ -50,13 +38,14 @@ export default function EmailLoginForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFields>({
+  } = useForm<z.input<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", rememberMe: false },
+    mode: "onChange",
   });
 
   // Action executed upon submitting credentials
-  const onSubmit = async (data: LoginFields) => {
+  const onSubmit = async (data: z.input<typeof loginSchema>) => {
     setLoading(true);
     setApiError(null);
     try {
@@ -82,7 +71,7 @@ export default function EmailLoginForm({
       {/* Return button back to the main Providers list */}
       <button
         onClick={onBack}
-        className="mb-8 flex w-fit items-center gap-2 text-sm text-dm-text-secondary transition-colors hover:text-white"
+        className="mb-8 flex w-fit cursor-pointer items-center gap-2 text-sm text-dm-text-secondary transition-colors hover:text-white"
       >
         <IoArrowBack size={16} />
         <span>Back</span>
@@ -97,7 +86,7 @@ export default function EmailLoginForm({
       </div>
 
       {/* Main Email Login Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {/* API response error alert */}
         {apiError && (
           <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -106,9 +95,15 @@ export default function EmailLoginForm({
         )}
 
         {/* Email input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <TfiEmail size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.email 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <TfiEmail size={18} className={`shrink-0 ${errors.email ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type="email"
               placeholder="Your email"
@@ -117,14 +112,20 @@ export default function EmailLoginForm({
             />
           </div>
           {errors.email && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.email.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password input field */}
-        <div>
-          <div className="flex h-[54px] items-center gap-3 rounded-xl border border-white/10 bg-[#1F2533] px-4 transition-all duration-200 focus-within:border-white/30 focus-within:bg-[#252d3d]">
-            <GoShieldLock size={18} className="shrink-0 text-dm-text-secondary" />
+        <div className="relative">
+          <div 
+            className={`flex h-[54px] items-center gap-3 rounded-xl border px-4 transition-all duration-200 ${
+              errors.password 
+                ? "border-red-500/50 bg-red-500/5 focus-within:border-red-500" 
+                : "border-white/10 bg-[#1F2533] focus-within:border-white/30 focus-within:bg-[#252d3d]"
+            }`}
+          >
+            <GoShieldLock size={18} className={`shrink-0 ${errors.password ? "text-red-400" : "text-dm-text-secondary"}`} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Your password"
@@ -135,7 +136,7 @@ export default function EmailLoginForm({
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="shrink-0 text-dm-text-secondary transition-colors hover:text-white"
+              className={`shrink-0 cursor-pointer transition-colors hover:text-white ${errors.password ? "text-red-400" : "text-dm-text-secondary"}`}
             >
               {showPassword ? (
                 <MdOutlineVisibility size={18} />
@@ -145,15 +146,24 @@ export default function EmailLoginForm({
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1.5 pl-2 text-xs text-red-400">{errors.password.message}</p>
+            <p className="absolute -bottom-5 left-2 text-xs text-red-400">{errors.password.message}</p>
           )}
         </div>
 
-        {/* Forgot password option */}
-        <div className="text-right">
+        {/* Remember me & Forgot password option */}
+        <div className="flex items-center justify-between">
+          <label className="flex cursor-pointer items-center gap-2">
+            <input
+              type="checkbox"
+              {...register("rememberMe")}
+              className="h-4 w-4 rounded border-white/20 bg-[#1F2533] text-[#46ca43] focus:ring-[#46ca43] focus:ring-offset-0"
+            />
+            <span className="text-sm text-dm-text-secondary">Remember me</span>
+          </label>
+          
           <button
             type="button"
-            className="text-sm font-medium text-[#46ca43] transition-colors hover:text-[#5de85a]"
+            className="cursor-pointer text-sm font-medium text-[#46ca43] transition-colors hover:text-[#5de85a]"
           >
             Forgot Password?
           </button>
@@ -168,7 +178,7 @@ export default function EmailLoginForm({
         Not registered?{" "}
         <button
           onClick={onSignUpClick}
-          className="font-semibold text-[#46ca43] transition-colors hover:text-[#5de85a]"
+          className="cursor-pointer font-semibold text-[#46ca43] transition-colors hover:text-[#5de85a]"
         >
           Sign Up
         </button>
